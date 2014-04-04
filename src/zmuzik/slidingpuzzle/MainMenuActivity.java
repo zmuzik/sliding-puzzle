@@ -83,6 +83,7 @@ public class MainMenuActivity extends Activity {
 			}
 		});
 	}
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);

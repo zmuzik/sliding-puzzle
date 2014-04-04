@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.app.Activity;
 
 public class GameActivity extends Activity {
-	
+
 	final String TAG = this.getClass().getSimpleName();
 
 	@Override
