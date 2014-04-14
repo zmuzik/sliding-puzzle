@@ -28,16 +28,14 @@ public class PicturePuzzleBoardView extends View {
 	final String TAG = this.getClass().getSimpleName();
 	int mGridDimX;
 	int mGridDimY;
-	Tile[][] tiles;
-	int mMainPicture = 0;
+	Tile[][] mTiles;
+	int mSelectedPicture = 0;
 
-	double picDimRatio;
 	TextPaint mTextPaint;
 	Rect mBounds;
 
 	Bitmap mCompletePictureBitmap;
 	Bitmap mOriginalBitmap;
-	boolean mTouching = false;
 	boolean mIsViewDimAdjusted = false;
 
 	private Paint mPaint;
@@ -50,7 +48,7 @@ public class PicturePuzzleBoardView extends View {
 	private int mMoveDeltaX, mMoveDeltaY;
 	private int mActiveTileX, mActiveTileY;
 	private int mBlackTileX, mBlackTileY;
-	private boolean puzzleComplete;
+	private boolean mPuzzleComplete;
 
 	public PicturePuzzleBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
@@ -72,7 +70,7 @@ public class PicturePuzzleBoardView extends View {
 		Bundle params = intent.getExtras();
 		mGridDimX = params.getInt("gridSizeLonger");
 		mGridDimY = params.getInt("gridSizeShorter");
-		mMainPicture = params.getInt("picture");
+		mSelectedPicture = params.getInt("picture");
 		init(context);
 	}
 
@@ -92,22 +90,21 @@ public class PicturePuzzleBoardView extends View {
 		mBounds = new Rect();
 
 		try {
-			String mainPictureFileName = "game_pic_" + mMainPicture + ".jpg";
+			String mainPictureFileName = "game_pic_" + mSelectedPicture + ".jpg";
 			InputStream ims = context.getAssets().open(mainPictureFileName);
 			Drawable drawable = Drawable.createFromStream(ims, null);
 			mOriginalBitmap = ((BitmapDrawable) drawable).getBitmap();
 
 			int x = mOriginalBitmap.getWidth();
 			int y = mOriginalBitmap.getHeight();
-			picDimRatio = x / y;
 
-			// set orientation according to the picture
+			// set orientation according to the picture dimensions
 			Activity activity = (Activity) context;
-			int origOrientation = activity.getResources().getConfiguration().orientation;
-			if (x > y && origOrientation != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+			if (x > y) {
 				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-			} else if (x < y && origOrientation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+			} else {
 				activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+				int temp = mGridDimX; mGridDimX = mGridDimY; mGridDimY = temp;
 			}
 		} catch (IOException e) {
 			Log.e(TAG, "init: ", e);
@@ -116,13 +113,13 @@ public class PicturePuzzleBoardView extends View {
 
 	void initTiles() {
 		Log.d(TAG, "initializing tiles");
-		tiles = new Tile[mGridDimX][mGridDimY];
+		mTiles = new Tile[mGridDimX][mGridDimY];
 		int tileNumber = 1;
 		for (int y = 0; y < mGridDimY; y++) {
 			for (int x = 0; x < mGridDimX; x++) {
 				Bitmap bitmap = Bitmap.createBitmap(mCompletePictureBitmap, x * mTileWidth, y * mTileHeight,
 						mTileWidth, mTileHeight);
-				tiles[x][y] = new Tile(x, y, bitmap, tileNumber);
+				mTiles[x][y] = new Tile(x, y, bitmap, tileNumber);
 				tileNumber++;
 			}
 		}
@@ -142,17 +139,12 @@ public class PicturePuzzleBoardView extends View {
 
 		float pictureSideRatio = (float) mOriginalBitmap.getWidth() / mOriginalBitmap.getHeight();
 		float viewSideRatio = (float) width / height;
-		Log.d(TAG, "pictureSideRatio: " + pictureSideRatio + " viewSideRatio: " + viewSideRatio);
 
 		if (!mIsViewDimAdjusted) {
 			if (pictureSideRatio > viewSideRatio) {
-				// obrazek je sirsi. sirka obrazku bude sirka view a vyska
-				// obrazku se dopocita
 				mViewWidth = width;
 				mViewHeight = (int) (width / pictureSideRatio);
 			} else {
-				// obrazek je vyssi. vyska obrazku bude vyska view a sirka
-				// obrazku se dopocita
 				mViewHeight = height;
 				mViewWidth = (int) (height * pictureSideRatio);
 			}
@@ -161,11 +153,7 @@ public class PicturePuzzleBoardView extends View {
 			mIsViewDimAdjusted = true;
 		}
 
-		Log.d(TAG, "mViewWidth: " + mViewWidth + " mViewHeight: " + mViewHeight);
-
 		if (width != mViewWidth || height != mViewHeight) {
-			Log.d(TAG, "Fixing view dimensions. Values now: " + width + " " + height + " Supposed values: "
-					+ mViewWidth + " " + mViewHeight);
 			LayoutParams params = getLayoutParams();
 			params.height = mViewHeight;
 			params.width = mViewWidth;
@@ -184,16 +172,16 @@ public class PicturePuzzleBoardView extends View {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		if (tiles == null) {
+		if (mTiles == null) {
 			return;
 		}
-		// draw all tiles - initialization
+
 		int tileNumber = 0;
 		for (int i = 0; i < mGridDimX; i++) {
 			for (int j = 0; j < mGridDimY; j++) {
-				Tile t = tiles[i][j];
+				Tile t = mTiles[i][j];
 				tileNumber = t.getTileNumber();
-				if (puzzleComplete || i != mBlackTileX || j != mBlackTileY) {
+				if (mPuzzleComplete || i != mBlackTileX || j != mBlackTileY) {
 					// anything but the black tile
 					Bitmap bitmap = t.getBitmap();
 					if (isHorizPlayable(i, j)) {
@@ -213,7 +201,7 @@ public class PicturePuzzleBoardView extends View {
 	}
 
 	void drawNumberOnTile(Canvas canvas, int number, int tileX, int tileY, int addX, int addY) {
-		if (!puzzleComplete) {
+		if (!mPuzzleComplete) {
 			String numStr = "" + number;
 			mTextPaint.getTextBounds(numStr, 0, numStr.length(), mBounds);
 			int xCoord = tileX * mTileWidth + addX + (mTileWidth / 2 - mBounds.width() / 2);
@@ -225,7 +213,7 @@ public class PicturePuzzleBoardView extends View {
 	private boolean isPuzzleComplete() {
 		for (int i = 0; i < mGridDimX; i++) {
 			for (int j = 0; j < mGridDimY; j++) {
-				Tile t = tiles[i][j];
+				Tile t = mTiles[i][j];
 				if (t.getOrigX() != i || t.getOrigY() != j) {
 					Log.d(TAG, "not complete: " + i + j);
 					return false;
@@ -270,37 +258,37 @@ public class PicturePuzzleBoardView extends View {
 
 	public int playTile(int x, int y) {
 		int totalMovedTiles = 0;
-		Tile temp = tiles[mBlackTileX][mBlackTileY];
+		Tile temp = mTiles[mBlackTileX][mBlackTileY];
 		Log.d(TAG, "black: " + mBlackTileX + " " + mBlackTileY);
 		Log.d(TAG, "active: " + mActiveTileX + " " + mActiveTileY);
 		Log.d(TAG, "xy: " + x + " " + y);
 		if (x == mBlackTileX) {
 			if (y < mBlackTileY) {
 				for (int i = mBlackTileY - 1; i >= y; i--) {
-					tiles[mBlackTileX][i + 1] = tiles[mBlackTileX][i];
+					mTiles[mBlackTileX][i + 1] = mTiles[mBlackTileX][i];
 					totalMovedTiles++;
 					Log.d(TAG, mBlackTileX + " " + (i + 1) + " -> " + mBlackTileX + " " + i);
 				}
 			} else if (y > mBlackTileY) {
 				for (int i = mBlackTileY + 1; i <= y; i++) {
-					tiles[mBlackTileX][i - 1] = tiles[mBlackTileX][i];
+					mTiles[mBlackTileX][i - 1] = mTiles[mBlackTileX][i];
 					totalMovedTiles++;
 				}
 			}
 		} else if (y == mBlackTileY) {
 			if (x < mBlackTileX) {
 				for (int i = mBlackTileX - 1; i >= x; i--) {
-					tiles[i + 1][mBlackTileY] = tiles[i][mBlackTileY];
+					mTiles[i + 1][mBlackTileY] = mTiles[i][mBlackTileY];
 					totalMovedTiles++;
 				}
 			} else if (x > mBlackTileX) {
 				for (int i = mBlackTileX + 1; i <= x; i++) {
-					tiles[i - 1][mBlackTileY] = tiles[i][mBlackTileY];
+					mTiles[i - 1][mBlackTileY] = mTiles[i][mBlackTileY];
 					totalMovedTiles++;
 				}
 			}
 		}
-		tiles[x][y] = temp;
+		mTiles[x][y] = temp;
 		mBlackTileX = x;
 		mBlackTileY = y;
 		Log.d(TAG, "total moved tiles " + totalMovedTiles);
@@ -312,34 +300,16 @@ public class PicturePuzzleBoardView extends View {
 		int eventX = (int) event.getX();
 		int eventY = (int) event.getY();
 		int action = event.getAction();
-		if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-			mTouching = false;
-			if (Math.abs(mMoveDeltaX) > mTileWidth / 2 || Math.abs(mMoveDeltaY) > mTileHeight / 2) {
-				playTile(mActiveTileX, mActiveTileY);
-				if (isPuzzleComplete()) {
-					puzzleComplete = true;
-				}
-			}
 
-			mDownX = -1;
-			mDownY = -1;
-			mActiveTileX = -1;
-			mActiveTileY = -1;
-			mMoveDeltaX = 0;
-			mMoveDeltaY = 0;
-			invalidate();
-		}
 		if (action == MotionEvent.ACTION_DOWN) {
-			if (!puzzleComplete) {
-				mTouching = true;
+			if (!mPuzzleComplete) {
 				mDownX = eventX;
 				mDownY = eventY;
 				mActiveTileX = mDownX / mTileWidth;
 				mActiveTileY = mDownY / mTileHeight;
-				// Log.d(TAG, "x=" + mDownX + "y=" + mDownY + "tilex=" +
-				// mActiveTileX + "tiley=" + mActiveTileY);
 			}
 		}
+
 		if (action == MotionEvent.ACTION_MOVE) {
 			if (mActiveTileX == mBlackTileX) {
 				mMoveDeltaY = eventY - mDownY;
@@ -362,9 +332,19 @@ public class PicturePuzzleBoardView extends View {
 					mMoveDeltaX = (mMoveDeltaX > 0) ? 0 : mMoveDeltaX;
 				}
 			}
-			// Log.d(TAG, "deltax: " +mMoveDeltaX + " deltay: "+ mMoveDeltaY);
 			invalidate();
 		}
+
+		if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+			if (Math.abs(mMoveDeltaX) > mTileWidth / 2 || Math.abs(mMoveDeltaY) > mTileHeight / 2) {
+				playTile(mActiveTileX, mActiveTileY);
+				mPuzzleComplete = isPuzzleComplete();
+			}
+			mMoveDeltaX = 0;
+			mMoveDeltaY = 0;
+			invalidate();
+		}
+
 		return true;
 	}
 }

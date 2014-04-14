@@ -10,7 +10,7 @@
     tools:context=".MainMenuActivity" >
 
     <TextView
-        android:id="@+id/gridSizeTV"
+        android:id="@+id/gridSizeLabelTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -19,49 +19,37 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp" />
 
-    <RadioGroup
-        android:id="@+id/gridSizeGroup"
+    <TextView
+        android:id="@+id/gridSizeTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/gridSizeTV"
+        android:layout_below="@id/gridSizeLabelTV"
         android:layout_centerHorizontal="true"
-        android:orientation="horizontal" >
+        android:text=""
+        android:textColor="#FFFFFF"
+        android:textSize="22sp" />
 
-        <RadioButton
-            android:id="@+id/gridSize3x3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15sp"
-            android:text="@string/grid_size_3x3"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp" />
+    <SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/gridSizeTV" />
 
-        <RadioButton
-            android:id="@+id/gridSize4x4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15sp"
-            android:text="@string/grid_size_4x4"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp" />
-
-        <RadioButton
-            android:id="@+id/gridSize5x5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15sp"
-            android:text="@string/grid_size_5x5"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp" />
-    </RadioGroup>
+    <SeekBar
+        android:id="@+id/seekBar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/seekBar1" />
 
     <TextView
         android:id="@+id/pictureTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/gridSizeGroup"
+        android:layout_below="@id/seekBar2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:text="@string/heading_picture"
         android:textColor="#FFFFFF"
         android:textSize="26sp" />
@@ -70,12 +58,13 @@
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
         android:layout_below="@+id/pictureTV"
+        android:layout_gravity="center"
         android:background="#000000"
         android:gravity="center"
         android:horizontalSpacing="5dp"
         android:numColumns="2"
         android:stretchMode="columnWidth"
         android:verticalSpacing="5dp" />
+
 </RelativeLayout>
