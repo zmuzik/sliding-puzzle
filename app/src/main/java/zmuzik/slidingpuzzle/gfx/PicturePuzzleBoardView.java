@@ -1,9 +1,5 @@
 package zmuzik.slidingpuzzle.gfx;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Random;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +19,11 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Random;
+
+import zmuzik.slidingpuzzle.PrefsHelper;
 import zmuzik.slidingpuzzle.Tile;
 
 public class PicturePuzzleBoardView extends View {
@@ -70,8 +71,8 @@ public class PicturePuzzleBoardView extends View {
 	public PicturePuzzleBoardView(Context context, Intent intent) {
 		super(context);
 		Bundle params = intent.getExtras();
-		mGridDimX = params.getInt("gridSizeLonger");
-		mGridDimY = params.getInt("gridSizeShorter");
+		mGridDimX = PrefsHelper.get().getGridDimLong();
+		mGridDimY = PrefsHelper.get().getGridDimShort();
 		mSelectedPicture = params.getInt("picture");
 		init(context);
 	}
