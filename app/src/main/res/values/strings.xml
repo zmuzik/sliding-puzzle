@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SlidingPuzzle</string>
-    <string name="heading_grid_size">Grid size</string>
-    <string name="heading_picture">Picture</string>
     <string name="congrats">Congratulations!</string>
-    <string name="title_activity_main">MainActivity</string>
 
     <string name="title_section1">Saved</string>
     <string name="title_section2">Camera</string>

@@ -31,7 +31,7 @@ public class PrefsHelper {
     }
 
     public int getGridDimShort() {
-        return getPrefs().getInt(GRID_DIM_SHORT, 0);
+        return getPrefs().getInt(GRID_DIM_SHORT, Conf.DEFAULT_GRID_DIM_SHORT);
     }
 
     public void setGridDimLong(int timestamp) {
@@ -39,6 +39,6 @@ public class PrefsHelper {
     }
 
     public int getGridDimLong() {
-        return getPrefs().getInt(GRID_DIM_LONG, 0);
+        return getPrefs().getInt(GRID_DIM_LONG, Conf.DEFAULT_GRID_DIM_LONG);
     }
 }

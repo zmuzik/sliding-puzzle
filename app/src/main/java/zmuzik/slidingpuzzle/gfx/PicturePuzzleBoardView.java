@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.ui;
+package zmuzik.slidingpuzzle.gfx;
 
 import java.io.IOException;
 import java.io.InputStream;
