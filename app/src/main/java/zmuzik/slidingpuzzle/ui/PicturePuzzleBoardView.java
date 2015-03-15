@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle;
+package zmuzik.slidingpuzzle.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +22,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
+
+import zmuzik.slidingpuzzle.Tile;
 
 public class PicturePuzzleBoardView extends View {
 

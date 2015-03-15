@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle;
+package zmuzik.slidingpuzzle.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +14,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import zmuzik.slidingpuzzle.R;
 
 public class MainMenuActivity extends Activity {
 
