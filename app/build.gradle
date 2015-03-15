@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "zmuzik.slidingpuzzle"
         minSdkVersion 8
-        targetSdkVersion 18
+        targetSdkVersion 21
     }
 
     buildTypes {
