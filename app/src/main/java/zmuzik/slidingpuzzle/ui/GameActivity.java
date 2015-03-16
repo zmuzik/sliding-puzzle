@@ -3,6 +3,7 @@ package zmuzik.slidingpuzzle.ui;
 import android.os.Bundle;
 import android.app.Activity;
 
+import zmuzik.slidingpuzzle.R;
 import zmuzik.slidingpuzzle.gfx.PicturePuzzleBoardView;
 
 public class GameActivity extends Activity {
@@ -12,7 +13,9 @@ public class GameActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		PicturePuzzleBoardView board = new PicturePuzzleBoardView(this, getIntent());
-		setContentView(board);
+        setContentView(R.layout.activity_game);
+        PicturePuzzleBoardView board = (PicturePuzzleBoardView) findViewById(R.id.board);
+        String fileUri = getIntent().getExtras().getString("FILE_URI");
+        board.setFile(fileUri);
 	}
 }

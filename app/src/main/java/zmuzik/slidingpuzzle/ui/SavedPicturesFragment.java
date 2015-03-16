@@ -15,8 +15,6 @@ import zmuzik.slidingpuzzle.adapters.GridViewAdapter;
 
 public class SavedPicturesFragment extends Fragment {
 
-    private static final String ARG_SECTION_NUMBER = "section_number";
-
     GridView gridView;
 
     public SavedPicturesFragment() {
@@ -39,8 +37,7 @@ public class SavedPicturesFragment extends Fragment {
 
     public void startGame(int pictureNumber) {
         Intent intent = new Intent(App.get(), GameActivity.class);
-        intent.putExtra("picture", pictureNumber);
+        intent.putExtra("FILE_URI", (String) gridView.getAdapter().getItem(pictureNumber));
         startActivity(intent);
     }
-
 }
