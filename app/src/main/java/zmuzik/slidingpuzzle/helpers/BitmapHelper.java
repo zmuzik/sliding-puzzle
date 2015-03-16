@@ -2,12 +2,17 @@ package zmuzik.slidingpuzzle.helpers;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import zmuzik.slidingpuzzle.App;
 import zmuzik.slidingpuzzle.Conf;
@@ -145,7 +150,30 @@ public class BitmapHelper {
     public static boolean isPicture(File file) {
         String path = file.getAbsolutePath();
         String mime = BitmapHelper.getMimeType(path);
-        return mime.startsWith("image");
+        return (mime != null) && mime.startsWith("image");
+    }
+
+    public static Uri getOutputPictureFileUri(){
+        return Uri.fromFile(getOutputPictureFile());
+    }
+
+    public static File getOutputPictureFile(){
+        File mediaStorageDir = new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+                Conf.APP_PIC_SUBDIR);
+
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                Log.d("MyCameraApp", "failed to create directory");
+                return null;
+            }
+        }
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+ timeStamp + ".jpg");
+        return mediaFile;
     }
 }
 

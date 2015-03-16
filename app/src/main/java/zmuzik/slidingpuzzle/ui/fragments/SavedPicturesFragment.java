@@ -40,7 +40,7 @@ public class SavedPicturesFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_pictures_grid, container, false);
+        View rootView = inflater.inflate(getLayoutId(), container, false);
 
         int columns = (isHorizontal()) ? Conf.GRID_COLUMNS_LANDSCAPE : Conf.GRID_COLUMNS_PORTRAIT;
 
@@ -61,5 +61,9 @@ public class SavedPicturesFragment extends Fragment {
 
     public List<String> getPictures() {
         return Arrays.asList(originalPictures);
+    }
+
+    public int getLayoutId() {
+        return R.layout.fragment_pictures_grid;
     }
 }

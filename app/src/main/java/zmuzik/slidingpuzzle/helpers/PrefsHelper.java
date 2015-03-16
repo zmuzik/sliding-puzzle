@@ -10,6 +10,7 @@ public class PrefsHelper {
 
     private static final String GRID_DIM_SHORT = "GRID_DIM_SHORT";
     private static final String GRID_DIM_LONG = "GRID_DIM_LONG";
+    private static final String PHOTO_FILE_PATH = "PHOTO_FILE_PATH";
 
     private static PrefsHelper instance = null;
     private final String PACKAGE_NAME;
@@ -43,5 +44,13 @@ public class PrefsHelper {
 
     public int getGridDimLong() {
         return getPrefs().getInt(GRID_DIM_LONG, Conf.DEFAULT_GRID_DIM_LONG);
+    }
+
+    public void setPhotoFilePath(String path) {
+        getPrefs().edit().putString(PHOTO_FILE_PATH, path).commit();
+    }
+
+    public String getPhotoFilePath() {
+        return getPrefs().getString(PHOTO_FILE_PATH, null);
     }
 }
