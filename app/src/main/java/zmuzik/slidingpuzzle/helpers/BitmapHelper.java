@@ -2,7 +2,9 @@ package zmuzik.slidingpuzzle.helpers;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.webkit.MimeTypeMap;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +16,7 @@ import zmuzik.slidingpuzzle.Conf;
 public class BitmapHelper {
     private static BitmapHelper instance = new BitmapHelper();
     public static final String ASSET_PREFIX = "file:///android_asset/";
+    public static final String FILE_PREFIX = "file://";
 
     public static BitmapHelper get() {
         return instance;
@@ -66,16 +69,16 @@ public class BitmapHelper {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
 
-         if (isAsset(filePath)) {
+        if (isAsset(filePath)) {
             try {
-                InputStream stream = App.get().getAssets().open(getAssetFileName(filePath));
+                InputStream stream = App.get().getAssets().open(getAssetName(filePath));
                 BitmapFactory.decodeStream(stream, null, bmOptions);
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
             }
-        } else {
-            BitmapFactory.decodeFile(filePath, bmOptions);
+        } else if (isFile(filePath)) {
+            BitmapFactory.decodeFile(getFileName(filePath), bmOptions);
         }
 
         return bmOptions.outWidth > bmOptions.outHeight;
@@ -84,13 +87,13 @@ public class BitmapHelper {
     public static Bitmap decodeFile(String filePath) {
         if (isAsset(filePath)) {
             try {
-                InputStream stream = App.get().getAssets().open(getAssetFileName(filePath));
+                InputStream stream = App.get().getAssets().open(getAssetName(filePath));
                 return BitmapFactory.decodeStream(stream);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            return BitmapFactory.decodeFile(filePath);
+        } else if (isFile(filePath)) {
+            return BitmapFactory.decodeFile(getFileName(filePath));
         }
         return null;
     }
@@ -99,8 +102,16 @@ public class BitmapHelper {
         return filePath.startsWith(ASSET_PREFIX);
     }
 
-    public static String getAssetFileName(String filePath) {
+    public static String getAssetName(String filePath) {
         return filePath.substring(ASSET_PREFIX.length());
+    }
+
+    public static boolean isFile(String filePath) {
+        return filePath.startsWith(FILE_PREFIX) && !filePath.startsWith(ASSET_PREFIX);
+    }
+
+    public static String getFileName(String filePath) {
+        return filePath.substring(FILE_PREFIX.length());
     }
 
     public static void saveBitmapAsFile(Bitmap bitmap, String fileName) {
@@ -119,6 +130,22 @@ public class BitmapHelper {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            type = mime.getMimeTypeFromExtension(extension);
+        }
+        return type;
+    }
+
+    public static boolean isPicture(File file) {
+        String path = file.getAbsolutePath();
+        String mime = BitmapHelper.getMimeType(path);
+        return mime.startsWith("image");
     }
 }
 
