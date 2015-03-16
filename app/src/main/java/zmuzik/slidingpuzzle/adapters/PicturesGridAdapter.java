@@ -12,15 +12,17 @@ import android.widget.ImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import zmuzik.slidingpuzzle.App;
 import zmuzik.slidingpuzzle.R;
 import zmuzik.slidingpuzzle.gfx.SquareImageView;
 import zmuzik.slidingpuzzle.helpers.BitmapHelper;
-import zmuzik.slidingpuzzle.ui.GameActivity;
+import zmuzik.slidingpuzzle.ui.activities.GameActivity;
 
 public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapter.ViewHolder> {
 
-    private String[] mFilePaths;
+    private List<String> mFilePaths;
     private Context mContext;
     private int mColumns;
     int mDim;
@@ -36,7 +38,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         }
     }
 
-    public PicturesGridAdapter(Context ctx, String[] filePaths, int columns) {
+    public PicturesGridAdapter(Context ctx, List<String> filePaths, int columns) {
         mContext = ctx;
         mColumns = columns;
         mFilePaths = filePaths;
@@ -45,7 +47,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     // Create new views (invoked by the layout manager)
     @Override
     public PicturesGridAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_picture_grid, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pictures_grid, parent, false);
         // set the view's size, margins, paddings and layout parameters
         mDim = parent.getWidth() / mColumns;
         return new ViewHolder(v);
@@ -54,7 +56,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final String uriString = mFilePaths[position];
+        final String uriString = mFilePaths.get(position);
         Picasso.with(App.get()).load(uriString)
                 .resize(mDim, mDim)
                 .centerCrop()
@@ -75,7 +77,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 Intent intent = new Intent(mContext, GameActivity.class);
-                intent.putExtra("FILE_URI", mFilePaths[position]);
+                intent.putExtra("FILE_URI", mFilePaths.get(position));
                 mContext.startActivity(intent);
             }
         });
@@ -83,6 +85,6 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
     @Override
     public int getItemCount() {
-        return mFilePaths.length;
+        return (mFilePaths == null) ? 0 : mFilePaths.size();
     }
 }

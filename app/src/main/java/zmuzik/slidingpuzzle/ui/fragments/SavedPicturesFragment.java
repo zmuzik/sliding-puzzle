@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.ui;
+package zmuzik.slidingpuzzle.ui.fragments;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Arrays;
+import java.util.List;
+
 import zmuzik.slidingpuzzle.R;
 import zmuzik.slidingpuzzle.adapters.PicturesGridAdapter;
 import zmuzik.slidingpuzzle.helpers.BitmapHelper;
 
-
-public class CameraPicturesFragment extends Fragment {
+public class SavedPicturesFragment extends Fragment {
 
     final String[] originalPictures = {
             BitmapHelper.ASSET_PREFIX + "game_pic_0.jpg",
@@ -32,7 +34,7 @@ public class CameraPicturesFragment extends Fragment {
     RecyclerView.LayoutManager mLayoutManager;
     PicturesGridAdapter mAdapter;
 
-    public CameraPicturesFragment() {
+    public SavedPicturesFragment() {
     }
 
     @Override
@@ -47,12 +49,16 @@ public class CameraPicturesFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new PicturesGridAdapter(getActivity(), originalPictures, columns);
+        mAdapter = new PicturesGridAdapter(getActivity(), getPictures(), columns);
         mRecyclerView.setAdapter(mAdapter);
         return rootView;
     }
 
     boolean isHorizontal() {
         return getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    public List<String> getPictures() {
+        return Arrays.asList(originalPictures);
     }
 }

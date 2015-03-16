@@ -44,7 +44,7 @@ public class GridViewAdapter extends BaseAdapter {
     @Override public View getView(final int i, View view, ViewGroup viewGroup) {
         if (view == null) {
             view = LayoutInflater.from(viewGroup.getContext()).inflate(
-                    R.layout.item_picture_grid, viewGroup, false);
+                    R.layout.item_pictures_grid, viewGroup, false);
         }
 
         SquareImageView image = (SquareImageView) view.findViewById(R.id.image);

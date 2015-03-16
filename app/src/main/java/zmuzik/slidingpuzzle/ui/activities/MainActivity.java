@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.ui;
+package zmuzik.slidingpuzzle.ui.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import java.util.Locale;
 
 import zmuzik.slidingpuzzle.R;
+import zmuzik.slidingpuzzle.ui.fragments.CameraPicturesFragment;
+import zmuzik.slidingpuzzle.ui.fragments.FlickrPicturesFragment;
+import zmuzik.slidingpuzzle.ui.fragments.SavedPicturesFragment;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
@@ -103,9 +106,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     return new SavedPicturesFragment();
                 case 1:
                     return new CameraPicturesFragment();
-                default:
-                    return PlaceholderFragment.newInstance(position + 1);
+                case 2:
+                    return new FlickrPicturesFragment();
             }
+            return null;
         }
 
         @Override

@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.ui;
+package zmuzik.slidingpuzzle.ui.activities;
 
 import android.os.Bundle;
 import android.app.Activity;
