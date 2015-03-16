@@ -98,10 +98,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0) {
-                return new SavedPicturesFragment();
-            } else {
-                return PlaceholderFragment.newInstance(position + 1);
+            switch (position) {
+                case 0:
+                    return new SavedPicturesFragment();
+                case 1:
+                    return new CameraPicturesFragment();
+                default:
+                    return PlaceholderFragment.newInstance(position + 1);
             }
         }
 
