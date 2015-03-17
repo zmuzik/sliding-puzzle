@@ -11,12 +11,16 @@ import android.util.Log;
 
 import com.squareup.otto.Bus;
 
+import retrofit.RestAdapter;
+import zmuzik.slidingpuzzle.flickr.FlickrApi;
+
 public class App extends Application {
     private final String TAG = this.getClass().getSimpleName();
     private static final Bus BUS = new Bus();
     private static App mApp;
 
     private SQLiteDatabase mDb;
+    private FlickrApi mFlickrApi;
 
     public static App get() {
         return mApp;
@@ -31,6 +35,18 @@ public class App extends Application {
         Log.i(TAG, "====================Initializing app====================");
         mApp = this;
         super.onCreate();
+        initFlickrApi();
+    }
+
+    void initFlickrApi() {
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(Conf.FLICKR_API_ROOT)
+                .build();
+        mFlickrApi = restAdapter.create(FlickrApi.class);
+    }
+
+    public FlickrApi getFlickrApi() {
+        return mFlickrApi;
     }
 
     public boolean isDebuggable() {

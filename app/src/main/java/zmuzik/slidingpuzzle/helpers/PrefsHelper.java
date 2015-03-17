@@ -53,4 +53,5 @@ public class PrefsHelper {
     public String getPhotoFilePath() {
         return getPrefs().getString(PHOTO_FILE_PATH, null);
     }
+
 }

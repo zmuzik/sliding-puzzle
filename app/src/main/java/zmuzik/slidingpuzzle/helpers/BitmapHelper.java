@@ -160,7 +160,7 @@ public class BitmapHelper {
     public static File getOutputPictureFile(){
         File mediaStorageDir = new File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
-                Conf.APP_PIC_SUBDIR);
+                Conf.DCIM_APP_SUBDIR);
 
         // Create the storage directory if it does not exist
         if (! mediaStorageDir.exists()){

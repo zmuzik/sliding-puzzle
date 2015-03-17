@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -71,6 +73,8 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
                     }
 
                     @Override public void onError() {
+                        Toast.makeText(mContext, uriString + " failed", Toast.LENGTH_SHORT).show();
+                        Log.e("PicturesGridAdapter", uriString + " failed");
                     }
                 });
 
@@ -86,6 +90,12 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     @Override
     public int getItemCount() {
         return (mFilePaths == null) ? 0 : mFilePaths.size();
+    }
+
+    public void add(String item) {
+        if (mFilePaths.contains(item)) return;
+        mFilePaths.add(item);
+        notifyItemInserted(getItemCount() - 1);
     }
 
     public void add(String item, int position) {
