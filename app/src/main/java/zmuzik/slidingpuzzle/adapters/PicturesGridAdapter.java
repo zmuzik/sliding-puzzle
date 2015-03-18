@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import zmuzik.slidingpuzzle.App;
@@ -61,14 +62,17 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         final String uriString = mFilePaths.get(position);
         Picasso.with(App.get()).load(uriString)
                 .resize(mDim, mDim)
+                .placeholder(R.drawable.ic_action_autorenew)
                 .centerCrop()
                 .into(holder.image, new Callback() {
                     @Override public void onSuccess() {
                         Resources res = App.get().getResources();
                         if (BitmapHelper.isBitmapHorizontal(uriString)) {
-                            holder.orientationIcon.setImageDrawable(res.getDrawable(R.drawable.ic_action_hardware_phone_android_horiz));
+                            holder.orientationIcon.setImageDrawable(
+                                    res.getDrawable(R.drawable.ic_action_hardware_phone_android_horiz));
                         } else {
-                            holder.orientationIcon.setImageDrawable(res.getDrawable(R.drawable.ic_action_hardware_phone_android));
+                            holder.orientationIcon.setImageDrawable(
+                                    res.getDrawable(R.drawable.ic_action_hardware_phone_android));
                         }
                     }
 
@@ -93,26 +97,29 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     }
 
     public void add(String item) {
+        if (mFilePaths == null) mFilePaths = new ArrayList<>();
         if (mFilePaths.contains(item)) return;
         mFilePaths.add(item);
         notifyItemInserted(getItemCount() - 1);
     }
 
     public void add(String item, int position) {
+        if (mFilePaths == null) mFilePaths = new ArrayList<>();
         if (mFilePaths.contains(item)) return;
         mFilePaths.add(position, item);
         notifyItemInserted(position);
     }
 
     public void remove(String item) {
+        if (mFilePaths == null) return;
         int position = mFilePaths.indexOf(item);
         mFilePaths.remove(position);
         notifyItemRemoved(position);
     }
 
     public void remove(int position) {
+        if (mFilePaths == null) return;
         mFilePaths.remove(position);
         notifyItemRemoved(position);
     }
-
 }
