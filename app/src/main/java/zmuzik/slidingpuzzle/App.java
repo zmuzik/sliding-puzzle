@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Bus;
 
 import retrofit.RestAdapter;
@@ -35,6 +36,7 @@ public class App extends Application {
         Log.i(TAG, "====================Initializing app====================");
         mApp = this;
         super.onCreate();
+        Crashlytics.start(this);
         initFlickrApi();
     }
 
