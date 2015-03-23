@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import java.util.Random;
 
-import zmuzik.slidingpuzzle.Tile;
+import zmuzik.slidingpuzzle.model.Tile;
 import zmuzik.slidingpuzzle.helpers.BitmapHelper;
 import zmuzik.slidingpuzzle.helpers.PrefsHelper;
 

@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle;
+package zmuzik.slidingpuzzle.model;
 
 import android.graphics.Bitmap;
 
