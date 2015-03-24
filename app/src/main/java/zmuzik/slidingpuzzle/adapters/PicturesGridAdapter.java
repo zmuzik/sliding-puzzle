@@ -80,11 +80,15 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                Intent intent = new Intent(mContext, GameActivity.class);
-                intent.putExtra("FILE_URI", mFilePaths.get(position));
-                mContext.startActivity(intent);
+                runGame(position);
             }
         });
+    }
+
+    public void runGame(int position) {
+        Intent intent = new Intent(mContext, GameActivity.class);
+        intent.putExtra("FILE_URI", mFilePaths.get(position));
+        mContext.startActivity(intent);
     }
 
     public void setOrientationIcon(ImageView orientationIcon, int position) {

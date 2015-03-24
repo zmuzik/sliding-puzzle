@@ -1,5 +1,7 @@
 package zmuzik.slidingpuzzle.ui.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,10 +12,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import zmuzik.slidingpuzzle.R;
+import zmuzik.slidingpuzzle.helpers.PrefsHelper;
 import zmuzik.slidingpuzzle.ui.fragments.CameraPicturesFragment;
 import zmuzik.slidingpuzzle.ui.fragments.FlickrPicturesFragment;
 import zmuzik.slidingpuzzle.ui.fragments.SavedPicturesFragment;
@@ -23,6 +28,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
+    final String[] GRID_SIZES = {
+            "3x3", "3x4", "3x5", "3x6",
+            "4x4", "4x5", "4x6",
+            "5x5", "5x6", "6x6",};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +83,33 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_change_grid_size) {
+            changeGridSize();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void changeGridSize() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        int prevPosition = PrefsHelper.get().getGridDimsPosition();
+        builder.setTitle(getString(R.string.select_grid_size));
+        builder.setSingleChoiceItems(GRID_SIZES, prevPosition, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                String positionsStr = GRID_SIZES[item];
+                StringTokenizer tokenizer = new StringTokenizer(positionsStr, "x");
+                String shorterStr = tokenizer.nextToken();
+                String longerStr = tokenizer.nextToken();
+                PrefsHelper.get().setGridDimsPosition(item);
+                PrefsHelper.get().setGridDimShort(Integer.parseInt(shorterStr));
+                PrefsHelper.get().setGridDimLong(Integer.parseInt(longerStr));
+                dialog.dismiss();
+                Toast.makeText(MainActivity.this,
+                        getString(R.string.grid_size_selected_to) + positionsStr,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.show();
     }
 
     @Override

@@ -1,8 +1,6 @@
 package zmuzik.slidingpuzzle.gfx;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -12,30 +10,26 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.Random;
 
-import zmuzik.slidingpuzzle.model.Tile;
-import zmuzik.slidingpuzzle.helpers.BitmapHelper;
 import zmuzik.slidingpuzzle.helpers.PrefsHelper;
+import zmuzik.slidingpuzzle.model.Tile;
 
 public class NewPuzzleBoardView extends View {
 
     final String TAG = this.getClass().getSimpleName();
-    int mGridDimX = PrefsHelper.get().getGridDimLong();
-    int mGridDimY = PrefsHelper.get().getGridDimShort();
+    int mTilesX = PrefsHelper.get().getGridDimLong();
+    int mTilesY = PrefsHelper.get().getGridDimShort();
     Tile[][] mTiles;
-    String mainPictureFileName;
     Context mContext;
 
     TextPaint mTextPaint;
     Rect mBounds;
 
     Bitmap mCompletePictureBitmap;
-    Bitmap mOriginalBitmap;
-    boolean mIsViewDimAdjusted = false;
 
     private Paint mPaint;
     private int mViewWidth;
@@ -49,29 +43,25 @@ public class NewPuzzleBoardView extends View {
     private int mBlackTileX, mBlackTileY;
     private boolean mPuzzleComplete;
 
+    public NewPuzzleBoardView(Context context) {
+        super(context);
+        mContext = context;
+        initPaints();
+    }
+
     public NewPuzzleBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
+        initPaints();
     }
 
     public NewPuzzleBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
+        initPaints();
     }
 
-    public NewPuzzleBoardView(Context context) {
-        super(context);
-        mContext = context;
-    }
-
-    public void setFile(String fileUri) {
-        mainPictureFileName = fileUri;
-        init();
-    }
-
-    void init() {
-        Log.d(TAG, "init method started");
-
+    public void initPaints() {
         mPaint = new Paint();
         mPaint.setStrokeWidth(0);
         mPaint.setFilterBitmap(false);
@@ -83,30 +73,32 @@ public class NewPuzzleBoardView extends View {
         mTextPaint.setStyle(Paint.Style.FILL);
         mTextPaint.setStrokeWidth(3);
         mBounds = new Rect();
+    }
 
-        mOriginalBitmap = BitmapHelper.decodeFile(mainPictureFileName);
+    public void setDimensions(int width, int height) {
+        ViewGroup.LayoutParams params = getLayoutParams();
+        params.height = height;
+        params.width = width;
+        setLayoutParams(params);
+        invalidate();
 
-        int x = mOriginalBitmap.getWidth();
-        int y = mOriginalBitmap.getHeight();
+        mTileWidth = width / mTilesX;
+        mTileHeight = height / mTilesY;
+        mViewWidth = width;
+        mViewHeight = height;
+    }
 
-        // set orientation according to the picture dimensions
-        Activity activity = (Activity) mContext;
-        if (x > y) {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            int temp = mGridDimX;
-            mGridDimX = mGridDimY;
-            mGridDimY = temp;
-        }
+    public void setBitmap(Bitmap bitmap) {
+        mCompletePictureBitmap = Bitmap.createScaledBitmap(bitmap, mViewWidth, mViewHeight, true);
+        initTiles();
     }
 
     void initTiles() {
         Log.d(TAG, "initializing tiles");
-        mTiles = new Tile[mGridDimX][mGridDimY];
+        mTiles = new Tile[mTilesX][mTilesY];
         int tileNumber = 1;
-        for (int y = 0; y < mGridDimY; y++) {
-            for (int x = 0; x < mGridDimX; x++) {
+        for (int y = 0; y < mTilesY; y++) {
+            for (int x = 0; x < mTilesX; x++) {
                 Bitmap bitmap = Bitmap.createBitmap(mCompletePictureBitmap, x * mTileWidth, y * mTileHeight,
                         mTileWidth, mTileHeight);
                 mTiles[x][y] = new Tile(x, y, bitmap, tileNumber);
@@ -114,50 +106,12 @@ public class NewPuzzleBoardView extends View {
             }
         }
         // sets the black tile to the last tile of the grid
-        mBlackTileX = mGridDimX - 1;
-        mBlackTileY = mGridDimY - 1;
+        mBlackTileX = mTilesX - 1;
+        mBlackTileY = mTilesY - 1;
         // save the tiles' starting position
         mCompletePictureBitmap.recycle();
         mCompletePictureBitmap = null;
         shuffle();
-    }
-
-    @Override
-    protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
-        Log.d(TAG, "onSizeChanged: width: " + width + " height: " + height);
-        Log.d(TAG, "picture : width: " + mOriginalBitmap.getWidth() + " height: " + mOriginalBitmap.getHeight());
-
-        float pictureSideRatio = (float) mOriginalBitmap.getWidth() / mOriginalBitmap.getHeight();
-        float viewSideRatio = (float) width / height;
-
-        if (!mIsViewDimAdjusted) {
-            if (pictureSideRatio > viewSideRatio) {
-                mViewWidth = width;
-                mViewHeight = (int) (width / pictureSideRatio);
-            } else {
-                mViewHeight = height;
-                mViewWidth = (int) (height * pictureSideRatio);
-            }
-            mViewWidth = mViewWidth - (mViewWidth % mGridDimX);
-            mViewHeight = mViewHeight - (mViewHeight % mGridDimY);
-            mIsViewDimAdjusted = true;
-        }
-
-        if (width != mViewWidth || height != mViewHeight) {
-            LayoutParams params = getLayoutParams();
-            params.height = mViewHeight;
-            params.width = mViewWidth;
-            setLayoutParams(params);
-            invalidate();
-            return;
-        }
-
-        mTileWidth = width / mGridDimX;
-        mTileHeight = height / mGridDimY;
-
-        mCompletePictureBitmap = Bitmap.createScaledBitmap(mOriginalBitmap, mViewWidth, mViewHeight, true);
-        Log.d(TAG, "disposing original bitmap");
-        initTiles();
     }
 
     @Override
@@ -167,8 +121,8 @@ public class NewPuzzleBoardView extends View {
         }
 
         int tileNumber = 0;
-        for (int i = 0; i < mGridDimX; i++) {
-            for (int j = 0; j < mGridDimY; j++) {
+        for (int i = 0; i < mTilesX; i++) {
+            for (int j = 0; j < mTilesY; j++) {
                 Tile t = mTiles[i][j];
                 tileNumber = t.getTileNumber();
                 if (mPuzzleComplete || i != mBlackTileX || j != mBlackTileY) {
@@ -201,8 +155,8 @@ public class NewPuzzleBoardView extends View {
     }
 
     private boolean isPuzzleComplete() {
-        for (int i = 0; i < mGridDimX; i++) {
-            for (int j = 0; j < mGridDimY; j++) {
+        for (int i = 0; i < mTilesX; i++) {
+            for (int j = 0; j < mTilesY; j++) {
                 Tile t = mTiles[i][j];
                 if (t.getOrigX() != i || t.getOrigY() != j) {
                     Log.d(TAG, "not complete: " + i + j);
@@ -228,16 +182,16 @@ public class NewPuzzleBoardView extends View {
     public void shuffle() {
         Random random = new Random();
         int position;
-        int steps = mGridDimX * mGridDimY * 2;
+        int steps = mTilesX * mTilesY * 2;
         for (int i = 0; i < steps; i++) {
             if ((i % 2) == 1) {
-                position = random.nextInt(mGridDimX - 1);
+                position = random.nextInt(mTilesX - 1);
                 if (position >= mBlackTileX)
                     position++;
                 Log.d(TAG, "shuffle play " + position + " " + mBlackTileY);
                 playTile(position, mBlackTileY);
             } else {
-                position = random.nextInt(mGridDimY - 1);
+                position = random.nextInt(mTilesY - 1);
                 if (position >= mBlackTileY)
                     position++;
                 Log.d(TAG, "shuffle play " + mBlackTileX + " " + position);
@@ -249,9 +203,6 @@ public class NewPuzzleBoardView extends View {
     public int playTile(int x, int y) {
         int totalMovedTiles = 0;
         Tile temp = mTiles[mBlackTileX][mBlackTileY];
-        Log.d(TAG, "black: " + mBlackTileX + " " + mBlackTileY);
-        Log.d(TAG, "active: " + mActiveTileX + " " + mActiveTileY);
-        Log.d(TAG, "xy: " + x + " " + y);
         if (x == mBlackTileX) {
             if (y < mBlackTileY) {
                 for (int i = mBlackTileY - 1; i >= y; i--) {
@@ -281,7 +232,6 @@ public class NewPuzzleBoardView extends View {
         mTiles[x][y] = temp;
         mBlackTileX = x;
         mBlackTileY = y;
-        Log.d(TAG, "total moved tiles " + totalMovedTiles);
         return totalMovedTiles;
     }
 

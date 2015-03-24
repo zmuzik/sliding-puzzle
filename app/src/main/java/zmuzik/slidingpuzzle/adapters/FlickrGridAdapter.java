@@ -1,6 +1,7 @@
 package zmuzik.slidingpuzzle.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.widget.ImageView;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import zmuzik.slidingpuzzle.App;
 import zmuzik.slidingpuzzle.R;
 import zmuzik.slidingpuzzle.flickr.Photo;
+import zmuzik.slidingpuzzle.ui.activities.GameActivity;
 
 public class FlickrGridAdapter extends PicturesGridAdapter {
 
@@ -67,5 +69,11 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
         mFilePaths.remove(position);
         mPhotos.remove(position);
         notifyItemRemoved(position);
+    }
+
+    @Override public void runGame(int position) {
+        Intent intent = new Intent(mContext, GameActivity.class);
+        intent.putExtra("FILE_URI", mPhotos.get(position).getThumbUrl());
+        mContext.startActivity(intent);
     }
 }

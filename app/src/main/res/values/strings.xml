@@ -13,5 +13,6 @@
     <string name="enter_keywords">Enter keyword(s)</string>
     <string name="title_activity_android_flickr">AndroidFlickrActivity</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="select_grid_size">Select grid size</string>
+    <string name="grid_size_selected_to">"Grid size was set to "</string>
 </resources>
