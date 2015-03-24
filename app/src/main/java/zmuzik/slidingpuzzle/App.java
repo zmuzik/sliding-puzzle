@@ -68,4 +68,8 @@ public class App extends Application {
             return 0;
         }
     }
+
+    public boolean isTablet() {
+        return getResources().getBoolean(R.bool.isTablet);
+    }
 }

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import java.util.Arrays;
 import java.util.List;
 
+import zmuzik.slidingpuzzle.App;
 import zmuzik.slidingpuzzle.Conf;
 import zmuzik.slidingpuzzle.R;
 import zmuzik.slidingpuzzle.adapters.PicturesGridAdapter;
@@ -42,7 +43,7 @@ public class SavedPicturesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(getLayoutId(), container, false);
 
-        int columns = (isHorizontal()) ? Conf.GRID_COLUMNS_LANDSCAPE : Conf.GRID_COLUMNS_PORTRAIT;
+        int columns = getColumnsNumber();
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -57,6 +58,14 @@ public class SavedPicturesFragment extends Fragment {
 
     boolean isHorizontal() {
         return getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    int getColumnsNumber() {
+        if (App.get().isTablet()) {
+            return isHorizontal() ? Conf.GRID_COLUMNS_LANDSCAPE_TABLET : Conf.GRID_COLUMNS_PORTRAIT_TABLET;
+        } else {
+            return isHorizontal() ? Conf.GRID_COLUMNS_LANDSCAPE_HANDHELD : Conf.GRID_COLUMNS_PORTRAIT_HANDHELD;
+        }
     }
 
     public List<String> getPictures() {
