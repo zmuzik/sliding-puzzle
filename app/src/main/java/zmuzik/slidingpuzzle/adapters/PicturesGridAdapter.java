@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
@@ -33,11 +34,13 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public SquareImageView image;
         public ImageView orientationIcon;
+        public ProgressBar progressBar;
 
         public ViewHolder(View v) {
             super(v);
             image = (SquareImageView) v.findViewById(R.id.image);
             orientationIcon = (ImageView) v.findViewById(R.id.orientationIcon);
+            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         }
     }
 
@@ -62,11 +65,11 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         final String uriString = mFilePaths.get(position);
         Picasso.with(App.get()).load(uriString)
                 .resize(mDim, mDim)
-                .placeholder(R.drawable.ic_action_autorenew)
                 .centerCrop()
                 .into(holder.image, new Callback() {
                     @Override public void onSuccess() {
                         Resources res = App.get().getResources();
+                        holder.progressBar.setVisibility(View.GONE);
                         if (BitmapHelper.isBitmapHorizontal(uriString)) {
                             holder.orientationIcon.setImageDrawable(
                                     res.getDrawable(R.drawable.ic_action_hardware_phone_android_horiz));
