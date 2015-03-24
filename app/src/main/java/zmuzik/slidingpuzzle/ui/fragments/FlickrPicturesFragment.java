@@ -3,12 +3,15 @@ package zmuzik.slidingpuzzle.ui.fragments;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,8 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.inject(this, rootView);
+        addKeywordEtListeners();
+
         return rootView;
     }
 
@@ -48,12 +53,45 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
         return R.layout.fragment_flickr_pictures_grid;
     }
 
-    @OnClick(R.id.searchBtn) void onClick(View v) {
+    @OnClick(R.id.searchBtn) void onSearchBtnClick(View v) {
         //hide virtual keyboard
-        InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        if (v != null) {
+            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
 
         new FlickrCaller(keywordEt.getText().toString(), v).execute();
+    }
+
+    void addKeywordEtListeners() {
+        keywordEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    onSearchBtnClick(searchBtn);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        keywordEt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+                            searchBtn.requestFocus();
+                            onSearchBtnClick(searchBtn);
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     private class FlickrCaller extends AsyncTask<Void, Void, Void> {
