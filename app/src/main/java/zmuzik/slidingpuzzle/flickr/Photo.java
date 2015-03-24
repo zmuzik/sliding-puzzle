@@ -10,6 +10,42 @@ public class Photo {
     int ispublic;
     int isfriend;
     int isfamily;
+    int height_l;
+    int width_l;
+    String url_c;
+    String url_o;
+
+    public String getUrl_c() {
+        return url_c;
+    }
+
+    public void setUrl_c(String url_c) {
+        this.url_c = url_c;
+    }
+
+    public String getUrl_o() {
+        return url_o;
+    }
+
+    public void setUrl_o(String url_o) {
+        this.url_o = url_o;
+    }
+
+    public int getHeight_l() {
+        return height_l;
+    }
+
+    public void setHeight_l(int height_l) {
+        this.height_l = height_l;
+    }
+
+    public int getWidth_l() {
+        return width_l;
+    }
+
+    public void setWidth_l(int width_l) {
+        this.width_l = width_l;
+    }
 
     public String getId() {
         return id;

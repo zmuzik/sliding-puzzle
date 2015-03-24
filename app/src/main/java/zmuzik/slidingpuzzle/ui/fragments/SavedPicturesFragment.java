@@ -51,9 +51,13 @@ public class SavedPicturesFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new PicturesGridAdapter(getActivity(), getPictures(), columns);
+        mAdapter = getAdapter(columns);
         mRecyclerView.setAdapter(mAdapter);
         return rootView;
+    }
+
+    public PicturesGridAdapter getAdapter(int columns) {
+        return new PicturesGridAdapter(getActivity(), getPictures(), columns);
     }
 
     boolean isHorizontal() {

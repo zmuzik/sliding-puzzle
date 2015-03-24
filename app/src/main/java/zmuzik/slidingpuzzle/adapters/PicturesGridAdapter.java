@@ -26,10 +26,10 @@ import zmuzik.slidingpuzzle.ui.activities.GameActivity;
 
 public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapter.ViewHolder> {
 
-    private List<String> mFilePaths;
-    private Context mContext;
-    private int mColumns;
-    int mDim;
+    protected List<String> mFilePaths;
+    protected Context mContext;
+    protected int mColumns;
+    protected int mDim;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public SquareImageView image;
@@ -68,15 +68,8 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
                 .centerCrop()
                 .into(holder.image, new Callback() {
                     @Override public void onSuccess() {
-                        Resources res = App.get().getResources();
                         holder.progressBar.setVisibility(View.GONE);
-                        if (BitmapHelper.isBitmapHorizontal(uriString)) {
-                            holder.orientationIcon.setImageDrawable(
-                                    res.getDrawable(R.drawable.ic_action_hardware_phone_android_horiz));
-                        } else {
-                            holder.orientationIcon.setImageDrawable(
-                                    res.getDrawable(R.drawable.ic_action_hardware_phone_android));
-                        }
+                        setOrientationIcon(holder.orientationIcon, position);
                     }
 
                     @Override public void onError() {
@@ -92,6 +85,17 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
                 mContext.startActivity(intent);
             }
         });
+    }
+
+    public void setOrientationIcon(ImageView orientationIcon, int position) {
+        Resources res = App.get().getResources();
+        if (BitmapHelper.isBitmapHorizontal(mFilePaths.get(position))) {
+            orientationIcon.setImageDrawable(
+                    res.getDrawable(R.drawable.ic_action_hardware_phone_android_horiz));
+        } else {
+            orientationIcon.setImageDrawable(
+                    res.getDrawable(R.drawable.ic_action_hardware_phone_android));
+        }
     }
 
     @Override

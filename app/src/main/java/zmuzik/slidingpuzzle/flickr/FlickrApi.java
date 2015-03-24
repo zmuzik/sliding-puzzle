@@ -9,7 +9,7 @@ public interface FlickrApi {
     @GET("/?method=flickr.photos.search" +
             "&format=json" +
             "&nojsoncallback=1" +
-            "&extras=url_l" +
+            "&extras=url_l,o_dims,url_c,url_o" +
             "&per_page=12"
             + "&api_key=" + Conf.FLICKR_API_KEY) SearchResponse getPhotos(@Query("text") String query);
 

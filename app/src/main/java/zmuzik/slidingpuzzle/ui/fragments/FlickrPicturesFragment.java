@@ -21,7 +21,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import zmuzik.slidingpuzzle.App;
 import zmuzik.slidingpuzzle.R;
-import zmuzik.slidingpuzzle.adapters.PicturesGridAdapter;
+import zmuzik.slidingpuzzle.adapters.FlickrGridAdapter;
 import zmuzik.slidingpuzzle.flickr.Photo;
 import zmuzik.slidingpuzzle.flickr.SearchResponse;
 
@@ -39,14 +39,13 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
         return rootView;
     }
 
+    public FlickrGridAdapter getAdapter(int columns) {
+        return new FlickrGridAdapter(getActivity(), new ArrayList<Photo>(), columns);
+    }
+
     @Override public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.reset(this);
-    }
-
-    @Override
-    public List<String> getPictures() {
-        return new ArrayList<>();
     }
 
     public int getLayoutId() {
@@ -118,14 +117,14 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
 
         @Override protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            PicturesGridAdapter adapter = (PicturesGridAdapter) mRecyclerView.getAdapter();
+            FlickrGridAdapter adapter = (FlickrGridAdapter) mRecyclerView.getAdapter();
             //remove all items in the list
             while (adapter.getItemCount() > 0) {
                 adapter.remove(0);
             }
             //add new photos
             for (Photo photo : photos) {
-                adapter.add(photo.getThumbUrl());
+                adapter.add(photo);
             }
             buttonToDisable.setEnabled(true);
         }
