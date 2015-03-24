@@ -13,6 +13,7 @@ import com.squareup.picasso.Target;
 
 import zmuzik.slidingpuzzle.R;
 import zmuzik.slidingpuzzle.gfx.NewPuzzleBoardView;
+import zmuzik.slidingpuzzle.helpers.PrefsHelper;
 
 public class GameActivity extends Activity {
 
@@ -82,8 +83,11 @@ public class GameActivity extends Activity {
             mBoardHeight = mScreenHeight;
             mBoardWidth = (int) (mScreenHeight * origPictureSideRatio);
         }
-        mBoardWidth = mBoardWidth - (mBoardWidth % 4);
-        mBoardHeight = mBoardHeight - (mBoardHeight % 4);
+        PrefsHelper ph = PrefsHelper.get();
+        int widthMultiple = (mBoardWidth > mBoardHeight) ? ph.getGridDimLong() : ph.getGridDimShort();
+        int heightMultiple = (mBoardWidth > mBoardHeight) ? ph.getGridDimShort() : ph.getGridDimLong();
+        mBoardWidth = mBoardWidth - (mBoardWidth % widthMultiple);
+        mBoardHeight = mBoardHeight - (mBoardHeight % heightMultiple);
 
         board.setDimensions(mBoardWidth, mBoardHeight);
     }
