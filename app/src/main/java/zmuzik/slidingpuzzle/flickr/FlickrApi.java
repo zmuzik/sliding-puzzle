@@ -10,6 +10,7 @@ public interface FlickrApi {
             "&format=json" +
             "&nojsoncallback=1" +
             "&extras=url_l,o_dims,url_c,url_o" +
+            "&sort=interestingness-desc" +
             "&per_page=12"
             + "&api_key=" + Conf.FLICKR_API_KEY) SearchResponse getPhotos(@Query("text") String query);
 
