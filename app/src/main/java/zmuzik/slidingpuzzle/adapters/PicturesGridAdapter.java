@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zmuzik.slidingpuzzle.App;
+import zmuzik.slidingpuzzle.Conf;
 import zmuzik.slidingpuzzle.R;
 import zmuzik.slidingpuzzle.gfx.SquareImageView;
 import zmuzik.slidingpuzzle.helpers.BitmapHelper;
@@ -30,17 +32,20 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     protected Context mContext;
     protected int mColumns;
     protected int mDim;
+    protected int mPage = 1;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public SquareImageView image;
         public ImageView orientationIcon;
         public ProgressBar progressBar;
+        public TextView nextTv;
 
         public ViewHolder(View v) {
             super(v);
             image = (SquareImageView) v.findViewById(R.id.image);
             orientationIcon = (ImageView) v.findViewById(R.id.orientationIcon);
             progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
+            nextTv = (TextView) v.findViewById(R.id.nextTv);
         }
     }
 
@@ -62,7 +67,17 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        if (isFooterItem(position)) {
+            bindFooterItem(holder, position);
+        } else {
+            bindNormalItem(holder, position);
+        }
+    }
+
+    void bindNormalItem(final ViewHolder holder, final int position) {
         final String uriString = mFilePaths.get(position);
+        holder.nextTv.setVisibility(View.GONE);
+        holder.progressBar.setVisibility(View.VISIBLE);
         Picasso.with(App.get()).load(uriString)
                 .resize(mDim, mDim)
                 .centerCrop()
@@ -91,6 +106,27 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         mContext.startActivity(intent);
     }
 
+    void bindFooterItem(final ViewHolder holder, final int position) {
+        holder.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.transparent_pixel));
+        holder.progressBar.setVisibility(View.GONE);
+        holder.nextTv.setVisibility(View.VISIBLE);
+        holder.nextTv.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                showNextPage();
+            }
+        });
+    }
+
+    void showNextPage() {
+        int startPosition = getItemCount() - 1;
+        mPage++;
+        notifyItemChanged(startPosition++);
+        int endPosition = getItemCount();
+        for (int i = startPosition; i < endPosition; i++) {
+            notifyItemInserted(i);
+        }
+    }
+
     public void setOrientationIcon(ImageView orientationIcon, int position) {
         Resources res = App.get().getResources();
         if (BitmapHelper.isBitmapHorizontal(mFilePaths.get(position))) {
@@ -102,10 +138,30 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         }
     }
 
+    int getPageSize() {
+        return Conf.PAGE_SIZE_LOCAL;
+    }
+
+    int getDisplayedPicsCount() {
+        if (mFilePaths == null) return 0;
+        return (mFilePaths.size() < getPageSize() * mPage) ? mFilePaths.size() : getPageSize() * mPage;
+    }
+
+    boolean isMoreToDisplay() {
+        if (mFilePaths == null) return false;
+        return mFilePaths.size() > getPageSize() * mPage;
+    }
+
     @Override
     public int getItemCount() {
-        return (mFilePaths == null) ? 0 : mFilePaths.size();
+        if (mFilePaths == null) return 0;
+        return (isMoreToDisplay()) ? getDisplayedPicsCount() + 1 : getDisplayedPicsCount();
     }
+
+    boolean isFooterItem(int position) {
+        return position == getItemCount() - 1 && isMoreToDisplay();
+    }
+
 
     public void add(String item) {
         if (mFilePaths == null) mFilePaths = new ArrayList<>();

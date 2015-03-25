@@ -30,7 +30,9 @@ public class SavedPicturesFragment extends Fragment {
             BitmapHelper.ASSET_PREFIX + "game_pic_5.jpg",
             BitmapHelper.ASSET_PREFIX + "game_pic_6.jpg",
             BitmapHelper.ASSET_PREFIX + "game_pic_8.jpg",
-            BitmapHelper.ASSET_PREFIX + "game_pic_9.jpg"};
+            BitmapHelper.ASSET_PREFIX + "game_pic_9.jpg",
+            BitmapHelper.ASSET_PREFIX + "game_pic_10.jpg",
+            BitmapHelper.ASSET_PREFIX + "game_pic_11.jpg"};
 
     RecyclerView mRecyclerView;
     RecyclerView.LayoutManager mLayoutManager;

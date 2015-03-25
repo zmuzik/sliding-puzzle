@@ -15,4 +15,5 @@
 
     <string name="select_grid_size">Select grid size</string>
     <string name="grid_size_selected_to">"Grid size was set to "</string>
+    <string name="more">More…</string>
 </resources>

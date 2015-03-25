@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zmuzik.slidingpuzzle.App;
+import zmuzik.slidingpuzzle.Conf;
 import zmuzik.slidingpuzzle.R;
 import zmuzik.slidingpuzzle.flickr.Photo;
 import zmuzik.slidingpuzzle.ui.activities.GameActivity;
@@ -36,6 +37,10 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
             orientationIcon.setImageDrawable(
                     res.getDrawable(R.drawable.ic_action_hardware_phone_android));
         }
+    }
+
+    int getPageSize() {
+        return Conf.PAGE_SIZE_FLICKR;
     }
 
     public void add(Photo photo) {

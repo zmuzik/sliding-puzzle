@@ -26,11 +26,23 @@
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:layout_gravity="center"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"/>
+
+        <TextView
+            android:id="@+id/nextTv"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:padding="30dp"
+            android:text="@string/more"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 </FrameLayout>
