@@ -63,7 +63,7 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
 
     @Override public void runGame(int position) {
         Intent intent = new Intent(mContext, GameActivity.class);
-        intent.putExtra("FILE_URI", mPhotos.get(position).getThumbUrl());
+        intent.putExtra("FILE_URI", mPhotos.get(position).getFullPicUrl());
         mContext.startActivity(intent);
     }
 }
