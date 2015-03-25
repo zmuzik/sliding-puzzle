@@ -61,21 +61,6 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
         notifyItemInserted(position);
     }
 
-    public void remove(Photo photo) {
-        if (mFilePaths == null) return;
-        int position = mFilePaths.indexOf(photo.getThumbUrl());
-        mFilePaths.remove(position);
-        mPhotos.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    @Override public void remove(int position) {
-        if (mFilePaths == null) return;
-        mFilePaths.remove(position);
-        mPhotos.remove(position);
-        notifyItemRemoved(position);
-    }
-
     @Override public void runGame(int position) {
         Intent intent = new Intent(mContext, GameActivity.class);
         intent.putExtra("FILE_URI", mPhotos.get(position).getThumbUrl());

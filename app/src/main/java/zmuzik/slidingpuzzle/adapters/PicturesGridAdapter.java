@@ -162,31 +162,10 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         return position == getItemCount() - 1 && isMoreToDisplay();
     }
 
-
-    public void add(String item) {
-        if (mFilePaths == null) mFilePaths = new ArrayList<>();
-        if (mFilePaths.contains(item)) return;
-        mFilePaths.add(item);
-        notifyItemInserted(getItemCount() - 1);
-    }
-
     public void add(String item, int position) {
         if (mFilePaths == null) mFilePaths = new ArrayList<>();
         if (mFilePaths.contains(item)) return;
         mFilePaths.add(position, item);
         notifyItemInserted(position);
-    }
-
-    public void remove(String item) {
-        if (mFilePaths == null) return;
-        int position = mFilePaths.indexOf(item);
-        mFilePaths.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    public void remove(int position) {
-        if (mFilePaths == null) return;
-        mFilePaths.remove(position);
-        notifyItemRemoved(position);
     }
 }

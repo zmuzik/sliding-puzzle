@@ -12,13 +12,17 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Bus;
 
+import java.util.List;
+
 import retrofit.RestAdapter;
 import zmuzik.slidingpuzzle.flickr.FlickrApi;
+import zmuzik.slidingpuzzle.flickr.Photo;
 
 public class App extends Application {
     private final String TAG = this.getClass().getSimpleName();
     private static final Bus BUS = new Bus();
     private static App mApp;
+    private List<Photo> mFlickrPhotos;
 
     private SQLiteDatabase mDb;
     private FlickrApi mFlickrApi;
@@ -49,6 +53,14 @@ public class App extends Application {
 
     public FlickrApi getFlickrApi() {
         return mFlickrApi;
+    }
+
+    public List<Photo> getFlickrPhotos() {
+        return mFlickrPhotos;
+    }
+
+    public void setFlickrPhotos(List<Photo> photos) {
+        mFlickrPhotos = photos;
     }
 
     public boolean isDebuggable() {

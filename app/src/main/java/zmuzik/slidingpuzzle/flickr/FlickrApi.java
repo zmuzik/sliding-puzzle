@@ -11,7 +11,7 @@ public interface FlickrApi {
             "&nojsoncallback=1" +
             "&extras=url_l,o_dims,url_c,url_o" +
             "&sort=interestingness-desc" +
-            "&per_page=" + Conf.PAGE_SIZE_FLICKR
+            "&per_page=" + Conf.FLICKR_REQUEST_IMAGES
             + "&api_key=" + Conf.FLICKR_API_KEY) SearchResponse getPhotos(@Query("text") String query);
 
 }

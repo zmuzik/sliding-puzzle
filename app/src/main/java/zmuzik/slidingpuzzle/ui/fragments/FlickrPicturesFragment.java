@@ -11,7 +11,9 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
 
     @InjectView(R.id.searchBtn) Button searchBtn;
     @InjectView(R.id.keywordEt) EditText keywordEt;
+    @InjectView(R.id.progressBar) ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,7 +62,21 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
             inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
 
-        new FlickrCaller(keywordEt.getText().toString(), v).execute();
+        if (!App.get().isOnline()) {
+            Toast.makeText(getActivity(),
+                    getActivity().getResources().getString(R.string.internet_unavailable),
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (keywordEt == null || keywordEt.getText() == null || "".equals(keywordEt.getText().toString())) {
+            Toast.makeText(getActivity(),
+                    getActivity().getResources().getString(R.string.keyword_not_supplied),
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        new GetFlickrPicsPageTask(keywordEt.getText().toString(), v).execute();
     }
 
     void addKeywordEtListeners() {
@@ -93,13 +110,12 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
         });
     }
 
-    private class FlickrCaller extends AsyncTask<Void, Void, Void> {
+    private class GetFlickrPicsPageTask extends AsyncTask<Void, Void, Void> {
 
         String query;
-        List<Photo> photos;
         View buttonToDisable;
 
-        public FlickrCaller(String query, View v) {
+        public GetFlickrPicsPageTask(String query, View v) {
             this.query = query;
             buttonToDisable = v;
         }
@@ -107,26 +123,24 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
         @Override protected void onPreExecute() {
             super.onPreExecute();
             buttonToDisable.setEnabled(false);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override protected Void doInBackground(Void... params) {
             SearchResponse resp = App.get().getFlickrApi().getPhotos(keywordEt.getText().toString());
-            photos = resp.getPhotos().getPhoto();
+            if (resp != null && resp.getPhotos() != null)
+                App.get().setFlickrPhotos(resp.getPhotos().getPhoto());
             return null;
         }
 
         @Override protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            FlickrGridAdapter adapter = (FlickrGridAdapter) mRecyclerView.getAdapter();
-            //remove all items in the list
-            while (adapter.getItemCount() > 0) {
-                adapter.remove(0);
-            }
-            //add new photos
-            for (Photo photo : photos) {
-                adapter.add(photo);
+            List<Photo> photos = App.get().getFlickrPhotos();
+            if (photos != null && photos.size() > 0 && isAdded()) {
+                mRecyclerView.setAdapter(new FlickrGridAdapter(getActivity(), photos, getColumnsNumber()));
             }
             buttonToDisable.setEnabled(true);
+            progressBar.setVisibility(View.GONE);
         }
     }
 }
