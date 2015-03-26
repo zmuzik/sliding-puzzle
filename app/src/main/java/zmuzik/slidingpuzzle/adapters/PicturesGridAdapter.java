@@ -88,6 +88,9 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
                     @Override public void onError() {
                         //Toast.makeText(mContext, uriString + " failed", Toast.LENGTH_SHORT).show();
+                        Resources res = mContext.getResources();
+                        holder.progressBar.setVisibility(View.GONE);
+                        holder.image.setImageDrawable(res.getDrawable(R.drawable.ic_action_image_photo));
                         Log.e("PicturesGridAdapter", uriString + " failed");
                     }
                 });
