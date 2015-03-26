@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.Random;
 
+import zmuzik.slidingpuzzle.R;
 import zmuzik.slidingpuzzle.helpers.PrefsHelper;
 import zmuzik.slidingpuzzle.model.Tile;
 
@@ -171,7 +172,7 @@ public class PuzzleBoardView extends View {
             }
         }
         Log.d(TAG, "puzzle complete");
-        Toast.makeText(getContext(), "Congratulations!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getContext().getText(R.string.congrats), Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -189,18 +190,14 @@ public class PuzzleBoardView extends View {
         Random random = new Random();
         int position;
         int steps = mTilesX * mTilesY * 2;
-        for (int i = 0; i < steps; i++) {
-            if ((i % 2) == 1) {
+        for (int step = 0; step < steps; step++) {
+            if ((step % 2) == 1) {
                 position = random.nextInt(mTilesX - 1);
-                if (position >= mBlackTileX)
-                    position++;
-                Log.d(TAG, "shuffle play " + position + " " + mBlackTileY);
+                if (position >= mBlackTileX) position++;
                 playTile(position, mBlackTileY);
             } else {
                 position = random.nextInt(mTilesY - 1);
-                if (position >= mBlackTileY)
-                    position++;
-                Log.d(TAG, "shuffle play " + mBlackTileX + " " + position);
+                if (position >= mBlackTileY) position++;
                 playTile(mBlackTileX, position);
             }
             invalidate();
@@ -208,44 +205,37 @@ public class PuzzleBoardView extends View {
         mGameInProgress = true;
     }
 
-    public int playTile(int x, int y) {
-        int totalMovedTiles = 0;
+    public void playTile(int x, int y) {
         Tile temp = mTiles[mBlackTileX][mBlackTileY];
         if (x == mBlackTileX) {
             if (y < mBlackTileY) {
                 for (int i = mBlackTileY - 1; i >= y; i--) {
                     mTiles[mBlackTileX][i + 1] = mTiles[mBlackTileX][i];
-                    totalMovedTiles++;
-                    Log.d(TAG, mBlackTileX + " " + (i + 1) + " -> " + mBlackTileX + " " + i);
                 }
             } else if (y > mBlackTileY) {
                 for (int i = mBlackTileY + 1; i <= y; i++) {
                     mTiles[mBlackTileX][i - 1] = mTiles[mBlackTileX][i];
-                    totalMovedTiles++;
                 }
             }
         } else if (y == mBlackTileY) {
             if (x < mBlackTileX) {
                 for (int i = mBlackTileX - 1; i >= x; i--) {
                     mTiles[i + 1][mBlackTileY] = mTiles[i][mBlackTileY];
-                    totalMovedTiles++;
                 }
             } else if (x > mBlackTileX) {
                 for (int i = mBlackTileX + 1; i <= x; i++) {
                     mTiles[i - 1][mBlackTileY] = mTiles[i][mBlackTileY];
-                    totalMovedTiles++;
                 }
             }
         }
         mTiles[x][y] = temp;
         mBlackTileX = x;
         mBlackTileY = y;
-        return totalMovedTiles;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!mGameInProgress) return true;
+        if (!mGameInProgress || event == null) return true;
 
         int eventX = (int) event.getX();
         int eventY = (int) event.getY();
@@ -294,7 +284,6 @@ public class PuzzleBoardView extends View {
             mMoveDeltaY = 0;
             invalidate();
         }
-
         return true;
     }
 }
