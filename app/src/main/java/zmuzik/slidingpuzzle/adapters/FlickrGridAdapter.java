@@ -3,6 +3,7 @@ package zmuzik.slidingpuzzle.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
@@ -32,6 +33,7 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
     @Override public void setOrientationIcon(ImageView orientationIcon, int position) {
         Resources res = App.get().getResources();
         Photo photo = mPhotos.get(position);
+        orientationIcon.setVisibility(View.VISIBLE);
         if (photo.getWidth_l() > photo.getHeight_l()) {
             orientationIcon.setImageDrawable(
                     res.getDrawable(R.drawable.ic_action_hardware_phone_android_horiz));
