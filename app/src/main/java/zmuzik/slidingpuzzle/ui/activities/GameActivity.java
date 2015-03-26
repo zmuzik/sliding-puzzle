@@ -22,14 +22,14 @@ import zmuzik.slidingpuzzle.App;
 import zmuzik.slidingpuzzle.R;
 import zmuzik.slidingpuzzle.flickr.Photo;
 import zmuzik.slidingpuzzle.flickr.Size;
-import zmuzik.slidingpuzzle.gfx.NewPuzzleBoardView;
+import zmuzik.slidingpuzzle.gfx.PuzzleBoardView;
 import zmuzik.slidingpuzzle.helpers.PrefsHelper;
 
 public class GameActivity extends Activity {
 
     final String TAG = this.getClass().getSimpleName();
 
-    NewPuzzleBoardView board;
+    PuzzleBoardView board;
     ProgressBar progressBar;
 
     int mScreenWidth;
@@ -44,7 +44,7 @@ public class GameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         resolveScreenDimensions();
-        board = (NewPuzzleBoardView) findViewById(R.id.board);
+        board = (PuzzleBoardView) findViewById(R.id.board);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         resolvePictureUri(new Callback() {
@@ -113,7 +113,7 @@ public class GameActivity extends Activity {
         return (mScreenWidth > mScreenHeight) ? mScreenWidth : mScreenHeight;
     }
 
-    void adjustBoardDimensions(NewPuzzleBoardView board, Bitmap bitmap) {
+    void adjustBoardDimensions(PuzzleBoardView board, Bitmap bitmap) {
         float screenSideRatio = (float) mScreenWidth / mScreenHeight;
         float origPictureSideRatio = (float) bitmap.getWidth() / bitmap.getHeight();
         if (origPictureSideRatio > screenSideRatio) {

@@ -18,11 +18,11 @@ import java.util.Random;
 import zmuzik.slidingpuzzle.helpers.PrefsHelper;
 import zmuzik.slidingpuzzle.model.Tile;
 
-public class NewPuzzleBoardView extends View {
+public class PuzzleBoardView extends View {
 
     final String TAG = this.getClass().getSimpleName();
-    int mTilesX = PrefsHelper.get().getGridDimLong();
-    int mTilesY = PrefsHelper.get().getGridDimShort();
+    int mTilesX;
+    int mTilesY;
     Tile[][] mTiles;
     Context mContext;
 
@@ -43,19 +43,19 @@ public class NewPuzzleBoardView extends View {
     private int mBlackTileX, mBlackTileY;
     private boolean mPuzzleComplete;
 
-    public NewPuzzleBoardView(Context context) {
+    public PuzzleBoardView(Context context) {
         super(context);
         mContext = context;
         initPaints();
     }
 
-    public NewPuzzleBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PuzzleBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         initPaints();
     }
 
-    public NewPuzzleBoardView(Context context, AttributeSet attrs) {
+    public PuzzleBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
         initPaints();
@@ -67,7 +67,6 @@ public class NewPuzzleBoardView extends View {
         mPaint.setFilterBitmap(false);
 
         mTextPaint = new TextPaint();
-        mTextPaint.setTextSize(40);
         mTextPaint.setColor(0xffffffff);
         mTextPaint.setShadowLayer(10, 0, 0, 0xff000000);
         mTextPaint.setStyle(Paint.Style.FILL);
@@ -81,11 +80,17 @@ public class NewPuzzleBoardView extends View {
         params.width = width;
         setLayoutParams(params);
         invalidate();
+        int shorterSideTiles =  PrefsHelper.get().getGridDimLong();
+        int longerSideTiles =  PrefsHelper.get().getGridDimShort();
+        mTilesX = width < height ? longerSideTiles : shorterSideTiles;
+        mTilesY = width < height ? shorterSideTiles : longerSideTiles;
 
         mTileWidth = width / mTilesX;
         mTileHeight = height / mTilesY;
         mViewWidth = width;
         mViewHeight = height;
+
+        mTextPaint.setTextSize(Math.max(mTileHeight, mTileWidth)/ 4);
     }
 
     public void setBitmap(Bitmap bitmap) {
