@@ -20,4 +20,5 @@
     <string name="keyword_not_supplied">Keyword(s) not supplied.</string>
     <string name="unable_to_load_flicker_picture">Unable to load picture from Flickr</string>
     <string name="picture_not_supplied">Picture not supplied</string>
+    <string name="shuffle">Shuffle</string>
 </resources>

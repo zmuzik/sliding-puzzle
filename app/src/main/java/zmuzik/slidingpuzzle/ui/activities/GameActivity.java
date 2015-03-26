@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class GameActivity extends Activity {
 
     PuzzleBoardView board;
     ProgressBar progressBar;
+    Button shuffleBtn;
 
     int mScreenWidth;
     int mScreenHeight;
@@ -46,6 +48,7 @@ public class GameActivity extends Activity {
         resolveScreenDimensions();
         board = (PuzzleBoardView) findViewById(R.id.board);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        shuffleBtn = (Button) findViewById(R.id.shuffleBtn);
 
         resolvePictureUri(new Callback() {
             @Override public void onFinished() {
@@ -81,11 +84,12 @@ public class GameActivity extends Activity {
             board.setVisibility(View.VISIBLE);
             adjustBoardDimensions(board, bitmap);
             board.setBitmap(bitmap);
+            shuffleBtn.setVisibility(View.VISIBLE);
         }
 
         @Override public void onBitmapFailed(Drawable errorDrawable) {
             progressBar.setVisibility(View.GONE);
-            Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_flicker_picture),Toast.LENGTH_LONG).show();
+            Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_flicker_picture), Toast.LENGTH_LONG).show();
             finish();
         }
 
@@ -111,6 +115,11 @@ public class GameActivity extends Activity {
 
     int getMaxScreenDim() {
         return (mScreenWidth > mScreenHeight) ? mScreenWidth : mScreenHeight;
+    }
+
+    public void shuffle(View v) {
+        if (board != null) board.shuffle();
+        shuffleBtn.setVisibility(View.GONE);
     }
 
     void adjustBoardDimensions(PuzzleBoardView board, Bitmap bitmap) {

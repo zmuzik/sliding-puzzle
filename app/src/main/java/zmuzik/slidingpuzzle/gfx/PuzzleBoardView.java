@@ -42,6 +42,8 @@ public class PuzzleBoardView extends View {
     private int mActiveTileX, mActiveTileY;
     private int mBlackTileX, mBlackTileY;
     private boolean mPuzzleComplete;
+    private boolean mGameInProgress = false;
+
 
     public PuzzleBoardView(Context context) {
         super(context);
@@ -116,7 +118,6 @@ public class PuzzleBoardView extends View {
         // save the tiles' starting position
         mCompletePictureBitmap.recycle();
         mCompletePictureBitmap = null;
-        shuffle();
     }
 
     @Override
@@ -125,7 +126,7 @@ public class PuzzleBoardView extends View {
             return;
         }
 
-        int tileNumber = 0;
+        int tileNumber;
         for (int i = 0; i < mTilesX; i++) {
             for (int j = 0; j < mTilesY; j++) {
                 Tile t = mTiles[i][j];
@@ -202,7 +203,9 @@ public class PuzzleBoardView extends View {
                 Log.d(TAG, "shuffle play " + mBlackTileX + " " + position);
                 playTile(mBlackTileX, position);
             }
+            invalidate();
         }
+        mGameInProgress = true;
     }
 
     public int playTile(int x, int y) {
@@ -242,6 +245,8 @@ public class PuzzleBoardView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (!mGameInProgress) return true;
+
         int eventX = (int) event.getX();
         int eventY = (int) event.getY();
         int action = event.getAction();
