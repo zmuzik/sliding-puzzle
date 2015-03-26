@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +65,9 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
 
     @Override public void runGame(int position) {
         Intent intent = new Intent(mContext, GameActivity.class);
-        intent.putExtra("FILE_URI", mPhotos.get(position).getFullPicUrl());
+        Gson gson = new Gson();
+        String photoStr = gson.toJson(mPhotos.get(position));
+        intent.putExtra("PHOTO", photoStr);
         mContext.startActivity(intent);
     }
 }

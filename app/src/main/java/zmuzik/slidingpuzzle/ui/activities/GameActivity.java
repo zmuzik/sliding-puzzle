@@ -5,57 +5,91 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.List;
+
+import zmuzik.slidingpuzzle.App;
 import zmuzik.slidingpuzzle.R;
+import zmuzik.slidingpuzzle.flickr.Photo;
+import zmuzik.slidingpuzzle.flickr.Size;
 import zmuzik.slidingpuzzle.gfx.NewPuzzleBoardView;
 import zmuzik.slidingpuzzle.helpers.PrefsHelper;
 
 public class GameActivity extends Activity {
 
-	final String TAG = this.getClass().getSimpleName();
+    final String TAG = this.getClass().getSimpleName();
+
+    NewPuzzleBoardView board;
+    ProgressBar progressBar;
 
     int mScreenWidth;
     int mScreenHeight;
     int mBoardWidth;
     int mBoardHeight;
 
-    String mFileUri;
-    Bitmap mBitmap;
-    Target mTarget;
+    public String mFileUri;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        final NewPuzzleBoardView board = (NewPuzzleBoardView) findViewById(R.id.board);
-        mFileUri = getIntent().getExtras().getString("FILE_URI");
-
         resolveScreenDimensions();
+        board = (NewPuzzleBoardView) findViewById(R.id.board);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        mTarget = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                mBitmap = bitmap;
-                setScreenOrientation(bitmap.getWidth(), bitmap.getHeight());
-                resolveScreenDimensions();
-                adjustBoardDimensions(board);
-                board.setBitmap(mBitmap);
+        resolvePictureUri(new Callback() {
+            @Override public void onFinished() {
+                Picasso.with(GameActivity.this).load(mFileUri).into(mTarget);
             }
+        });
+    }
 
-            @Override public void onBitmapFailed(Drawable errorDrawable) {
-            }
+    void resolvePictureUri(Callback callback) {
+        progressBar.setVisibility(View.VISIBLE);
+        if (getIntent().getExtras() == null) {
+            Toast.makeText(this, getString(R.string.picture_not_supplied), Toast.LENGTH_LONG).show();
+            finish();
+        }
+        mFileUri = getIntent().getExtras().getString("FILE_URI");
+        if (mFileUri != null) {
+            callback.onFinished();
+        } else {
+            String photoStr = getIntent().getExtras().getString("PHOTO");
+            Gson gson = new Gson();
+            Photo photo = gson.fromJson(photoStr, Photo.class);
+            new GetFlickrPhotoSizesTask(photo, getMaxScreenDim(), callback).execute();
+        }
+    }
 
-            @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
-            }
-        };
+    Target mTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            setScreenOrientation(bitmap.getWidth(), bitmap.getHeight());
+            resolveScreenDimensions();
+            adjustBoardDimensions(board, bitmap);
+            board.setBitmap(bitmap);
+            progressBar.setVisibility(View.GONE);
+        }
 
-        Picasso.with(this).load(mFileUri).into(mTarget);
-	}
+        @Override public void onBitmapFailed(Drawable errorDrawable) {
+            progressBar.setVisibility(View.GONE);
+            Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_flicker_picture),Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+        @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+    };
 
     void setScreenOrientation(int bitmapWidth, int bitmapHeight) {
         if (bitmapWidth > bitmapHeight) {
@@ -73,9 +107,13 @@ public class GameActivity extends Activity {
         mScreenHeight = size.y;
     }
 
-    void adjustBoardDimensions(NewPuzzleBoardView board) {
+    int getMaxScreenDim() {
+        return (mScreenWidth > mScreenHeight) ? mScreenWidth : mScreenHeight;
+    }
+
+    void adjustBoardDimensions(NewPuzzleBoardView board, Bitmap bitmap) {
         float screenSideRatio = (float) mScreenWidth / mScreenHeight;
-        float origPictureSideRatio = (float)mBitmap.getWidth() / mBitmap.getHeight();
+        float origPictureSideRatio = (float) bitmap.getWidth() / bitmap.getHeight();
         if (origPictureSideRatio > screenSideRatio) {
             mBoardWidth = mScreenWidth;
             mBoardHeight = (int) (mScreenWidth / origPictureSideRatio);
@@ -96,5 +134,36 @@ public class GameActivity extends Activity {
     public void onStop() {
         Picasso.with(this).cancelRequest(mTarget);
         super.onDestroy();
+    }
+
+    private class GetFlickrPhotoSizesTask extends AsyncTask<Void, Void, Void> {
+
+        Photo photo;
+        List<Size> sizes;
+        Callback callback;
+        int maxScreenDim;
+        String result;
+
+        public GetFlickrPhotoSizesTask(Photo photo, int maxScreenDim, Callback callback) {
+            this.photo = photo;
+            this.maxScreenDim = maxScreenDim;
+            this.callback = callback;
+        }
+
+        @Override protected Void doInBackground(Void... params) {
+            sizes = App.get().getFlickrApi().getSizes(photo.getId()).getSizes().getSize();
+            result = photo.getFullPicUrl(maxScreenDim, sizes);
+            return null;
+        }
+
+        @Override protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mFileUri = result;
+            callback.onFinished();
+        }
+    }
+
+    private interface Callback {
+        void onFinished();
     }
 }

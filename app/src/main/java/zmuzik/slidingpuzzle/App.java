@@ -45,9 +45,16 @@ public class App extends Application {
     }
 
     void initFlickrApi() {
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(Conf.FLICKR_API_ROOT)
-                .build();
+        RestAdapter.Builder builder = new RestAdapter.Builder();
+        builder.setEndpoint(Conf.FLICKR_API_ROOT);
+        if (isDebuggable()) {
+            builder.setLogLevel(RestAdapter.LogLevel.FULL).setLog(new RestAdapter.Log() {
+                public void log(String msg) {
+                    Log.i("RETROFIT", msg);
+                }
+            });
+        }
+        RestAdapter restAdapter = builder.build();
         mFlickrApi = restAdapter.create(FlickrApi.class);
     }
 
