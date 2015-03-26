@@ -111,6 +111,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     void bindFooterItem(final ViewHolder holder, final int position) {
         holder.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.transparent_pixel));
         holder.progressBar.setVisibility(View.GONE);
+        holder.orientationIcon.setVisibility(View.GONE);
         holder.nextTv.setVisibility(View.VISIBLE);
         holder.nextTv.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -131,6 +132,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
     public void setOrientationIcon(ImageView orientationIcon, int position) {
         Resources res = App.get().getResources();
+        orientationIcon.setVisibility(View.VISIBLE);
         if (BitmapHelper.isBitmapHorizontal(mFilePaths.get(position))) {
             orientationIcon.setImageDrawable(
                     res.getDrawable(R.drawable.ic_action_hardware_phone_android_horiz));
