@@ -189,7 +189,7 @@ public class PuzzleBoardView extends View {
     public void shuffle() {
         Random random = new Random();
         int position;
-        int steps = mTilesX * mTilesY * 2;
+        int steps = mTilesX * mTilesY * 4;
         for (int step = 0; step < steps; step++) {
             if ((step % 2) == 1) {
                 position = random.nextInt(mTilesX - 1);
