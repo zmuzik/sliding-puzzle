@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -88,7 +87,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
                     }
 
                     @Override public void onError() {
-                        Toast.makeText(mContext, uriString + " failed", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, uriString + " failed", Toast.LENGTH_SHORT).show();
                         Log.e("PicturesGridAdapter", uriString + " failed");
                     }
                 });

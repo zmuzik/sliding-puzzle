@@ -56,6 +56,7 @@ public class GameActivity extends Activity {
 
     void resolvePictureUri(Callback callback) {
         progressBar.setVisibility(View.VISIBLE);
+        board.setVisibility(View.GONE);
         if (getIntent().getExtras() == null) {
             Toast.makeText(this, getString(R.string.picture_not_supplied), Toast.LENGTH_LONG).show();
             finish();
@@ -76,9 +77,10 @@ public class GameActivity extends Activity {
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             setScreenOrientation(bitmap.getWidth(), bitmap.getHeight());
             resolveScreenDimensions();
+            progressBar.setVisibility(View.GONE);
+            board.setVisibility(View.VISIBLE);
             adjustBoardDimensions(board, bitmap);
             board.setBitmap(bitmap);
-            progressBar.setVisibility(View.GONE);
         }
 
         @Override public void onBitmapFailed(Drawable errorDrawable) {

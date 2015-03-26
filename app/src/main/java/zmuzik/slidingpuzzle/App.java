@@ -3,7 +3,6 @@ package zmuzik.slidingpuzzle;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,6 +11,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Bus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -22,7 +22,7 @@ public class App extends Application {
     private final String TAG = this.getClass().getSimpleName();
     private static final Bus BUS = new Bus();
     private static App mApp;
-    private List<Photo> mFlickrPhotos;
+    private List<Photo> mFlickrPhotos = new ArrayList<>();
 
     private SQLiteDatabase mDb;
     private FlickrApi mFlickrApi;
@@ -80,13 +80,13 @@ public class App extends Application {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public int getAppVersionCode() {
-        try {
-            return App.get().getPackageManager().getPackageInfo(App.get().getPackageName(), 0).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            return 0;
-        }
-    }
+//    public int getAppVersionCode() {
+//        try {
+//            return App.get().getPackageManager().getPackageInfo(App.get().getPackageName(), 0).versionCode;
+//        } catch (PackageManager.NameNotFoundException e) {
+//            return 0;
+//        }
+//    }
 
     public boolean isTablet() {
         return getResources().getBoolean(R.bool.isTablet);

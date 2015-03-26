@@ -65,8 +65,7 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
 
     @Override public void runGame(int position) {
         Intent intent = new Intent(mContext, GameActivity.class);
-        Gson gson = new Gson();
-        String photoStr = gson.toJson(mPhotos.get(position));
+        String photoStr = new Gson().toJson(mPhotos.get(position));
         intent.putExtra("PHOTO", photoStr);
         mContext.startActivity(intent);
     }

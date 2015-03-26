@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -43,7 +42,7 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
     }
 
     public FlickrGridAdapter getAdapter(int columns) {
-        return new FlickrGridAdapter(getActivity(), new ArrayList<Photo>(), columns);
+        return new FlickrGridAdapter(getActivity(), App.get().getFlickrPhotos(), columns);
     }
 
     @Override public void onDestroyView() {
