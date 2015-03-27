@@ -23,6 +23,7 @@ import zmuzik.slidingpuzzle.Conf;
 import zmuzik.slidingpuzzle.R;
 import zmuzik.slidingpuzzle.gfx.SquareImageView;
 import zmuzik.slidingpuzzle.helpers.BitmapHelper;
+import zmuzik.slidingpuzzle.ui.activities.AsyncGameActivity;
 import zmuzik.slidingpuzzle.ui.activities.GameActivity;
 
 public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapter.ViewHolder> {
@@ -100,6 +101,13 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
                 runGame(position);
             }
         });
+
+        holder.image.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override public boolean onLongClick(View v) {
+                runGameAsync(position);
+                return true;
+            }
+        });
     }
 
     public void runGame(int position) {
@@ -107,6 +115,13 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         intent.putExtra("FILE_URI", mFilePaths.get(position));
         mContext.startActivity(intent);
     }
+
+    public void runGameAsync(int position) {
+        Intent intent = new Intent(mContext, AsyncGameActivity.class);
+        intent.putExtra("FILE_URI", mFilePaths.get(position));
+        mContext.startActivity(intent);
+    }
+
 
     void bindFooterItem(final ViewHolder holder, final int position) {
         holder.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.transparent_pixel));
