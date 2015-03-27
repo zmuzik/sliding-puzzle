@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -54,6 +55,11 @@ public class GameActivity extends Activity {
             @Override public void onFinished() {
                 Picasso.with(GameActivity.this).load(mFileUri).into(mTarget);
             }
+
+            @Override public void onError() {
+                Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_picture), Toast.LENGTH_LONG).show();
+                GameActivity.this.finish();
+            }
         });
     }
 
@@ -71,7 +77,12 @@ public class GameActivity extends Activity {
             String photoStr = getIntent().getExtras().getString("PHOTO");
             Gson gson = new Gson();
             Photo photo = gson.fromJson(photoStr, Photo.class);
-            new GetFlickrPhotoSizesTask(photo, getMaxScreenDim(), callback).execute();
+            if (App.get().isOnline()) {
+                new GetFlickrPhotoSizesTask(photo, getMaxScreenDim(), callback).execute();
+            } else {
+                Toast.makeText(this, getString(R.string.internet_unavailable), Toast.LENGTH_LONG).show();
+                finish();
+            }
         }
     }
 
@@ -162,7 +173,13 @@ public class GameActivity extends Activity {
         }
 
         @Override protected Void doInBackground(Void... params) {
-            sizes = App.get().getFlickrApi().getSizes(photo.getId()).getSizes().getSize();
+            try {
+                sizes = App.get().getFlickrApi().getSizes(photo.getId()).getSizes().getSize();
+            } catch (Exception e) {
+                result = null;
+                Crashlytics.logException(e);
+                callback.onError();
+            }
             result = photo.getFullPicUrl(maxScreenDim, sizes);
             return null;
         }
@@ -176,5 +193,6 @@ public class GameActivity extends Activity {
 
     private interface Callback {
         void onFinished();
+        void onError();
     }
 }
