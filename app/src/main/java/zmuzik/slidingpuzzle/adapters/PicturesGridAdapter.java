@@ -102,12 +102,12 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
             }
         });
 
-        holder.image.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override public boolean onLongClick(View v) {
-                runGameAsync(position);
-                return true;
-            }
-        });
+//        holder.image.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override public boolean onLongClick(View v) {
+//                runGameAsync(position);
+//                return true;
+//            }
+//        });
     }
 
     public void runGame(int position) {
