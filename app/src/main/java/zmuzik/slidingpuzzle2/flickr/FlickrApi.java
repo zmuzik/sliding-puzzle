@@ -1,8 +1,8 @@
-package zmuzik.slidingpuzzle.flickr;
+package zmuzik.slidingpuzzle2.flickr;
 
 import retrofit.http.GET;
 import retrofit.http.Query;
-import zmuzik.slidingpuzzle.Conf;
+import zmuzik.slidingpuzzle2.Conf;
 
 public interface FlickrApi {
 

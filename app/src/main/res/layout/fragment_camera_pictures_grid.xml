@@ -3,7 +3,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="zmuzik.slidingpuzzle.ui.fragments.CameraPicturesFragment">
+                tools:context="zmuzik.slidingpuzzle2.ui.fragments.CameraPicturesFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"

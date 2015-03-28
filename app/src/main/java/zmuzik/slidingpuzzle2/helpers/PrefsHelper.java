@@ -1,10 +1,10 @@
-package zmuzik.slidingpuzzle.helpers;
+package zmuzik.slidingpuzzle2.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import zmuzik.slidingpuzzle.App;
-import zmuzik.slidingpuzzle.Conf;
+import zmuzik.slidingpuzzle2.App;
+import zmuzik.slidingpuzzle2.Conf;
 
 public class PrefsHelper {
 

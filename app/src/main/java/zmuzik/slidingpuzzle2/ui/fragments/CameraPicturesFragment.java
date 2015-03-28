@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.ui.fragments;
+package zmuzik.slidingpuzzle2.ui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import zmuzik.slidingpuzzle.R;
-import zmuzik.slidingpuzzle.adapters.PicturesGridAdapter;
-import zmuzik.slidingpuzzle.helpers.BitmapHelper;
-import zmuzik.slidingpuzzle.helpers.PrefsHelper;
+import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
+import zmuzik.slidingpuzzle2.helpers.BitmapHelper;
+import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 
 public class CameraPicturesFragment extends SavedPicturesFragment {
 

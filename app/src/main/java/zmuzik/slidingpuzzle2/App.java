@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle;
+package zmuzik.slidingpuzzle2;
 
 import android.app.Application;
 import android.content.Context;
@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.RestAdapter;
-import zmuzik.slidingpuzzle.flickr.FlickrApi;
-import zmuzik.slidingpuzzle.flickr.Photo;
+import zmuzik.slidingpuzzle2.flickr.FlickrApi;
+import zmuzik.slidingpuzzle2.flickr.Photo;
 
 public class App extends Application {
     private final String TAG = this.getClass().getSimpleName();

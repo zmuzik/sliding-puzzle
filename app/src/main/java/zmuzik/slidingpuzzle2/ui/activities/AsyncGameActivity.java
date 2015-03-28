@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.ui.activities;
+package zmuzik.slidingpuzzle2.ui.activities;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -19,12 +19,12 @@ import com.squareup.picasso.Target;
 
 import java.util.List;
 
-import zmuzik.slidingpuzzle.App;
-import zmuzik.slidingpuzzle.R;
-import zmuzik.slidingpuzzle.flickr.Photo;
-import zmuzik.slidingpuzzle.flickr.Size;
-import zmuzik.slidingpuzzle.gfx.PuzzleBoardView;
-import zmuzik.slidingpuzzle.helpers.PrefsHelper;
+import zmuzik.slidingpuzzle2.App;
+import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.flickr.Photo;
+import zmuzik.slidingpuzzle2.flickr.Size;
+import zmuzik.slidingpuzzle2.gfx.PuzzleBoardView;
+import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 
 public class AsyncGameActivity extends Activity {
 

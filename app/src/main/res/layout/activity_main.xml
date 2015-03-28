@@ -3,4 +3,4 @@
                                    android:id="@+id/pager"
                                    android:layout_width="match_parent"
                                    android:layout_height="match_parent"
-                                   tools:context="zmuzik.slidingpuzzle.ui.activities.MainActivity"/>
+                                   tools:context="zmuzik.slidingpuzzle2.ui.activities.MainActivity"/>

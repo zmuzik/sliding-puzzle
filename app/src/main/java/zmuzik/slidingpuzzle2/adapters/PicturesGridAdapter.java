@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.adapters;
+package zmuzik.slidingpuzzle2.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,13 +18,13 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import zmuzik.slidingpuzzle.App;
-import zmuzik.slidingpuzzle.Conf;
-import zmuzik.slidingpuzzle.R;
-import zmuzik.slidingpuzzle.gfx.SquareImageView;
-import zmuzik.slidingpuzzle.helpers.BitmapHelper;
-import zmuzik.slidingpuzzle.ui.activities.AsyncGameActivity;
-import zmuzik.slidingpuzzle.ui.activities.GameActivity;
+import zmuzik.slidingpuzzle2.App;
+import zmuzik.slidingpuzzle2.Conf;
+import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.gfx.SquareImageView;
+import zmuzik.slidingpuzzle2.helpers.BitmapHelper;
+import zmuzik.slidingpuzzle2.ui.activities.AsyncGameActivity;
+import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
 
 public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapter.ViewHolder> {
 

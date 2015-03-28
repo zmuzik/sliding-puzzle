@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.gfx;
+package zmuzik.slidingpuzzle2.gfx;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,20 +6,20 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.TextPaint;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.Random;
 
-import zmuzik.slidingpuzzle.R;
-import zmuzik.slidingpuzzle.helpers.PrefsHelper;
-import zmuzik.slidingpuzzle.model.Tile;
+import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
+import zmuzik.slidingpuzzle2.model.Tile;
 
-public class AsyncPuzzleBoardView extends SurfaceView implements SurfaceHolder.Callback{
+public class PuzzleBoardView extends View {
 
     final String TAG = this.getClass().getSimpleName();
     int mTilesX;
@@ -45,28 +45,24 @@ public class AsyncPuzzleBoardView extends SurfaceView implements SurfaceHolder.C
     private boolean mPuzzleComplete;
     private boolean mGameInProgress = false;
 
-    MainThread thread;
 
-    public AsyncPuzzleBoardView(Context context) {
+    public PuzzleBoardView(Context context) {
         super(context);
         mContext = context;
-        getHolder().addCallback(this);
-        thread = new MainThread(getHolder(), this);
-        setFocusable(true);
         initPaints();
     }
 
-//    public AsyncPuzzleBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
-//        super(context, attrs, defStyleAttr);
-//        mContext = context;
-//        initPaints();
-//    }
-//
-//    public AsyncPuzzleBoardView(Context context, AttributeSet attrs) {
-//        super(context, attrs);
-//        mContext = context;
-//        initPaints();
-//    }
+    public PuzzleBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        mContext = context;
+        initPaints();
+    }
+
+    public PuzzleBoardView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        mContext = context;
+        initPaints();
+    }
 
     public void initPaints() {
         mPaint = new Paint();
@@ -289,43 +285,5 @@ public class AsyncPuzzleBoardView extends SurfaceView implements SurfaceHolder.C
             invalidate();
         }
         return true;
-    }
-
-    @Override public void surfaceCreated(SurfaceHolder holder) {
-
-    }
-
-    @Override public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-    }
-
-    @Override public void surfaceDestroyed(SurfaceHolder holder) {
-
-    }
-
-    private class MainThread extends Thread {
-
-        private boolean running;
-        private SurfaceHolder surfaceHolder;
-        private AsyncPuzzleBoardView asyncPuzzleBoardView;
-
-        public void setRunning(boolean running) {
-            this.running = running;
-        }
-
-        public MainThread(SurfaceHolder surfaceHolder, AsyncPuzzleBoardView asyncPuzzleBoardView) {
-            super();
-            this.surfaceHolder = surfaceHolder;
-            this.asyncPuzzleBoardView = asyncPuzzleBoardView;
-        }
-
-
-        @Override
-        public void run() {
-            while (running) {
-                // update game state
-                // render state to the screen
-            }
-        }
     }
 }

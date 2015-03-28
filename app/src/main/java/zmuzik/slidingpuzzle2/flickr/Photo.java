@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.flickr;
+package zmuzik.slidingpuzzle2.flickr;
 
 import java.util.Collections;
 import java.util.List;

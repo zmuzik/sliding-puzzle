@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.helpers;
+package zmuzik.slidingpuzzle2.helpers;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,8 +14,8 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import zmuzik.slidingpuzzle.App;
-import zmuzik.slidingpuzzle.Conf;
+import zmuzik.slidingpuzzle2.App;
+import zmuzik.slidingpuzzle2.Conf;
 
 
 public class BitmapHelper {

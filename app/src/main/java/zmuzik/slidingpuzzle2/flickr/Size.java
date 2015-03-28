@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.flickr;
+package zmuzik.slidingpuzzle2.flickr;
 
 public class Size implements Comparable {
     int width;

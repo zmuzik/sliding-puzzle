@@ -20,7 +20,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "zmuzik.slidingpuzzle"
+        applicationId "zmuzik.slidingpuzzle2"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 2

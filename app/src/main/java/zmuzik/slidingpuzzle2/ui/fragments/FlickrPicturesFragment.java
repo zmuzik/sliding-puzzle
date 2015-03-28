@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.ui.fragments;
+package zmuzik.slidingpuzzle2.ui.fragments;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -22,11 +22,11 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import zmuzik.slidingpuzzle.App;
-import zmuzik.slidingpuzzle.R;
-import zmuzik.slidingpuzzle.adapters.FlickrGridAdapter;
-import zmuzik.slidingpuzzle.flickr.Photo;
-import zmuzik.slidingpuzzle.flickr.SearchResponse;
+import zmuzik.slidingpuzzle2.App;
+import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
+import zmuzik.slidingpuzzle2.flickr.Photo;
+import zmuzik.slidingpuzzle2.flickr.SearchResponse;
 
 public class FlickrPicturesFragment extends SavedPicturesFragment {
 

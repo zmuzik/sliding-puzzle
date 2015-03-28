@@ -2,7 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="zmuzik.slidingpuzzle.ui.fragments.FlickrPicturesFragment">
+                tools:context="zmuzik.slidingpuzzle2.ui.fragments.FlickrPicturesFragment">
 
     <RelativeLayout
         android:id="@+id/searchPanel"

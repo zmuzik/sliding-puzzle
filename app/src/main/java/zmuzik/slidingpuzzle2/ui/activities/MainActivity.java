@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle.ui.activities;
+package zmuzik.slidingpuzzle2.ui.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,11 +17,11 @@ import android.widget.Toast;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import zmuzik.slidingpuzzle.R;
-import zmuzik.slidingpuzzle.helpers.PrefsHelper;
-import zmuzik.slidingpuzzle.ui.fragments.CameraPicturesFragment;
-import zmuzik.slidingpuzzle.ui.fragments.FlickrPicturesFragment;
-import zmuzik.slidingpuzzle.ui.fragments.SavedPicturesFragment;
+import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
+import zmuzik.slidingpuzzle2.ui.fragments.CameraPicturesFragment;
+import zmuzik.slidingpuzzle2.ui.fragments.FlickrPicturesFragment;
+import zmuzik.slidingpuzzle2.ui.fragments.SavedPicturesFragment;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
