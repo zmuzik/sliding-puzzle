@@ -15,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -113,6 +115,7 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
 
         String query;
         View buttonToDisable;
+        SearchResponse resp;
 
         public GetFlickrPicsPageTask(String query, View v) {
             this.query = query;
@@ -126,17 +129,31 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
         }
 
         @Override protected Void doInBackground(Void... params) {
-            SearchResponse resp = App.get().getFlickrApi().getPhotos(keywordEt.getText().toString());
-            if (resp != null && resp.getPhotos() != null)
+            String keyword = keywordEt.getText().toString();
+            try {
+                resp = App.get().getFlickrApi().getPhotos(keyword);
+            } catch (Exception e) {
+                resp = null;
+                Crashlytics.log("keyword = " + (keyword == null ? "" : keyword));
+                Crashlytics.logException(e);
+            }
+            if (resp != null && resp.getPhotos() != null) {
                 App.get().setFlickrPhotos(resp.getPhotos().getPhoto());
+            }
             return null;
         }
 
         @Override protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            List<Photo> photos = App.get().getFlickrPhotos();
-            if (photos != null && photos.size() > 0 && isAdded()) {
-                mRecyclerView.setAdapter(new FlickrGridAdapter(getActivity(), photos, getColumnsNumber()));
+            if (resp == null) {
+                Toast.makeText(getActivity(),
+                        getActivity().getResources().getString(R.string.err_querying_flickr),
+                        Toast.LENGTH_LONG).show();
+            } else {
+                List<Photo> photos = App.get().getFlickrPhotos();
+                if (photos != null && photos.size() > 0 && isAdded()) {
+                    mRecyclerView.setAdapter(new FlickrGridAdapter(getActivity(), photos, getColumnsNumber()));
+                }
             }
             buttonToDisable.setEnabled(true);
             progressBar.setVisibility(View.GONE);

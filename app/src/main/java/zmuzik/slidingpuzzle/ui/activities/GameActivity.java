@@ -173,10 +173,12 @@ public class GameActivity extends Activity {
         }
 
         @Override protected Void doInBackground(Void... params) {
+            String photoId = photo.getId();
             try {
-                sizes = App.get().getFlickrApi().getSizes(photo.getId()).getSizes().getSize();
+                sizes = App.get().getFlickrApi().getSizes(photoId).getSizes().getSize();
             } catch (Exception e) {
                 result = null;
+                Crashlytics.log("photo id = " + (photoId == null ? "" : photoId));
                 Crashlytics.logException(e);
                 callback.onError();
             }
