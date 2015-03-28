@@ -47,24 +47,6 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
         return Conf.PAGE_SIZE_FLICKR;
     }
 
-    public void add(Photo photo) {
-        if (mFilePaths == null) mFilePaths = new ArrayList<>();
-        if (mPhotos == null) mPhotos = new ArrayList<>();
-        if (mFilePaths.contains(photo.getThumbUrl())) return;
-        mFilePaths.add(photo.getThumbUrl());
-        mPhotos.add(photo);
-        notifyItemInserted(getItemCount() - 1);
-    }
-
-    public void add(Photo photo, int position) {
-        if (mFilePaths == null) mFilePaths = new ArrayList<>();
-        if (mPhotos == null) mPhotos = new ArrayList<>();
-        if (mFilePaths.contains(photo.getThumbUrl())) return;
-        mFilePaths.add(position, photo.getThumbUrl());
-        mPhotos.add(position, photo);
-        notifyItemInserted(position);
-    }
-
     @Override public void runGame(int position) {
         Intent intent = new Intent(mContext, GameActivity.class);
         String photoStr = new Gson().toJson(mPhotos.get(position));
