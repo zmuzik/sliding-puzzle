@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SlidingPuzzle</string>
+    <string name="app_name">Sliding Puzzle</string>
     <string name="action_settings">Nastavení</string>
     <string name="congrats">Gratuluji!</string>
     <string name="enter_keywords">Zadejte klíčová slova</string>
     <string name="err_querying_flickr">Chyba při kontaktování Flickru</string>
-    <string name="title_section1">Uožené</string>
+    <string name="title_section1">Uložené</string>
     <string name="title_section2">Fotoaparát</string>
     <string name="title_section3">Flickr</string>
     <string name="shuffle">Zamíchat</string>
@@ -14,7 +14,7 @@
     <string name="keyword_not_supplied">Nebylo zadáno žádné klíčové slovo</string>
     <string name="more">Více…</string>
     <string name="picture_not_supplied">Obrázek není k dispozici</string>
-    <string name="grid_size_selected_to">Složitost byla nastavena na </string>
+    <string name="grid_size_selected_to">Velikost mřížky byla nastavena na</string>
     <string name="search">Hledat</string>
-    <string name="select_grid_size">Vyberte složitost</string>
+    <string name="select_grid_size">Vyberte velikost mřížky</string>
 </resources>
