@@ -89,7 +89,7 @@ public class AsyncGameActivity extends Activity {
 
         @Override public void onBitmapFailed(Drawable errorDrawable) {
             progressBar.setVisibility(View.GONE);
-            Toast.makeText(AsyncGameActivity.this, getString(R.string.unable_to_load_flicker_picture), Toast.LENGTH_LONG).show();
+            Toast.makeText(AsyncGameActivity.this, getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
             finish();
         }
 

@@ -57,7 +57,7 @@ public class GameActivity extends Activity {
             }
 
             @Override public void onError() {
-                Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_picture), Toast.LENGTH_LONG).show();
+                Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
                 GameActivity.this.finish();
             }
         });
@@ -100,7 +100,7 @@ public class GameActivity extends Activity {
 
         @Override public void onBitmapFailed(Drawable errorDrawable) {
             progressBar.setVisibility(View.GONE);
-            Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_flicker_picture), Toast.LENGTH_LONG).show();
+            Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
             finish();
         }
 
