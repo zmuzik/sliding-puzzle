@@ -27,12 +27,42 @@ android {
         versionName "2.0"
     }
 
+    signingConfigs {
+        zmuzik {
+            storeFile file("zmuzik.keystore")
+            keyAlias System.getenv("keyAlias")
+            storePassword System.getenv("storePassword")
+            keyPassword System.getenv("keyPassword")
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFile = new File(
+                    output.outputFile.parent,
+                    output.outputFile.name.replace(".apk",
+                            "-v${variant.versionName}-"
+                                    + getDate()
+                                    + "-c${variant.versionCode}"
+                                    + ".apk"))
+        }
+    }
+
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+}
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy-MM-dd-HH-mm')
+    return formattedDate
 }
 
 dependencies {

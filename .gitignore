@@ -46,3 +46,7 @@ Thumbs.db
 build/
 apitest.sh
 
+zmuzik.keystore
+setpass.sh
+make.sh
+
