@@ -50,3 +50,5 @@ zmuzik.keystore
 setpass.sh
 make.sh
 
+crashlytics.properties
+
