@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import zmuzik.slidingpuzzle2.App;
-import zmuzik.slidingpuzzle2.Conf;
+import zmuzik.slidingpuzzle2.AppConf;
 
 
 public class BitmapHelper {
@@ -123,7 +123,7 @@ public class BitmapHelper {
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(fileName);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, Conf.PIC_QUALITY, out);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, AppConf.PIC_QUALITY, out);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -160,7 +160,7 @@ public class BitmapHelper {
     public static File getOutputPictureFile(){
         File mediaStorageDir = new File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
-                Conf.DCIM_APP_SUBDIR);
+                AppConf.DCIM_APP_SUBDIR);
 
         // Create the storage directory if it does not exist
         if (! mediaStorageDir.exists()){

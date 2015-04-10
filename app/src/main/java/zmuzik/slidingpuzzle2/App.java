@@ -40,7 +40,7 @@ public class App extends Application {
 
     void initFlickrApi() {
         RestAdapter.Builder builder = new RestAdapter.Builder();
-        builder.setEndpoint(Conf.FLICKR_API_ROOT);
+        builder.setEndpoint(FlickrConf.FLICKR_API_ROOT);
         if (isDebuggable()) {
             builder.setLogLevel(RestAdapter.LogLevel.FULL).setLog(new RestAdapter.Log() {
                 public void log(String msg) {

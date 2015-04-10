@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zmuzik.slidingpuzzle2.App;
-import zmuzik.slidingpuzzle2.Conf;
+import zmuzik.slidingpuzzle2.AppConf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.gfx.SquareImageView;
 import zmuzik.slidingpuzzle2.helpers.BitmapHelper;
@@ -158,7 +158,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     }
 
     int getPageSize() {
-        return Conf.PAGE_SIZE_LOCAL;
+        return AppConf.PAGE_SIZE_LOCAL;
     }
 
     int getDisplayedPicsCount() {
