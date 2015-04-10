@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import zmuzik.slidingpuzzle2.App;
-import zmuzik.slidingpuzzle2.AppConf;
+import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
 import zmuzik.slidingpuzzle2.helpers.BitmapHelper;
@@ -68,9 +68,9 @@ public class SavedPicturesFragment extends Fragment {
 
     int getColumnsNumber() {
         if (App.get().isTablet()) {
-            return isHorizontal() ? AppConf.GRID_COLUMNS_LANDSCAPE_TABLET : AppConf.GRID_COLUMNS_PORTRAIT_TABLET;
+            return isHorizontal() ? Conf.GRID_COLUMNS_LANDSCAPE_TABLET : Conf.GRID_COLUMNS_PORTRAIT_TABLET;
         } else {
-            return isHorizontal() ? AppConf.GRID_COLUMNS_LANDSCAPE_HANDHELD : AppConf.GRID_COLUMNS_PORTRAIT_HANDHELD;
+            return isHorizontal() ? Conf.GRID_COLUMNS_LANDSCAPE_HANDHELD : Conf.GRID_COLUMNS_PORTRAIT_HANDHELD;
         }
     }
 

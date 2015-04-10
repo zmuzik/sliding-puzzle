@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import zmuzik.slidingpuzzle2.App;
-import zmuzik.slidingpuzzle2.AppConf;
+import zmuzik.slidingpuzzle2.Conf;
 
 public class PrefsHelper {
 
@@ -36,7 +36,7 @@ public class PrefsHelper {
     }
 
     public int getGridDimShort() {
-        return getPrefs().getInt(GRID_DIM_SHORT, AppConf.DEFAULT_GRID_DIM_SHORT);
+        return getPrefs().getInt(GRID_DIM_SHORT, Conf.DEFAULT_GRID_DIM_SHORT);
     }
 
     public void setGridDimLong(int timestamp) {
@@ -44,7 +44,7 @@ public class PrefsHelper {
     }
 
     public int getGridDimLong() {
-        return getPrefs().getInt(GRID_DIM_LONG, AppConf.DEFAULT_GRID_DIM_LONG);
+        return getPrefs().getInt(GRID_DIM_LONG, Conf.DEFAULT_GRID_DIM_LONG);
     }
 
     public void setGridDimsPosition(int timestamp) {
@@ -52,7 +52,7 @@ public class PrefsHelper {
     }
 
     public int getGridDimsPosition() {
-        return getPrefs().getInt(GRID_DIMS_POSITION, AppConf.DEFAULT_GRID_DIMS_POSITION);
+        return getPrefs().getInt(GRID_DIMS_POSITION, Conf.DEFAULT_GRID_DIMS_POSITION);
     }
 
     public void setPhotoFilePath(String path) {

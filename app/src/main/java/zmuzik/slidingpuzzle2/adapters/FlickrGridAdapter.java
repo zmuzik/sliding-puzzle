@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zmuzik.slidingpuzzle2.App;
-import zmuzik.slidingpuzzle2.AppConf;
+import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
@@ -44,7 +44,7 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
     }
 
     int getPageSize() {
-        return AppConf.PAGE_SIZE_FLICKR;
+        return Conf.PAGE_SIZE_FLICKR;
     }
 
     @Override public void runGame(int position) {
