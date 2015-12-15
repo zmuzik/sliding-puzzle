@@ -116,6 +116,7 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
         String query;
         View buttonToDisable;
         SearchResponse resp;
+        String keyword;
 
         public GetFlickrPicsPageTask(String query, View v) {
             this.query = query;
@@ -126,10 +127,10 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
             super.onPreExecute();
             buttonToDisable.setEnabled(false);
             progressBar.setVisibility(View.VISIBLE);
+            keyword = keywordEt.getText().toString();
         }
 
         @Override protected Void doInBackground(Void... params) {
-            String keyword = keywordEt.getText().toString();
             try {
                 resp = App.get().getFlickrApi().getPhotos(keyword);
             } catch (Exception e) {

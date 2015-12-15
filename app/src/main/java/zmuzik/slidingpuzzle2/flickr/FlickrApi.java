@@ -2,8 +2,9 @@ package zmuzik.slidingpuzzle2.flickr;
 
 import retrofit.http.GET;
 import retrofit.http.Query;
+import zmuzik.slidingpuzzle2.App;
+import zmuzik.slidingpuzzle2.BuildConfig;
 import zmuzik.slidingpuzzle2.Conf;
-import zmuzik.slidingpuzzle2.FlickrConf;
 
 public interface FlickrApi {
 
@@ -13,12 +14,12 @@ public interface FlickrApi {
             "&extras=url_l,o_dims,url_c,url_o" +
             "&sort=interestingness-desc" +
             "&per_page=" + Conf.FLICKR_REQUEST_IMAGES +
-            "&api_key=" + FlickrConf.FLICKR_API_KEY) SearchResponse getPhotos(@Query("text") String query);
+            "&api_key=" + BuildConfig.FLICKR_API_KEY) SearchResponse getPhotos(@Query("text") String query);
 
     @GET("/?method=flickr.photos.getSizes" +
             "&format=json" +
             "&nojsoncallback=1" +
-            "&api_key=" + FlickrConf.FLICKR_API_KEY) PhotoSizesResponse getSizes(@Query("photo_id") String id);
+            "&api_key=" + BuildConfig.FLICKR_API_KEY) PhotoSizesResponse getSizes(@Query("photo_id") String id);
 
 
 }

@@ -14,37 +14,30 @@ repositories {
     maven { url 'http://download.crashlytics.com/maven' }
 }
 
-
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+
+    Properties customProps = new Properties()
+    customProps.load(new FileInputStream("../secrets/zmuzik.slidingpuzzle2.properties"))
+
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "zmuzik.slidingpuzzle2"
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 23
         versionCode 2
         versionName "2.0"
+        buildConfigField("String", "FLICKR_API_KEY", customProps.FLICKR_API_KEY)
+        archivesBaseName = "zmuzik-slidingpuzzle2-v$versionName"
     }
 
     signingConfigs {
-        zmuzik {
-            storeFile file("zmuzik.keystore")
-            keyAlias System.getenv("keyAlias")
-            storePassword System.getenv("storePassword")
-            keyPassword System.getenv("keyPassword")
-        }
-    }
-
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            output.outputFile = new File(
-                    output.outputFile.parent,
-                    output.outputFile.name.replace(".apk",
-                            "-v${variant.versionName}-"
-                                    + getDate()
-                                    + "-c${variant.versionCode}"
-                                    + ".apk"))
+        release {
+            storeFile file("../../secrets/zmuzik.keystore")
+            keyAlias customProps.KEY_ALIAS
+            storePassword customProps.STORE_PASSWORD
+            keyPassword customProps.KEY_PASSWORD
         }
     }
 
@@ -54,25 +47,20 @@ android {
         }
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
 }
 
-def getDate() {
-    def date = new Date()
-    def formattedDate = date.format('yyyy-MM-dd-HH-mm')
-    return formattedDate
-}
-
 dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:recyclerview-v7:21.0.3'
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.shamanland:fab:0.0.8'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.squareup:otto:1.3.5'
-    compile 'com.squareup.picasso:picasso:2.5.0'
+    compile 'com.squareup:otto:1.3.8'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.crashlytics.android:crashlytics:1.+'
 }
