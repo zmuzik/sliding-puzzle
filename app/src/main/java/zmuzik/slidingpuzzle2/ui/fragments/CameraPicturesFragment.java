@@ -58,8 +58,10 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
     }
 
     public void scanDirectoryForPictures(File root, final ArrayList<FileContainer> filePaths) {
+        if (root == null) return;
         Log.d(TAG, "scanning dir: " + root.getAbsolutePath());
         File[] list = root.listFiles();
+        if (list == null) return;
 
         for (File f : list) {
             if (f.isHidden()) continue;
