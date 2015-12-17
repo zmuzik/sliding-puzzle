@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class App extends Application {
         Log.i(TAG, "====================Initializing app====================");
         mApp = this;
         super.onCreate();
-        Crashlytics.start(this);
+        Fabric.with(this, new Crashlytics());
         initFlickrApi();
     }
 
