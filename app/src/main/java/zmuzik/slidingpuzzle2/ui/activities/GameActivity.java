@@ -22,6 +22,8 @@ import java.util.List;
 
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
+import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.Size;
 import zmuzik.slidingpuzzle2.gfx.PuzzleBoardView;
@@ -70,11 +72,11 @@ public class GameActivity extends Activity {
             Toast.makeText(this, getString(R.string.picture_not_supplied), Toast.LENGTH_LONG).show();
             finish();
         }
-        mFileUri = getIntent().getExtras().getString("FILE_URI");
+        mFileUri = getIntent().getExtras().getString(PicturesGridAdapter.FILE_URI);
         if (mFileUri != null) {
             callback.onFinished();
         } else {
-            String photoStr = getIntent().getExtras().getString("PHOTO");
+            String photoStr = getIntent().getExtras().getString(FlickrGridAdapter.PHOTO);
             Gson gson = new Gson();
             Photo photo = gson.fromJson(photoStr, Photo.class);
             if (App.get().isOnline()) {
@@ -155,7 +157,7 @@ public class GameActivity extends Activity {
     @Override
     public void onStop() {
         Picasso.with(this).cancelRequest(mTarget);
-        super.onDestroy();
+        super.onStop();
     }
 
     private class GetFlickrPhotoSizesTask extends AsyncTask<Void, Void, Void> {

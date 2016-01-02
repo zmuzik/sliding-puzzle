@@ -28,6 +28,8 @@ import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
 
 public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapter.ViewHolder> {
 
+    public static final String FILE_URI = "FILE_URI";
+
     protected List<String> mFilePaths;
     protected Context mContext;
     protected int mColumns;
@@ -112,13 +114,13 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
     public void runGame(int position) {
         Intent intent = new Intent(mContext, GameActivity.class);
-        intent.putExtra("FILE_URI", mFilePaths.get(position));
+        intent.putExtra(FILE_URI, mFilePaths.get(position));
         mContext.startActivity(intent);
     }
 
     public void runGameAsync(int position) {
         Intent intent = new Intent(mContext, AsyncGameActivity.class);
-        intent.putExtra("FILE_URI", mFilePaths.get(position));
+        intent.putExtra(FILE_URI, mFilePaths.get(position));
         mContext.startActivity(intent);
     }
 
