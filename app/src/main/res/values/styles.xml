@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme.Base" parent="Theme.AppCompat">
-        <!--
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
 
-        -->
-        <item name="floatingActionButtonStyle">@style/AppTheme.Fab</item>
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base"/>
@@ -18,10 +11,6 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <style name="AppTheme.Fab" parent="FloatingActionButton">
-        <item name="floatingActionButtonColor">@color/red</item>
     </style>
 
 </resources>
