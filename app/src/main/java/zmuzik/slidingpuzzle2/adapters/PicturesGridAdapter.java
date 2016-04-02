@@ -80,6 +80,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         final String uriString = mFilePaths.get(position);
         holder.nextTv.setVisibility(View.GONE);
         holder.progressBar.setVisibility(View.VISIBLE);
+        Picasso.with(App.get()).cancelRequest(holder.image);
         Picasso.with(App.get()).load(uriString)
                 .resize(mDim, mDim)
                 .centerCrop()
