@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -55,7 +57,11 @@ public class GameActivity extends Activity {
 
         resolvePictureUri(new Callback() {
             @Override public void onFinished() {
-                Picasso.with(GameActivity.this).load(mFileUri).into(mTarget);
+                Picasso.with(GameActivity.this)
+                        .load(mFileUri)
+                        .memoryPolicy(MemoryPolicy.NO_STORE)
+                        .networkPolicy(NetworkPolicy.NO_STORE)
+                        .into(mTarget);
             }
 
             @Override public void onError() {
