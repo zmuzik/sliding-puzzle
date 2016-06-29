@@ -25,6 +25,8 @@
             android:layout_toLeftOf="@id/searchBtn"
             android:hint="@string/enter_keywords"
             android:imeOptions="actionSearch"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:maxLines="1"/>
     </RelativeLayout>
 
