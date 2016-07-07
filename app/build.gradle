@@ -26,7 +26,7 @@ android {
     defaultConfig {
         applicationId "zmuzik.slidingpuzzle2"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 4
         versionName "2.2"
         buildConfigField("String", "FLICKR_API_KEY", customProps.FLICKR_API_KEY)
