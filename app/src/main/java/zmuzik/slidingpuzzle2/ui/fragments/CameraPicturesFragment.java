@@ -1,12 +1,17 @@
 package zmuzik.slidingpuzzle2.ui.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +30,8 @@ import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 public class CameraPicturesFragment extends SavedPicturesFragment {
 
     final String TAG = this.getClass().getSimpleName();
+    public static final int REQUEST_PERMISSION_CAMERA = 100;
+    public static final int REQUEST_PERMISSION_STORAGE = 101;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     FloatingActionButton mFab;
@@ -34,8 +41,9 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                dispatchTakePictureIntent();
+            @Override
+            public void onClick(View v) {
+                dispatchTakePictureIntentWrapper();
             }
         });
 
@@ -77,6 +85,27 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
         return R.layout.fragment_camera_pictures_grid;
     }
 
+    private void dispatchTakePictureIntentWrapper() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
+        } else {
+            dispatchTakePictureIntent();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PERMISSION_CAMERA:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    dispatchTakePictureIntent();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -111,7 +140,8 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
             this.lastModified = lastModified;
         }
 
-        @Override public int compareTo(Object another) {
+        @Override
+        public int compareTo(Object another) {
             return (((FileContainer) another).lastModified - lastModified) > 0 ? 1 : -1;
         }
     }
