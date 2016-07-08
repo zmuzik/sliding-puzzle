@@ -43,7 +43,7 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dispatchTakePictureIntentWrapper();
+                dispatchTakePictureIntent();
             }
         });
 
@@ -85,14 +85,6 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
         return R.layout.fragment_camera_pictures_grid;
     }
 
-    private void dispatchTakePictureIntentWrapper() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
-        } else {
-            dispatchTakePictureIntent();
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -107,16 +99,21 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
     }
 
     private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            File photoFile = BitmapHelper.getOutputPictureFile();
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                PrefsHelper.get().setPhotoFilePath(photoFile.getAbsolutePath());
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            } else {
-                PrefsHelper.get().setPhotoFilePath(null);
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
+        } else {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                File photoFile = BitmapHelper.getOutputPictureFile();
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    PrefsHelper.get().setPhotoFilePath(photoFile.getAbsolutePath());
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+                    PrefsHelper.get().setPhotoFilePath(null);
+                }
             }
         }
     }
