@@ -1,0 +1,3 @@
+#!/bin/bash
+adb uninstall zmuzik.slidingpuzzle2.debug
+
