@@ -3,18 +3,17 @@ package zmuzik.slidingpuzzle2.ui.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 import zmuzik.slidingpuzzle2.R;
@@ -24,53 +23,51 @@ import zmuzik.slidingpuzzle2.ui.fragments.FlickrPicturesFragment;
 import zmuzik.slidingpuzzle2.ui.fragments.SavedPicturesFragment;
 
 
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class MainActivity extends AppCompatActivity {
 
-    SectionsPagerAdapter mSectionsPagerAdapter;
-    ViewPager mViewPager;
     final String[] GRID_SIZES = {
             "3x3", "3x4", "3x5", "3x6",
             "4x4", "4x5", "4x6",
             "5x5", "5x6", "6x6",};
+
+    PagerAdapter mSectionsPagerAdapter;
+    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set up the action bar.
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_section1)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_section2)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_section3)));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        // Set up the ViewPager with the sections adapter.
+        mSectionsPagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        if (mViewPager != null) {
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+        }
 
-        // When swiping between different sections, select the corresponding
-        // tab. We can also use ActionBar.Tab#select() to do this if we have
-        // a reference to the Tab.
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-
-        // For each of the sections in the app, add a tab to the action bar.
-        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-            // Create a tab with text corresponding to the page title defined by
-            // the adapter. Also specify this Activity object, which implements
-            // the TabListener interface, as the callback (listener) for when
-            // this tab is selected.
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText(mSectionsPagerAdapter.getPageTitle(i))
-                            .setTabListener(this));
-        }
     }
 
 
@@ -112,23 +109,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         builder.show();
     }
 
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
+    public class PagerAdapter extends FragmentStatePagerAdapter {
 
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
+        int mNumOfTabs;
 
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
-
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public PagerAdapter(FragmentManager fm, int numOfTabs) {
             super(fm);
+            this.mNumOfTabs = numOfTabs;
         }
 
         @Override
@@ -140,27 +127,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     return new CameraPicturesFragment();
                 case 2:
                     return new FlickrPicturesFragment();
+                default:
+                    return null;
             }
-            return null;
         }
 
         @Override
         public int getCount() {
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
-            }
-            return null;
+            return mNumOfTabs;
         }
     }
 }
