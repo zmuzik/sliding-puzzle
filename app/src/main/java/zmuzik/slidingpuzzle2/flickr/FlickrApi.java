@@ -1,8 +1,7 @@
 package zmuzik.slidingpuzzle2.flickr;
 
-import retrofit.http.GET;
-import retrofit.http.Query;
-import zmuzik.slidingpuzzle2.App;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 import zmuzik.slidingpuzzle2.BuildConfig;
 import zmuzik.slidingpuzzle2.Conf;
 

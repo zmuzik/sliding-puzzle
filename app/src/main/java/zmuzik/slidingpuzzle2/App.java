@@ -9,11 +9,12 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
-import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.RestAdapter;
+import io.fabric.sdk.android.Fabric;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Retrofit;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 
@@ -40,17 +41,12 @@ public class App extends Application {
     }
 
     void initFlickrApi() {
-        RestAdapter.Builder builder = new RestAdapter.Builder();
-        builder.setEndpoint(Conf.FLICKR_API_ROOT);
-        if (isDebuggable()) {
-            builder.setLogLevel(RestAdapter.LogLevel.FULL).setLog(new RestAdapter.Log() {
-                public void log(String msg) {
-                    Log.i("RETROFIT", msg);
-                }
-            });
-        }
-        RestAdapter restAdapter = builder.build();
-        mFlickrApi = restAdapter.create(FlickrApi.class);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Conf.FLICKR_API_ROOT)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        mFlickrApi = retrofit.create(FlickrApi.class);
     }
 
     public FlickrApi getFlickrApi() {
