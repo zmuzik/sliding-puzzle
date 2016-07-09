@@ -143,11 +143,8 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     public void setOrientationIcon(ImageView orientationIcon, int position) {
         Resources res = App.get().getResources();
         orientationIcon.setVisibility(View.VISIBLE);
-        if (BitmapHelper.isBitmapHorizontal(mFilePaths.get(position))) {
-            orientationIcon.setRotation(270f);
-        } else {
-            orientationIcon.setRotation(0f);
-        }
+        boolean isHorizontal = BitmapHelper.isBitmapHorizontal(mFilePaths.get(position));
+        orientationIcon.setRotation(isHorizontal ? 270f : 0f);
     }
 
     int getPageSize() {

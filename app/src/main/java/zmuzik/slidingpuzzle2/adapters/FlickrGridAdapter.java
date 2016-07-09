@@ -36,11 +36,8 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
         Resources res = App.get().getResources();
         Photo photo = mPhotos.get(position);
         orientationIcon.setVisibility(View.VISIBLE);
-        if (photo.getWidth_l() > photo.getHeight_l()) {
-            orientationIcon.setRotation(270f);
-        } else {
-            orientationIcon.setRotation(0f);
-        }
+        boolean isHorizontal = photo.getWidth_l() > photo.getHeight_l();
+        orientationIcon.setRotation(isHorizontal ? 270f : 0f);
     }
 
     int getPageSize() {
