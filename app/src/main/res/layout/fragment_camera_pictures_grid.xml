@@ -18,6 +18,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
+        android:elevation="8dp"
+        app:elevation="8dp"
         android:src="@drawable/ic_action_image_camera_alt" />
 
 </RelativeLayout>

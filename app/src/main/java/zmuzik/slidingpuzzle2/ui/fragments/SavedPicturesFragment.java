@@ -45,17 +45,19 @@ public class SavedPicturesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(getLayoutId(), container, false);
 
-        int columns = getColumnsNumber();
-
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(getActivity(), columns);
+        mLayoutManager = new GridLayoutManager(getActivity(), getColumnsNumber());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // specify an adapter (see also next example)
-        mAdapter = getAdapter(columns);
-        mRecyclerView.setAdapter(mAdapter);
+        initData();
+
         return rootView;
+    }
+
+    public void initData() {
+        mAdapter = getAdapter(getColumnsNumber());
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     public PicturesGridAdapter getAdapter(int columns) {

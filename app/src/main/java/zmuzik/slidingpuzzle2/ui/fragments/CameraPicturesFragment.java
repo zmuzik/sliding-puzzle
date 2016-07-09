@@ -52,16 +52,22 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
 
     @Override
     public List<String> getPictures() {
-        ArrayList<FileContainer> foundFiles = new ArrayList<>();
-        File cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        scanDirectoryForPictures(cameraDir, foundFiles);
-        //sort - most recent pictures first
-        Collections.sort(foundFiles);
-        ArrayList<String> result = new ArrayList<>();
-        for (FileContainer fileContainer : foundFiles) {
-            result.add(fileContainer.filePath);
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
+        } else {
+            ArrayList<FileContainer> foundFiles = new ArrayList<>();
+            File cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+            scanDirectoryForPictures(cameraDir, foundFiles);
+            //sort - most recent pictures first
+            Collections.sort(foundFiles);
+            ArrayList<String> result = new ArrayList<>();
+            for (FileContainer fileContainer : foundFiles) {
+                result.add(fileContainer.filePath);
+            }
+            return result;
         }
-        return result;
+        return null;
     }
 
     public void scanDirectoryForPictures(File root, final ArrayList<FileContainer> filePaths) {
@@ -91,6 +97,11 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
             case REQUEST_PERMISSION_CAMERA:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     dispatchTakePictureIntent();
+                }
+                break;
+            case REQUEST_PERMISSION_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initData();
                 }
                 break;
             default:
