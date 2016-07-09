@@ -74,6 +74,7 @@ public class PuzzleBoardView extends View {
         mTextPaint.setShadowLayer(10, 0, 0, 0xff000000);
         mTextPaint.setStyle(Paint.Style.FILL);
         mTextPaint.setStrokeWidth(3);
+        mTextPaint.setAntiAlias(true);
         mBounds = new Rect();
     }
 
