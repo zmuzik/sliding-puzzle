@@ -32,12 +32,6 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.Fullscreen">
         </activity>
-
-        <activity
-            android:name="zmuzik.slidingpuzzle2.ui.activities.AsyncGameActivity"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.Fullscreen">
-        </activity>
     </application>
 
 </manifest>
