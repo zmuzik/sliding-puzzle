@@ -29,8 +29,9 @@ import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 public class CameraPicturesFragment extends SavedPicturesFragment {
 
     final String TAG = this.getClass().getSimpleName();
-    public static final int REQUEST_PERMISSION_CAMERA_AND_STORAGE = 100;
+    public static final int REQUEST_PERMISSION_CAMERA = 100;
     public static final int REQUEST_PERMISSION_STORAGE = 101;
+    public static final int REQUEST_PERMISSION_STORAGE_FOR_CAMERA = 102;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     FloatingActionButton mFab;
@@ -51,9 +52,9 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
 
     @Override
     public List<String> getPictures() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
         } else {
             ArrayList<FileContainer> foundFiles = new ArrayList<>();
             File cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
@@ -93,17 +94,25 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_PERMISSION_CAMERA_AND_STORAGE:
-                if (grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    initData();
-                }
+            case REQUEST_PERMISSION_CAMERA:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    dispatchTakePictureIntent();
+                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        dispatchTakePictureIntent();
+                    } else {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
+                    }
                 }
                 break;
             case REQUEST_PERMISSION_STORAGE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     initData();
+                }
+                break;
+            case REQUEST_PERMISSION_STORAGE_FOR_CAMERA:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initData();
+                    dispatchTakePictureIntent();
                 }
                 break;
             default:
@@ -113,12 +122,11 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
 
     private void dispatchTakePictureIntent() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_PERMISSION_CAMERA_AND_STORAGE);
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
+        } else if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE_FOR_CAMERA);
         } else {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
