@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:background="?attr/colorPrimary"
         android:elevation="8dp"
         android:minHeight="?attr/actionBarSize"
@@ -22,7 +22,7 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
         android:elevation="8dp"
         android:minHeight="?attr/actionBarSize"
@@ -31,7 +31,8 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/tab_layout"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/tab_layout"
+        android:layout_above="@id/toolbar"/>
 
 </RelativeLayout>
