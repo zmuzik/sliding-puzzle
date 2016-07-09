@@ -20,10 +20,12 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.List;
 
+import retrofit2.Call;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
 import zmuzik.slidingpuzzle2.flickr.Photo;
+import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
 import zmuzik.slidingpuzzle2.flickr.SearchResponse;
 
 public class FlickrPicturesFragment extends SavedPicturesFragment {
@@ -157,7 +159,8 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
 
         @Override protected Void doInBackground(Void... params) {
             try {
-                resp = App.get().getFlickrApi().getPhotos(query);
+                Call<SearchResponse> call = App.get().getFlickrApi().getPhotos(query);
+                resp = call.execute().body();
             } catch (Exception e) {
                 resp = null;
                 Crashlytics.log("keyword = " + (query == null ? "" : query));

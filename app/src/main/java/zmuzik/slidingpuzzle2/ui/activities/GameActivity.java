@@ -22,11 +22,13 @@ import com.squareup.picasso.Target;
 
 import java.util.List;
 
+import retrofit2.Call;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
 import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
 import zmuzik.slidingpuzzle2.flickr.Photo;
+import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
 import zmuzik.slidingpuzzle2.flickr.Size;
 import zmuzik.slidingpuzzle2.gfx.PuzzleBoardView;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
@@ -183,7 +185,8 @@ public class GameActivity extends Activity {
         @Override protected Void doInBackground(Void... params) {
             String photoId = photo.getId();
             try {
-                sizes = App.get().getFlickrApi().getSizes(photoId).getSizes().getSize();
+                Call<PhotoSizesResponse> call = App.get().getFlickrApi().getSizes(photoId);
+                sizes = call.execute().body().getSizes().getSize();
             } catch (Exception e) {
                 result = null;
                 Crashlytics.log("photo id = " + (photoId == null ? "" : photoId));

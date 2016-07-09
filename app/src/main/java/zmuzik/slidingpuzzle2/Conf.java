@@ -1,9 +1,5 @@
 package zmuzik.slidingpuzzle2;
 
-import android.content.res.Resources;
-
-import java.util.ResourceBundle;
-
 public class Conf {
     public static final int DEFAULT_GRID_DIM_SHORT = 4;
     public static final int DEFAULT_GRID_DIM_LONG = 4;
@@ -22,5 +18,5 @@ public class Conf {
     public static final String DCIM_APP_SUBDIR = "SlidingPuzzle";
     public static final int PIC_QUALITY = 90;
 
-    public static final String FLICKR_API_ROOT = "https://api.flickr.com/services/rest";
+    public static final String FLICKR_API_ROOT = "https://api.flickr.com/services/rest/";
 }
