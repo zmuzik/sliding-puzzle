@@ -18,4 +18,7 @@
     <string name="search">Hledat</string>
     <string name="select_grid_size">Vyberte velikost mřížky</string>
     <string name="flickr_search">Vyhledávání na Flickru</string>
+
+    <string name="display_tile_numbers_on">Zobrazování čísel dílů zapnuto</string>
+    <string name="display_tile_numbers_off">Zobrazování čísel dílů vypnuto</string>
 </resources>

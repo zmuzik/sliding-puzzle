@@ -93,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
             changeGridSize();
             return true;
         }
+        if (id == R.id.action_toggle_display_numbers) {
+            toggleShowNumbers();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -116,6 +120,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    public void toggleShowNumbers() {
+        boolean value = PrefsHelper.get().getDisplayTileNumbers();
+        value = !value;
+        PrefsHelper.get().setDisplayTileNumbers(value);
+        String msg = getString(value ? R.string.display_tile_numbers_on : R.string.display_tile_numbers_off);
+        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter {

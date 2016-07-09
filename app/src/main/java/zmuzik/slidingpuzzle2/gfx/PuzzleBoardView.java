@@ -44,27 +44,27 @@ public class PuzzleBoardView extends View {
     private int mBlackTileX, mBlackTileY;
     private boolean mPuzzleComplete;
     private boolean mGameInProgress = false;
-
+    private boolean mDisplayNumbers;
 
     public PuzzleBoardView(Context context) {
         super(context);
         mContext = context;
-        initPaints();
+        init();
     }
 
     public PuzzleBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        initPaints();
+        init();
     }
 
     public PuzzleBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-        initPaints();
+        init();
     }
 
-    public void initPaints() {
+    public void init() {
         mPaint = new Paint();
         mPaint.setStrokeWidth(0);
         mPaint.setFilterBitmap(false);
@@ -76,6 +76,8 @@ public class PuzzleBoardView extends View {
         mTextPaint.setStrokeWidth(3);
         mTextPaint.setAntiAlias(true);
         mBounds = new Rect();
+
+        mDisplayNumbers = PrefsHelper.get().getDisplayTileNumbers();
     }
 
     public void setDimensions(int width, int height) {
@@ -153,7 +155,7 @@ public class PuzzleBoardView extends View {
     }
 
     void drawNumberOnTile(Canvas canvas, int number, int tileX, int tileY, int addX, int addY) {
-        if (!mPuzzleComplete) {
+        if (!mPuzzleComplete && mDisplayNumbers) {
             String numStr = "" + number;
             mTextPaint.getTextBounds(numStr, 0, numStr.length(), mBounds);
             int xCoord = tileX * mTileWidth + addX + (mTileWidth / 2 - mBounds.width() / 2);

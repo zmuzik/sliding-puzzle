@@ -22,4 +22,7 @@
     <string name="shuffle">Shuffle</string>
     <string name="err_querying_flickr">Error while querying Flickr</string>
     <string name="flickr_search">Flickr search</string>
+
+    <string name="display_tile_numbers_on">Displaying tile numbers is on</string>
+    <string name="display_tile_numbers_off">Displaying tile numbers is off</string>
 </resources>
