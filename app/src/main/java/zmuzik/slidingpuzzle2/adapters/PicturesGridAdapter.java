@@ -144,11 +144,9 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         Resources res = App.get().getResources();
         orientationIcon.setVisibility(View.VISIBLE);
         if (BitmapHelper.isBitmapHorizontal(mFilePaths.get(position))) {
-            orientationIcon.setImageDrawable(
-                    res.getDrawable(R.drawable.ic_phone_landscape_32dp));
+            orientationIcon.setRotation(270f);
         } else {
-            orientationIcon.setImageDrawable(
-                    res.getDrawable(R.drawable.ic_phone_portrait_32dp));
+            orientationIcon.setRotation(0f);
         }
     }
 
