@@ -119,7 +119,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     }
 
     void bindFooterItem(final ViewHolder holder, final int position) {
-        holder.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.transparent_pixel));
+        holder.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.nothing));
         holder.progressBar.setVisibility(View.GONE);
         holder.orientationIcon.setVisibility(View.GONE);
         holder.nextTv.setVisibility(View.VISIBLE);

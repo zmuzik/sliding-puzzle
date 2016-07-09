@@ -17,4 +17,5 @@
     <string name="grid_size_selected_to">Velikost mřížky byla nastavena na</string>
     <string name="search">Hledat</string>
     <string name="select_grid_size">Vyberte velikost mřížky</string>
+    <string name="flickr_search">Vyhledávání na Flickru</string>
 </resources>

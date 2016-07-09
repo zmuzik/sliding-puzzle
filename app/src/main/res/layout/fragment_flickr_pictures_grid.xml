@@ -1,40 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="zmuzik.slidingpuzzle2.ui.fragments.FlickrPicturesFragment">
-
-    <RelativeLayout
-        android:id="@+id/searchPanel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/searchBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="@string/search"/>
-
-        <EditText
-            android:id="@+id/keywordEt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/searchBtn"
-            android:layout_toLeftOf="@id/searchBtn"
-            android:hint="@string/enter_keywords"
-            android:imeOptions="actionSearch"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:maxLines="1"/>
-    </RelativeLayout>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="zmuzik.slidingpuzzle2.ui.fragments.FlickrPicturesFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/searchPanel"/>
+        android:layout_height="match_parent" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -42,6 +16,17 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:elevation="8dp"
+        android:src="@drawable/ic_search_24dp"
+        app:elevation="8dp"
+        app:useCompatPadding="true" />
 
 </RelativeLayout>
