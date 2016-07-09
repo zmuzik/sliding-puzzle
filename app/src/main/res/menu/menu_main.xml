@@ -5,7 +5,7 @@
 
     <item android:id="@+id/action_change_grid_size"
           android:title=""
-          android:icon="@drawable/ic_action_image_grid_on"
+          android:icon="@drawable/ic_grid_on_32dp"
           android:orderInCategory="10"
           app:showAsAction="always"/>
 </menu>

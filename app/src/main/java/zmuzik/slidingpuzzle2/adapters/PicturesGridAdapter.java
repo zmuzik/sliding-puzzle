@@ -93,7 +93,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
                         //Toast.makeText(mContext, uriString + " failed", Toast.LENGTH_SHORT).show();
                         Resources res = mContext.getResources();
                         holder.progressBar.setVisibility(View.GONE);
-                        holder.image.setImageDrawable(res.getDrawable(R.drawable.ic_action_image_photo));
+                        holder.image.setImageDrawable(res.getDrawable(R.drawable.ic_panorama_32dp));
                         Log.e("PicturesGridAdapter", uriString + " failed");
                     }
                 });
@@ -145,10 +145,10 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         orientationIcon.setVisibility(View.VISIBLE);
         if (BitmapHelper.isBitmapHorizontal(mFilePaths.get(position))) {
             orientationIcon.setImageDrawable(
-                    res.getDrawable(R.drawable.ic_action_hardware_phone_android_horiz));
+                    res.getDrawable(R.drawable.ic_phone_landscape_32dp));
         } else {
             orientationIcon.setImageDrawable(
-                    res.getDrawable(R.drawable.ic_action_hardware_phone_android));
+                    res.getDrawable(R.drawable.ic_phone_portrait_32dp));
         }
     }
 

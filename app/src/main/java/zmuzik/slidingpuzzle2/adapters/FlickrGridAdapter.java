@@ -38,10 +38,10 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
         orientationIcon.setVisibility(View.VISIBLE);
         if (photo.getWidth_l() > photo.getHeight_l()) {
             orientationIcon.setImageDrawable(
-                    res.getDrawable(R.drawable.ic_action_hardware_phone_android_horiz));
+                    res.getDrawable(R.drawable.ic_phone_landscape_32dp));
         } else {
             orientationIcon.setImageDrawable(
-                    res.getDrawable(R.drawable.ic_action_hardware_phone_android));
+                    res.getDrawable(R.drawable.ic_phone_portrait_32dp));
         }
     }
 
