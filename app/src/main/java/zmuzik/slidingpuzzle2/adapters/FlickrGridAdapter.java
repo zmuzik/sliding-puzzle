@@ -33,7 +33,6 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
     }
 
     @Override public void setOrientationIcon(ImageView orientationIcon, int position) {
-        Resources res = App.get().getResources();
         Photo photo = mPhotos.get(position);
         orientationIcon.setVisibility(View.VISIBLE);
         boolean isHorizontal = photo.getWidth_l() > photo.getHeight_l();
