@@ -95,7 +95,7 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_PERMISSION_CAMERA:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             == PackageManager.PERMISSION_GRANTED) {
                         dispatchTakePictureIntent();
@@ -105,12 +105,12 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
                 }
                 break;
             case REQUEST_PERMISSION_STORAGE:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     initData();
                 }
                 break;
             case REQUEST_PERMISSION_STORAGE_FOR_CAMERA:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     initData();
                     dispatchTakePictureIntent();
                 }
