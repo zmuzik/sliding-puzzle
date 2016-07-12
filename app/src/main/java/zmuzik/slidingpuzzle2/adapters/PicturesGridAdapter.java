@@ -84,32 +84,28 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
                 .resize(mDim, mDim)
                 .centerCrop()
                 .into(holder.image, new Callback() {
-                    @Override public void onSuccess() {
+                    @Override
+                    public void onSuccess() {
                         holder.progressBar.setVisibility(View.GONE);
+                        holder.orientationIcon.setVisibility(View.VISIBLE);
                         setOrientationIcon(holder.orientationIcon, position);
                     }
 
-                    @Override public void onError() {
-                        //Toast.makeText(mContext, uriString + " failed", Toast.LENGTH_SHORT).show();
-                        Resources res = mContext.getResources();
+                    @Override
+                    public void onError() {
                         holder.progressBar.setVisibility(View.GONE);
-                        holder.image.setImageDrawable(res.getDrawable(R.drawable.ic_panorama_32dp));
+                        holder.orientationIcon.setVisibility(View.GONE);
+                        holder.image.setImageResource(R.drawable.ic_panorama_32dp);
                         Log.e("PicturesGridAdapter", uriString + " failed");
                     }
                 });
 
         holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 runGame(position);
             }
         });
-
-//        holder.image.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override public boolean onLongClick(View v) {
-//                runGameAsync(position);
-//                return true;
-//            }
-//        });
     }
 
     public void runGame(int position) {
