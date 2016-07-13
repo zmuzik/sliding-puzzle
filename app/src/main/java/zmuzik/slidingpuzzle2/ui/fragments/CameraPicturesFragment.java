@@ -164,7 +164,9 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
 
         @Override
         public int compareTo(Object another) {
-            return (((FileContainer) another).lastModified - lastModified) > 0 ? 1 : -1;
+            long diff = ((FileContainer) another).lastModified - lastModified;
+            if (diff == 0) return 0;
+            return diff > 0 ? 1 : -1;
         }
     }
 }
