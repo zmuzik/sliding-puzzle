@@ -86,6 +86,7 @@ public class GameActivity extends Activity {
     protected void onResume() {
         super.onResume();
         Crashlytics.log(Log.DEBUG, TAG, "onResume");
+        Crashlytics.setString("screen", TAG);
     }
 
     void resolvePictureUri(Callback callback) {

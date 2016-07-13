@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 mViewPager.setCurrentItem(tab.getPosition());
                 Crashlytics.log(Log.DEBUG, TAG, "onTabSelected " + tab.getPosition());
+                Crashlytics.setInt("tab", tab.getPosition());
+
             }
 
             @Override
@@ -117,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Crashlytics.log(Log.DEBUG, TAG, "onResume");
+        Crashlytics.setString("screen", TAG);
     }
 
     public void changeGridSize() {
