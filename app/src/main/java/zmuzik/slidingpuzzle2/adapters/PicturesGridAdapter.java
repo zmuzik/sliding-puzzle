@@ -90,6 +90,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
                 .into(holder.image, new Callback() {
                     @Override
                     public void onSuccess() {
+                        holder.image.setVisibility(View.VISIBLE);
                         holder.progressBar.setVisibility(View.GONE);
                         holder.orientationIcon.setVisibility(View.VISIBLE);
                         setOrientationIcon(holder.orientationIcon, position);
@@ -97,6 +98,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
                     @Override
                     public void onError() {
+                        holder.image.setVisibility(View.VISIBLE);
                         holder.progressBar.setVisibility(View.GONE);
                         holder.orientationIcon.setVisibility(View.GONE);
                         holder.image.setImageResource(R.drawable.ic_panorama_32dp);
@@ -120,7 +122,8 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     }
 
     void bindFooterItem(final ViewHolder holder, final int position) {
-        holder.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.nothing));
+        //holder.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.nothing));
+        holder.image.setVisibility(View.GONE);
         holder.progressBar.setVisibility(View.GONE);
         holder.orientationIcon.setVisibility(View.GONE);
         holder.nextTv.setVisibility(View.VISIBLE);
