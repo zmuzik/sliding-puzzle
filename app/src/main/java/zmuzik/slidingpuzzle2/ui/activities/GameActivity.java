@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
@@ -59,6 +60,7 @@ public class GameActivity extends Activity {
 
         resolvePictureUri(new Callback() {
             @Override public void onFinished() {
+                Crashlytics.log(Log.DEBUG, TAG, "requesting " + mFileUri);
                 Picasso.with(GameActivity.this)
                         .load(mFileUri)
                         .memoryPolicy(MemoryPolicy.NO_STORE)
@@ -68,9 +70,22 @@ public class GameActivity extends Activity {
 
             @Override public void onError() {
                 Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
+                Crashlytics.log(Log.DEBUG, TAG, getString(R.string.unable_to_load_flickr_picture));
                 GameActivity.this.finish();
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Crashlytics.log(Log.DEBUG, TAG, "onPause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Crashlytics.log(Log.DEBUG, TAG, "onResume");
     }
 
     void resolvePictureUri(Callback callback) {
@@ -78,6 +93,7 @@ public class GameActivity extends Activity {
         board.setVisibility(View.GONE);
         if (getIntent().getExtras() == null) {
             Toast.makeText(this, getString(R.string.picture_not_supplied), Toast.LENGTH_LONG).show();
+            Crashlytics.log(Log.DEBUG, TAG, getString(R.string.picture_not_supplied));
             finish();
         }
         mFileUri = getIntent().getExtras().getString(PicturesGridAdapter.FILE_URI);
@@ -91,6 +107,7 @@ public class GameActivity extends Activity {
                 new GetFlickrPhotoSizesTask(photo, getMaxScreenDim(), callback).execute();
             } else {
                 Toast.makeText(this, getString(R.string.internet_unavailable), Toast.LENGTH_LONG).show();
+                Crashlytics.log(Log.DEBUG, TAG, getString(R.string.internet_unavailable));
                 finish();
             }
         }
@@ -111,6 +128,7 @@ public class GameActivity extends Activity {
         @Override public void onBitmapFailed(Drawable errorDrawable) {
             progressBar.setVisibility(View.GONE);
             Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
+            Crashlytics.log(Log.DEBUG, TAG, getString(R.string.unable_to_load_flickr_picture));
             finish();
         }
 
@@ -164,6 +182,7 @@ public class GameActivity extends Activity {
 
     @Override
     public void onStop() {
+        Crashlytics.log(Log.DEBUG, TAG, "canceling Picasso request");
         Picasso.with(this).cancelRequest(mTarget);
         super.onStop();
     }

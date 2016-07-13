@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.Random;
 
 import zmuzik.slidingpuzzle2.R;
@@ -78,6 +80,7 @@ public class PuzzleBoardView extends View {
         mBounds = new Rect();
 
         mDisplayNumbers = PrefsHelper.get().getDisplayTileNumbers();
+        Crashlytics.log(Log.DEBUG, TAG, "puzzle initialized");
     }
 
     public void setDimensions(int width, int height) {
@@ -169,13 +172,13 @@ public class PuzzleBoardView extends View {
             for (int j = 0; j < mTilesY; j++) {
                 Tile t = mTiles[i][j];
                 if (t.getOrigX() != i || t.getOrigY() != j) {
-                    Log.d(TAG, "not complete: " + i + j);
                     return false;
                 }
             }
         }
         Log.d(TAG, "puzzle complete");
         Toast.makeText(getContext(), getContext().getText(R.string.congrats), Toast.LENGTH_SHORT).show();
+        Crashlytics.log(Log.DEBUG, TAG, "puzzle complete");
         return true;
     }
 

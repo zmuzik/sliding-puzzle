@@ -12,9 +12,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
 
 import java.util.StringTokenizer;
 
@@ -26,6 +29,8 @@ import zmuzik.slidingpuzzle2.ui.fragments.SavedPicturesFragment;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    final String TAG = this.getClass().getSimpleName();
 
     final String[] GRID_SIZES = {
             "3x3", "3x4", "3x5", "3x6",
@@ -67,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 mViewPager.setCurrentItem(tab.getPosition());
+                Crashlytics.log(Log.DEBUG, TAG, "onTabSelected " + tab.getPosition());
             }
 
             @Override
@@ -98,6 +104,19 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Crashlytics.log(Log.DEBUG, TAG, "onPause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Crashlytics.log(Log.DEBUG, TAG, "onResume");
     }
 
     public void changeGridSize() {

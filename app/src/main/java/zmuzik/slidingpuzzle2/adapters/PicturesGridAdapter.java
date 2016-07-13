@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -27,6 +28,7 @@ import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
 
 public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapter.ViewHolder> {
 
+    final String TAG = this.getClass().getSimpleName();
     public static final String FILE_URI = "FILE_URI";
 
     protected List<String> mFilePaths;
@@ -79,7 +81,9 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         final String uriString = mFilePaths.get(position);
         holder.nextTv.setVisibility(View.GONE);
         holder.progressBar.setVisibility(View.VISIBLE);
+        Crashlytics.log(Log.DEBUG, TAG, "canceling Picasso request");
         Picasso.with(App.get()).cancelRequest(holder.image);
+        Crashlytics.log(Log.DEBUG, TAG, "requesting " + uriString);
         Picasso.with(App.get()).load(uriString)
                 .resize(mDim, mDim)
                 .centerCrop()

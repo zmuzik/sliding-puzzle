@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,8 @@ import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
 import zmuzik.slidingpuzzle2.flickr.SearchResponse;
 
 public class FlickrPicturesFragment extends SavedPicturesFragment {
+
+    final String TAG = this.getClass().getSimpleName();
 
     ProgressBar mProgressBar;
     FloatingActionButton mFab;
@@ -110,6 +113,7 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
     }
 
     private void search(String keywords) {
+        Crashlytics.log(Log.DEBUG, TAG, "search " + keywords);
         if (!App.get().isOnline()) {
             Toast.makeText(getActivity(),
                     getActivity().getResources().getString(R.string.internet_unavailable),
@@ -174,6 +178,7 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
 
         @Override protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            Crashlytics.log(Log.DEBUG, TAG, "onPostExecute");
             if (resp == null) {
                 Toast.makeText(getActivity(),
                         getActivity().getResources().getString(R.string.err_querying_flickr),
