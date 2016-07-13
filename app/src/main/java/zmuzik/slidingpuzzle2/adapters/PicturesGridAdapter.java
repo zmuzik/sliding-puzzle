@@ -107,6 +107,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Crashlytics.log(Log.DEBUG, TAG, "run game");
                 runGame(position);
             }
         });
