@@ -125,6 +125,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         holder.nextTv.setVisibility(View.VISIBLE);
         holder.nextTv.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
+                Crashlytics.log(Log.DEBUG, TAG, "more clicked");
                 showNextPage();
             }
         });
