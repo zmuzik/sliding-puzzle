@@ -50,6 +50,28 @@ public class GameActivity extends Activity {
 
     public String mFileUri;
 
+    Target mTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            Crashlytics.log(Log.DEBUG, TAG, "onBitmapLoaded");
+            adjustBoardDimensions(board, bitmap);
+            board.setBitmap(bitmap);
+            shuffleBtn.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            board.setVisibility(View.VISIBLE);
+        }
+
+        @Override public void onBitmapFailed(Drawable errorDrawable) {
+            progressBar.setVisibility(View.GONE);
+            Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
+            Crashlytics.log(Log.DEBUG, TAG, getString(R.string.unable_to_load_flickr_picture));
+            finish();
+        }
+
+        @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +92,8 @@ public class GameActivity extends Activity {
                         .load(mFileUri)
                         .memoryPolicy(MemoryPolicy.NO_STORE)
                         .networkPolicy(NetworkPolicy.NO_STORE)
+                        .resize(mScreenWidth, mScreenHeight)
+                        .centerInside()
                         .into(mTarget);
             }
 
@@ -118,28 +142,6 @@ public class GameActivity extends Activity {
             }
         }
     }
-
-    Target mTarget = new Target() {
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            resolveScreenDimensions();
-            progressBar.setVisibility(View.GONE);
-            board.setVisibility(View.VISIBLE);
-            adjustBoardDimensions(board, bitmap);
-            board.setBitmap(bitmap);
-            shuffleBtn.setVisibility(View.VISIBLE);
-        }
-
-        @Override public void onBitmapFailed(Drawable errorDrawable) {
-            progressBar.setVisibility(View.GONE);
-            Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
-            Crashlytics.log(Log.DEBUG, TAG, getString(R.string.unable_to_load_flickr_picture));
-            finish();
-        }
-
-        @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
-        }
-    };
 
     void setScreenOrientation(int bitmapWidth, int bitmapHeight) {
         if (bitmapWidth > bitmapHeight) {

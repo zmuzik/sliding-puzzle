@@ -103,7 +103,7 @@ public class PuzzleBoardView extends View {
     }
 
     public void setBitmap(Bitmap bitmap) {
-        mCompletePictureBitmap = Bitmap.createScaledBitmap(bitmap, mViewWidth, mViewHeight, true);
+        mCompletePictureBitmap = bitmap;
         initTiles();
     }
 
@@ -113,18 +113,15 @@ public class PuzzleBoardView extends View {
         int tileNumber = 1;
         for (int y = 0; y < mTilesY; y++) {
             for (int x = 0; x < mTilesX; x++) {
-                Bitmap bitmap = Bitmap.createBitmap(mCompletePictureBitmap, x * mTileWidth, y * mTileHeight,
+                Bitmap tileBitmap = Bitmap.createBitmap(mCompletePictureBitmap, x * mTileWidth, y * mTileHeight,
                         mTileWidth, mTileHeight);
-                mTiles[x][y] = new Tile(x, y, bitmap, tileNumber);
+                mTiles[x][y] = new Tile(x, y, tileBitmap, tileNumber);
                 tileNumber++;
             }
         }
         // sets the black tile to the last tile of the grid
         mBlackTileX = mTilesX - 1;
         mBlackTileY = mTilesY - 1;
-        // save the tiles' starting position
-        mCompletePictureBitmap.recycle();
-        mCompletePictureBitmap = null;
     }
 
     @Override
