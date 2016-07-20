@@ -26,7 +26,6 @@ import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
 import zmuzik.slidingpuzzle2.flickr.Photo;
-import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
 import zmuzik.slidingpuzzle2.flickr.SearchResponse;
 
 public class FlickrPicturesFragment extends SavedPicturesFragment {
@@ -115,15 +114,15 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
     private void search(String keywords) {
         Crashlytics.log(Log.DEBUG, TAG, "search " + keywords);
         if (!App.get().isOnline()) {
-            Toast.makeText(getActivity(),
-                    getActivity().getResources().getString(R.string.internet_unavailable),
+            Toast.makeText(App.get(),
+                    App.get().getResources().getString(R.string.internet_unavailable),
                     Toast.LENGTH_LONG).show();
             return;
         }
 
         if (keywords == null || "".equals(keywords.toString())) {
-            Toast.makeText(getActivity(),
-                    getActivity().getResources().getString(R.string.keyword_not_supplied),
+            Toast.makeText(App.get(),
+                    App.get().getResources().getString(R.string.keyword_not_supplied),
                     Toast.LENGTH_LONG).show();
             return;
         }
@@ -180,8 +179,8 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
             super.onPostExecute(aVoid);
             Crashlytics.log(Log.DEBUG, TAG, "onPostExecute");
             if (resp == null) {
-                Toast.makeText(getActivity(),
-                        getActivity().getResources().getString(R.string.err_querying_flickr),
+                Toast.makeText(App.get(),
+                        App.get().getResources().getString(R.string.err_querying_flickr),
                         Toast.LENGTH_LONG).show();
             } else {
                 List<Photo> photos = App.get().getFlickrPhotos();

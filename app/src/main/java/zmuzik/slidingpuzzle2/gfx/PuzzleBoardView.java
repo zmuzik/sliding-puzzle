@@ -17,6 +17,7 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.Random;
 
+import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 import zmuzik.slidingpuzzle2.model.Tile;
@@ -174,7 +175,7 @@ public class PuzzleBoardView extends View {
             }
         }
         Log.d(TAG, "puzzle complete");
-        Toast.makeText(getContext(), getContext().getText(R.string.congrats), Toast.LENGTH_SHORT).show();
+        Toast.makeText(App.get(), App.get().getText(R.string.congrats), Toast.LENGTH_SHORT).show();
         Crashlytics.log(Log.DEBUG, TAG, "puzzle complete");
         return true;
     }

@@ -63,8 +63,8 @@ public class GameActivity extends Activity {
 
         @Override public void onBitmapFailed(Drawable errorDrawable) {
             progressBar.setVisibility(View.GONE);
-            Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
-            Crashlytics.log(Log.DEBUG, TAG, getString(R.string.unable_to_load_flickr_picture));
+            Toast.makeText(App.get(), App.get().getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
+            Crashlytics.log(Log.DEBUG, TAG, App.get().getString(R.string.unable_to_load_flickr_picture));
             finish();
         }
 
@@ -98,8 +98,8 @@ public class GameActivity extends Activity {
             }
 
             @Override public void onError() {
-                Toast.makeText(GameActivity.this, getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
-                Crashlytics.log(Log.DEBUG, TAG, getString(R.string.unable_to_load_flickr_picture));
+                Toast.makeText(App.get(), App.get().getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
+                Crashlytics.log(Log.DEBUG, TAG, App.get().getString(R.string.unable_to_load_flickr_picture));
                 GameActivity.this.finish();
             }
         });
@@ -122,7 +122,7 @@ public class GameActivity extends Activity {
         progressBar.setVisibility(View.VISIBLE);
         board.setVisibility(View.GONE);
         if (getIntent().getExtras() == null) {
-            Toast.makeText(this, getString(R.string.picture_not_supplied), Toast.LENGTH_LONG).show();
+            Toast.makeText(App.get(), App.get().getString(R.string.picture_not_supplied), Toast.LENGTH_LONG).show();
             Crashlytics.log(Log.DEBUG, TAG, getString(R.string.picture_not_supplied));
             finish();
         }
@@ -136,8 +136,8 @@ public class GameActivity extends Activity {
             if (App.get().isOnline()) {
                 new GetFlickrPhotoSizesTask(photo, getMaxScreenDim(), callback).execute();
             } else {
-                Toast.makeText(this, getString(R.string.internet_unavailable), Toast.LENGTH_LONG).show();
-                Crashlytics.log(Log.DEBUG, TAG, getString(R.string.internet_unavailable));
+                Toast.makeText(App.get(), App.get().getString(R.string.internet_unavailable), Toast.LENGTH_LONG).show();
+                Crashlytics.log(Log.DEBUG, TAG, App.get().getString(R.string.internet_unavailable));
                 finish();
             }
         }

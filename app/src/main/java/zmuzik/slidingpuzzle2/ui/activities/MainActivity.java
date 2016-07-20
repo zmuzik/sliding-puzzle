@@ -21,6 +21,7 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.StringTokenizer;
 
+import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 import zmuzik.slidingpuzzle2.ui.fragments.CameraPicturesFragment;
@@ -136,8 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 PrefsHelper.get().setGridDimShort(Integer.parseInt(shorterStr));
                 PrefsHelper.get().setGridDimLong(Integer.parseInt(longerStr));
                 dialog.dismiss();
-                Toast.makeText(MainActivity.this,
-                        getString(R.string.grid_size_selected_to) + positionsStr,
+                Toast.makeText(App.get(), App.get().getString(R.string.grid_size_selected_to) + positionsStr,
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         value = !value;
         PrefsHelper.get().setDisplayTileNumbers(value);
         String msg = getString(value ? R.string.display_tile_numbers_on : R.string.display_tile_numbers_off);
-        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(App.get(), msg, Toast.LENGTH_SHORT).show();
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
