@@ -81,9 +81,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         final String uriString = mFilePaths.get(position);
         holder.nextTv.setVisibility(View.GONE);
         holder.progressBar.setVisibility(View.VISIBLE);
-        Crashlytics.log(Log.DEBUG, TAG, "canceling Picasso request");
         Picasso.with(App.get()).cancelRequest(holder.image);
-        Crashlytics.log(Log.DEBUG, TAG, "requesting " + uriString);
         Picasso.with(App.get()).load(uriString)
                 .resize(mDim, mDim)
                 .centerCrop()
