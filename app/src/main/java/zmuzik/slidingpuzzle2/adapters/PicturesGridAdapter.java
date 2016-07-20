@@ -30,6 +30,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
     final String TAG = this.getClass().getSimpleName();
     public static final String FILE_URI = "FILE_URI";
+    public static final String IS_HORIZONTAL = "IS_HORIZONTAL";
 
     protected List<String> mFilePaths;
     protected Context mContext;
@@ -114,13 +115,14 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     }
 
     public void runGame(int position) {
+        boolean isHorizontal = BitmapHelper.isBitmapHorizontal(mFilePaths.get(position));
         Intent intent = new Intent(mContext, GameActivity.class);
         intent.putExtra(FILE_URI, mFilePaths.get(position));
+        intent.putExtra(IS_HORIZONTAL, isHorizontal);
         mContext.startActivity(intent);
     }
 
     void bindFooterItem(final ViewHolder holder, final int position) {
-        //holder.image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.nothing));
         holder.image.setVisibility(View.GONE);
         holder.progressBar.setVisibility(View.GONE);
         holder.orientationIcon.setVisibility(View.GONE);

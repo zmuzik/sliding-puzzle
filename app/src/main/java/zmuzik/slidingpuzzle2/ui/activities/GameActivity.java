@@ -1,6 +1,7 @@
 package zmuzik.slidingpuzzle2.ui.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -52,8 +53,12 @@ public class GameActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        Intent intent = getIntent();
+        if (intent == null) finish();
+        boolean isHorizontal = getIntent().getExtras().getBoolean(PicturesGridAdapter.IS_HORIZONTAL);
+        setScreenOrientation(isHorizontal);
         resolveScreenDimensions();
+        setContentView(R.layout.activity_game);
         board = (PuzzleBoardView) findViewById(R.id.board);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         shuffleBtn = (Button) findViewById(R.id.shuffleBtn);
@@ -117,7 +122,6 @@ public class GameActivity extends Activity {
     Target mTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            setScreenOrientation(bitmap.getWidth(), bitmap.getHeight());
             resolveScreenDimensions();
             progressBar.setVisibility(View.GONE);
             board.setVisibility(View.VISIBLE);
@@ -143,6 +147,12 @@ public class GameActivity extends Activity {
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
+    }
+
+    void setScreenOrientation(boolean isHorizontal) {
+        setRequestedOrientation(isHorizontal
+                ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     void resolveScreenDimensions() {
