@@ -180,6 +180,6 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         if (mFilePaths == null) mFilePaths = new ArrayList<>();
         if (mFilePaths.contains(item)) return;
         mFilePaths.add(position, item);
-        notifyItemInserted(position);
+        notifyDataSetChanged();
     }
 }
