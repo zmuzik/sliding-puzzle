@@ -1,0 +1,21 @@
+key	en	cs
+app_name	Sliding Puzzle	Patnáctka		
+congrats	Congratulations!	Gratuluji!		
+title_section1	Saved	Uložené		
+title_section2	Camera	Fotoaparát		
+title_section3	Flickr	Flickr		
+action_settings	Settings	Nastavení		
+search	Search	Hledat		
+enter_keywords	Enter keyword(s)	Zadejte klíčová slova		
+select_grid_size	Select grid size	Vyberte velikost mřížky		
+grid_size_selected_to	Grid size was set to xxx	Velikost mřížky byla nastavena na xxx		
+more	More…	Více…		
+internet_unavailable	Internet connection unavailable.	Internet není k dispozici		
+keyword_not_supplied	Keyword(s) not supplied.	Nebylo zadáno žádné klíčové slovo		
+unable_to_load_flickr_picture	Unable to load picture from Flickr	Nepodařilo se nahrát obrázek z Flickru		
+picture_not_supplied	Picture not available	Obrázek není k dispozici		
+shuffle	Shuffle	Zamíchat		
+err_querying_flickr	Error while querying Flickr	Chyba při kontaktování Flickru		
+flickr_search	Flickr search	Vyhledávání na Flickru		
+display_tile_numbers_on	Displaying tile numbers is on	Zobrazování čísel dílů zapnuto		
+display_tile_numbers_off	Displaying tile numbers is off	Zobrazování čísel dílů vypnuto		
