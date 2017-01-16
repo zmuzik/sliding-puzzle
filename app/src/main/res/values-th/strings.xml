@@ -19,4 +19,5 @@
     <string name="err_querying_flickr">ข้อผิดพลาดระหว่างสืบค้นข้อมูลจาก Flickr </string>
     <string name="flickr_search">ค้้นหาโดยFlickr </string>
     <string name="display_tile_numbers_on">เปิดหมายเลขบนแผ่นภาพ</string>
+    <string name="display_tile_numbers_off">ปิดหมายเลขบนแผ่นภาพ</string>
 </resources>

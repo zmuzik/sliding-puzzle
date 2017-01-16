@@ -19,4 +19,5 @@
     <string name="err_querying_flickr">Flickrに接続できませんでした</string>
     <string name="flickr_search">Flickrで検索</string>
     <string name="display_tile_numbers_on">数字を表示します</string>
+    <string name="display_tile_numbers_off">数字を非表示にします</string>
 </resources>
