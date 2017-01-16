@@ -137,8 +137,8 @@ public class MainActivity extends AppCompatActivity {
                 PrefsHelper.get().setGridDimShort(Integer.parseInt(shorterStr));
                 PrefsHelper.get().setGridDimLong(Integer.parseInt(longerStr));
                 dialog.dismiss();
-                Toast.makeText(App.get(), App.get().getString(R.string.grid_size_selected_to) + positionsStr,
-                        Toast.LENGTH_SHORT).show();
+                String msg = String.format(App.get().getString(R.string.grid_size_selected_to), positionsStr);
+                Toast.makeText(App.get(), msg, Toast.LENGTH_SHORT).show();
             }
         });
         builder.show();
