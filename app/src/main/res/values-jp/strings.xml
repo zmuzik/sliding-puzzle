@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">スライディングパズル</string>
+    <string name="congrats">よくできました</string>
+    <string name="title_section1">保存</string>
+    <string name="title_section2">カメラ</string>
+    <string name="title_section3">Flickr</string>
+    <string name="action_settings">設定</string>
+    <string name="search">検索</string>
+    <string name="enter_keywords">キーワード入力</string>
+    <string name="select_grid_size">グリッドサイズの選択</string>
+    <string name="grid_size_selected_to">グリッドサイズを%1$sに設定しました</string>
+    <string name="more">More…</string>
+    <string name="internet_unavailable">インターネットに接続できません</string>
+    <string name="keyword_not_supplied">該当するキーワードがありません</string>
+    <string name="unable_to_load_flickr_picture">Flickrから写真を読み込めません</string>
+    <string name="picture_not_supplied">選択された写真は使用できません</string>
+    <string name="shuffle">シャッフル</string>
+    <string name="err_querying_flickr">Flickrに接続できませんでした</string>
+    <string name="flickr_search">Flickrで検索</string>
+    <string name="display_tile_numbers_on">数字を表示します</string>
+</resources>

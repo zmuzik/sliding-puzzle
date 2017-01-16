@@ -2,27 +2,21 @@
 <resources>
     <string name="app_name">Sliding Puzzle</string>
     <string name="congrats">Congratulations!</string>
-
     <string name="title_section1">Saved</string>
     <string name="title_section2">Camera</string>
     <string name="title_section3">Flickr</string>
-
     <string name="action_settings">Settings</string>
-
     <string name="search">Search</string>
     <string name="enter_keywords">Enter keyword(s)</string>
-
     <string name="select_grid_size">Select grid size</string>
     <string name="grid_size_selected_to">Grid size was set to %1$s</string>
     <string name="more">More…</string>
     <string name="internet_unavailable">Internet connection unavailable.</string>
     <string name="keyword_not_supplied">Keyword(s) not supplied.</string>
     <string name="unable_to_load_flickr_picture">Unable to load picture from Flickr</string>
-    <string name="picture_not_supplied">Picture not supplied</string>
+    <string name="picture_not_supplied">Picture not available</string>
     <string name="shuffle">Shuffle</string>
     <string name="err_querying_flickr">Error while querying Flickr</string>
     <string name="flickr_search">Flickr search</string>
-
     <string name="display_tile_numbers_on">Displaying tile numbers is on</string>
-    <string name="display_tile_numbers_off">Displaying tile numbers is off</string>
 </resources>

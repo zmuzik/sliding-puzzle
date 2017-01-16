@@ -1,21 +1,21 @@
-key	en	cs
-app_name	Sliding Puzzle	Patnáctka		
-congrats	Congratulations!	Gratuluji!		
-title_section1	Saved	Uložené		
-title_section2	Camera	Fotoaparát		
-title_section3	Flickr	Flickr		
-action_settings	Settings	Nastavení		
-search	Search	Hledat		
-enter_keywords	Enter keyword(s)	Zadejte klíčová slova		
-select_grid_size	Select grid size	Vyberte velikost mřížky		
-grid_size_selected_to	Grid size was set to xxx	Velikost mřížky byla nastavena na xxx		
-more	More…	Více…		
-internet_unavailable	Internet connection unavailable.	Internet není k dispozici		
-keyword_not_supplied	Keyword(s) not supplied.	Nebylo zadáno žádné klíčové slovo		
-unable_to_load_flickr_picture	Unable to load picture from Flickr	Nepodařilo se nahrát obrázek z Flickru		
-picture_not_supplied	Picture not available	Obrázek není k dispozici		
-shuffle	Shuffle	Zamíchat		
-err_querying_flickr	Error while querying Flickr	Chyba při kontaktování Flickru		
-flickr_search	Flickr search	Vyhledávání na Flickru		
-display_tile_numbers_on	Displaying tile numbers is on	Zobrazování čísel dílů zapnuto		
-display_tile_numbers_off	Displaying tile numbers is off	Zobrazování čísel dílů vypnuto		
+key	en	cs	th	jp
+app_name	Sliding Puzzle	Patnáctka	จิ๊กซอว์ภาพเลื่อน	スライディングパズル
+congrats	Congratulations!	Gratuluji!	ขอแสดงความยินดี	よくできました
+title_section1	Saved	Uložené	อัลบั้ม	保存
+title_section2	Camera	Fotoaparát	กล้อง	カメラ
+title_section3	Flickr	Flickr	Flickr	Flickr
+action_settings	Settings	Nastavení	การตั้งค่า 	設定
+search	Search	Hledat	ค้นหา	検索
+enter_keywords	Enter keyword(s)	Zadejte klíčová slova	ใส่คำหลักเพื่อค้นหา	キーワード入力
+select_grid_size	Select grid size	Vyberte velikost mřížky	เลือกขนาดตารางภาพปริศนา	グリッドサイズの選択
+grid_size_selected_to	Grid size was set to %1$s	Velikost mřížky byla nastavena na %1$s	ขนาดของตารางคือ %1$s	グリッドサイズを%1$sに設定しました
+more	More…	Více…	อื่นๆ	More…
+internet_unavailable	Internet connection unavailable.	Internet není k dispozici	สัญญาณเครือข่ายไม่ได้ถูกเชื่อมต่อ 	インターネットに接続できません
+keyword_not_supplied	Keyword(s) not supplied.	Nebylo zadáno žádné klíčové slovo	คำหลักไม่ปรากฎ	該当するキーワードがありません
+unable_to_load_flickr_picture	Unable to load picture from Flickr	Nepodařilo se nahrát obrázek z Flickru	ไม่่สามารถโหลดภาพจาก Flickr ได้	Flickrから写真を読み込めません
+picture_not_supplied	Picture not available	Obrázek není k dispozici	ไม่มีีรูปภาพปรากฎ	選択された写真は使用できません
+shuffle	Shuffle	Zamíchat	สัับเปลี่ยน	シャッフル
+err_querying_flickr	Error while querying Flickr	Chyba při kontaktování Flickru	ข้อผิดพลาดระหว่างสืบค้นข้อมูลจาก Flickr 	Flickrに接続できませんでした
+flickr_search	Flickr search	Vyhledávání na Flickru	ค้้นหาโดยFlickr 	Flickrで検索
+display_tile_numbers_on	Displaying tile numbers is on	Zobrazování čísel dílů zapnuto	เปิดหมายเลขบนแผ่นภาพ	数字を表示します
+display_tile_numbers_off	Displaying tile numbers is off	Zobrazování čísel dílů vypnuto	ปิดหมายเลขบนแผ่นภาพ	数字を非表示にします

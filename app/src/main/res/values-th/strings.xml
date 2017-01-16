@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">จิ๊กซอว์ภาพเลื่อน</string>
+    <string name="congrats">ขอแสดงความยินดี</string>
+    <string name="title_section1">อัลบั้ม</string>
+    <string name="title_section2">กล้อง</string>
+    <string name="title_section3">Flickr</string>
+    <string name="action_settings">การตั้งค่า </string>
+    <string name="search">ค้นหา</string>
+    <string name="enter_keywords">ใส่คำหลักเพื่อค้นหา</string>
+    <string name="select_grid_size">เลือกขนาดตารางภาพปริศนา</string>
+    <string name="grid_size_selected_to">ขนาดของตารางคือ %1$s</string>
+    <string name="more">อื่นๆ</string>
+    <string name="internet_unavailable">สัญญาณเครือข่ายไม่ได้ถูกเชื่อมต่อ </string>
+    <string name="keyword_not_supplied">คำหลักไม่ปรากฎ</string>
+    <string name="unable_to_load_flickr_picture">ไม่่สามารถโหลดภาพจาก Flickr ได้</string>
+    <string name="picture_not_supplied">ไม่มีีรูปภาพปรากฎ</string>
+    <string name="shuffle">สัับเปลี่ยน</string>
+    <string name="err_querying_flickr">ข้อผิดพลาดระหว่างสืบค้นข้อมูลจาก Flickr </string>
+    <string name="flickr_search">ค้้นหาโดยFlickr </string>
+    <string name="display_tile_numbers_on">เปิดหมายเลขบนแผ่นภาพ</string>
+</resources>
