@@ -1,13 +1,12 @@
 package zmuzik.slidingpuzzle2.ui.fragments;
 
 import android.Manifest;
-import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -22,18 +21,13 @@ import java.util.Collections;
 import java.util.List;
 
 import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
 import zmuzik.slidingpuzzle2.helpers.BitmapHelper;
-import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 
 public class CameraPicturesFragment extends SavedPicturesFragment {
 
     final String TAG = this.getClass().getSimpleName();
-    public static final int REQUEST_PERMISSION_CAMERA = 100;
     public static final int REQUEST_PERMISSION_STORAGE = 101;
-    public static final int REQUEST_PERMISSION_STORAGE_FOR_CAMERA = 102;
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
     FloatingActionButton mFab;
 
     @Override
@@ -43,7 +37,7 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dispatchTakePictureIntent();
+                dispatchRunCameraIntent();
             }
         });
 
@@ -52,9 +46,9 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
 
     @Override
     public List<String> getPictures() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
         } else {
             ArrayList<FileContainer> foundFiles = new ArrayList<>();
             File cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
@@ -93,63 +87,25 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_PERMISSION_CAMERA:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        dispatchTakePictureIntent();
-                    } else {
-                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
-                    }
-                }
-                break;
-            case REQUEST_PERMISSION_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    initData();
-                }
-                break;
-            case REQUEST_PERMISSION_STORAGE_FOR_CAMERA:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    initData();
-                    dispatchTakePictureIntent();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION_STORAGE
+                && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            initData();
         }
     }
 
-    private void dispatchTakePictureIntent() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
-        } else if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE_FOR_CAMERA);
-        } else {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                File photoFile = BitmapHelper.getOutputPictureFile();
-                // Continue only if the File was successfully created
-                if (photoFile != null) {
-                    PrefsHelper.get().setPhotoFilePath(photoFile.getAbsolutePath());
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                } else {
-                    PrefsHelper.get().setPhotoFilePath(null);
-                }
-            }
-        }
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            String filePath = PrefsHelper.get().getPhotoFilePath();
-            if (filePath == null) return;
-            String fileUriStr = BitmapHelper.FILE_PREFIX + filePath;
-            mRecyclerView.getLayoutManager().scrollToPosition(0);
-            ((PicturesGridAdapter) mRecyclerView.getAdapter()).add(fileUriStr, 0);
+    private void dispatchRunCameraIntent() {
+        Intent auxIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            PackageManager pm = getContext().getPackageManager();
+            ResolveInfo mInfo = pm.resolveActivity(auxIntent, 0);
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName(mInfo.activityInfo.packageName, mInfo.activityInfo.name));
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.i(TAG, "Unable to launch camera: " + e);
         }
     }
 
