@@ -11,9 +11,7 @@ public class PrefsHelper {
     private static final String GRID_DIM_SHORT = "GRID_DIM_SHORT";
     private static final String GRID_DIM_LONG = "GRID_DIM_LONG";
     private static final String GRID_DIMS_POSITION = "GRID_DIMS_POSITION";
-    private static final String PHOTO_FILE_PATH = "PHOTO_FILE_PATH";
     private static final String DISPLAY_TILE_NUMBERS = "DISPLAY_TILE_NUMBERS";
-
 
     private static PrefsHelper instance = null;
     private final String PACKAGE_NAME;
@@ -57,10 +55,6 @@ public class PrefsHelper {
         return getPrefs().getInt(GRID_DIMS_POSITION, Conf.DEFAULT_GRID_DIMS_POSITION);
     }
 
-    public void setPhotoFilePath(String path) {
-        getPrefs().edit().putString(PHOTO_FILE_PATH, path).commit();
-    }
-
     public boolean getDisplayTileNumbers() {
         return getPrefs().getBoolean(DISPLAY_TILE_NUMBERS, Conf.DEFAULT_DISPLAY_TILE_NUMBERS);
     }
@@ -68,9 +62,4 @@ public class PrefsHelper {
     public void setDisplayTileNumbers(boolean yesNo) {
         getPrefs().edit().putBoolean(DISPLAY_TILE_NUMBERS, yesNo).apply();
     }
-
-    public String getPhotoFilePath() {
-        return getPrefs().getString(PHOTO_FILE_PATH, null);
-    }
-
 }
