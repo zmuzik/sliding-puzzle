@@ -32,7 +32,7 @@ import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
 import zmuzik.slidingpuzzle2.flickr.Size;
-import zmuzik.slidingpuzzle2.gfx.PuzzleBoardView;
+import zmuzik.slidingpuzzle2.view.PuzzleBoardView;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 
 public class GameActivity extends Activity {

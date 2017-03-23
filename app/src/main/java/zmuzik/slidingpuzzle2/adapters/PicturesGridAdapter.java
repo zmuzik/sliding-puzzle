@@ -22,7 +22,7 @@ import java.util.List;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.gfx.SquareImageView;
+import zmuzik.slidingpuzzle2.view.SquareImageView;
 import zmuzik.slidingpuzzle2.helpers.BitmapHelper;
 import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
 
