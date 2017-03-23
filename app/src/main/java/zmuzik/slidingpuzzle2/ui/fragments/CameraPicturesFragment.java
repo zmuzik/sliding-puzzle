@@ -24,11 +24,12 @@ import java.util.List;
 
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.helpers.BitmapHelper;
+import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 
 public class CameraPicturesFragment extends SavedPicturesFragment {
 
     final String TAG = this.getClass().getSimpleName();
-    public static final int REQUEST_PERMISSION_STORAGE = 101;
+    public static final int REQUEST_PERMISSION_READ_STORAGE = 101;
 
     FloatingActionButton mFab;
 
@@ -60,9 +61,10 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
 
     @Override
     public List<String> getPictures() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
+        if (ContextCompat.checkSelfPermission(getActivity(),  Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED
+                && PrefsHelper.get().shouldAskReadStoragePerm()) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION_READ_STORAGE);
         } else {
             ArrayList<FileContainer> foundFiles = new ArrayList<>();
             File cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
@@ -101,10 +103,11 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_PERMISSION_STORAGE
-                && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            initData();
+        if (requestCode == REQUEST_PERMISSION_READ_STORAGE) {
+            PrefsHelper.get().setShouldAskReadStoragePerm(false);
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                initData();
+            }
         }
     }
 

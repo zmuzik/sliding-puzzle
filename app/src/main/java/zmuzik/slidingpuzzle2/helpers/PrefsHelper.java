@@ -12,6 +12,7 @@ public class PrefsHelper {
     private static final String GRID_DIM_LONG = "GRID_DIM_LONG";
     private static final String GRID_DIMS_POSITION = "GRID_DIMS_POSITION";
     private static final String DISPLAY_TILE_NUMBERS = "DISPLAY_TILE_NUMBERS";
+    private static final String SHOULD_ASK_READ_STORAGE_PERM = "SHOULD_ASK_READ_STORAGE_PERM";
 
     private static PrefsHelper instance = null;
     private final String PACKAGE_NAME;
@@ -61,5 +62,13 @@ public class PrefsHelper {
 
     public void setDisplayTileNumbers(boolean yesNo) {
         getPrefs().edit().putBoolean(DISPLAY_TILE_NUMBERS, yesNo).apply();
+    }
+
+    public void setShouldAskReadStoragePerm(boolean yesNo) {
+        getPrefs().edit().putBoolean(SHOULD_ASK_READ_STORAGE_PERM, yesNo).commit();
+    }
+
+    public boolean shouldAskReadStoragePerm() {
+        return getPrefs().getBoolean(SHOULD_ASK_READ_STORAGE_PERM, true);
     }
 }
