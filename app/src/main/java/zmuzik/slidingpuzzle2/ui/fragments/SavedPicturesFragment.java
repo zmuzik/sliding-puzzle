@@ -65,7 +65,7 @@ public class SavedPicturesFragment extends Fragment {
     }
 
     boolean isHorizontal() {
-        return getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     int getColumnsNumber() {
