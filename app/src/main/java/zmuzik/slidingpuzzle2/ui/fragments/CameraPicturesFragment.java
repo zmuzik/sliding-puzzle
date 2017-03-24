@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import java.io.File;
@@ -37,6 +39,8 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
     FloatingActionButton mFab;
     ProgressBar mProgressBar;
     private ArrayList<String> mFilesList;
+    private LinearLayout mPermissionsCombo;
+    private Button mRequestPermissionsButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,8 +51,28 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
         mLayoutManager = new GridLayoutManager(getActivity(), getColumnsNumber());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-
+        mPermissionsCombo = (LinearLayout) rootView.findViewById(R.id.permissionsCombo);
+        mRequestPermissionsButton = (Button) rootView.findViewById(R.id.requestPermissionsButton);
         mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+
+        if (!isReadExternalGranted()) {
+            mPermissionsCombo.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+            mFab.setVisibility(View.GONE);
+        } else {
+            mPermissionsCombo.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mFab.setVisibility(View.VISIBLE);
+        }
+
+        mRequestPermissionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_PERMISSION_READ_STORAGE);
+            }
+        });
+
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +119,9 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
         if (requestCode == REQUEST_PERMISSION_READ_STORAGE) {
             PrefsHelper.get().setShouldAskReadStoragePerm(false);
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mPermissionsCombo.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+                mFab.setVisibility(View.VISIBLE);
                 new UpdateCameraFilesTask().execute();
             } else {
                 mIsUpdating = false;
