@@ -1,20 +1,25 @@
 package zmuzik.slidingpuzzle2.ui.fragments;
 
 import android.Manifest;
-import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.content.pm.ResolveInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,69 +27,87 @@ import java.util.Collections;
 import java.util.List;
 
 import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
 import zmuzik.slidingpuzzle2.helpers.BitmapHelper;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 
 public class CameraPicturesFragment extends SavedPicturesFragment {
 
     final String TAG = this.getClass().getSimpleName();
-    public static final int REQUEST_PERMISSION_CAMERA = 100;
-    public static final int REQUEST_PERMISSION_STORAGE = 101;
-    public static final int REQUEST_PERMISSION_STORAGE_FOR_CAMERA = 102;
+    public static final int REQUEST_PERMISSION_READ_STORAGE = 101;
+    private boolean mIsUpdating;
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
     FloatingActionButton mFab;
+    ProgressBar mProgressBar;
+    private ArrayList<String> mFilesList;
+    private LinearLayout mPermissionsCombo;
+    private Button mRequestPermissionsButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        View rootView = inflater.inflate(getLayoutId(), container, false);
+
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new GridLayoutManager(getActivity(), getColumnsNumber());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        mPermissionsCombo = (LinearLayout) rootView.findViewById(R.id.permissionsCombo);
+        mRequestPermissionsButton = (Button) rootView.findViewById(R.id.requestPermissionsButton);
         mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener() {
+
+        if (!isReadExternalGranted()) {
+            mPermissionsCombo.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+            mFab.setVisibility(View.GONE);
+        } else {
+            mPermissionsCombo.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mFab.setVisibility(View.VISIBLE);
+        }
+
+        mRequestPermissionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dispatchTakePictureIntent();
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_PERMISSION_READ_STORAGE);
             }
         });
 
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchRunCameraIntent();
+            }
+        });
         return rootView;
     }
 
     @Override
-    public List<String> getPictures() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
-        } else {
-            ArrayList<FileContainer> foundFiles = new ArrayList<>();
-            File cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-            scanDirectoryForPictures(cameraDir, foundFiles);
-            //sort - most recent pictures first
-            Collections.sort(foundFiles);
-            ArrayList<String> result = new ArrayList<>();
-            for (FileContainer fileContainer : foundFiles) {
-                result.add(fileContainer.filePath);
-            }
-            return result;
-        }
-        return null;
+    public void onResume() {
+        super.onResume();
+        maybeRequestUpdate();
     }
 
-    public void scanDirectoryForPictures(File root, final ArrayList<FileContainer> filePaths) {
-        if (root == null) return;
-        Log.d(TAG, "scanning dir: " + root.getAbsolutePath());
-        File[] list = root.listFiles();
-        if (list == null) return;
-
-        for (File f : list) {
-            if (f.isHidden()) continue;
-            if (f.isDirectory()) {
-                scanDirectoryForPictures(f, filePaths);
-            } else if (BitmapHelper.isPicture(f)) {
-                filePaths.add(new FileContainer(BitmapHelper.FILE_PREFIX +
-                        f.getAbsolutePath(), f.lastModified()));
+    private void maybeRequestUpdate() {
+        if (!mIsUpdating) {
+            mIsUpdating = true;
+            if (!isReadExternalGranted() && PrefsHelper.get().shouldAskReadStoragePerm()) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_PERMISSION_READ_STORAGE);
+            } else {
+                new UpdateCameraFilesTask().execute();
             }
         }
+    }
+
+    private boolean isReadExternalGranted() {
+        return ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public List<String> getPictures() {
+        return mFilesList;
     }
 
     public int getLayoutId() {
@@ -93,63 +116,31 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_PERMISSION_CAMERA:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        dispatchTakePictureIntent();
-                    } else {
-                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
-                    }
-                }
-                break;
-            case REQUEST_PERMISSION_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    initData();
-                }
-                break;
-            case REQUEST_PERMISSION_STORAGE_FOR_CAMERA:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    initData();
-                    dispatchTakePictureIntent();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    private void dispatchTakePictureIntent() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
-        } else if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE_FOR_CAMERA);
-        } else {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                File photoFile = BitmapHelper.getOutputPictureFile();
-                // Continue only if the File was successfully created
-                if (photoFile != null) {
-                    PrefsHelper.get().setPhotoFilePath(photoFile.getAbsolutePath());
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                } else {
-                    PrefsHelper.get().setPhotoFilePath(null);
-                }
+        if (requestCode == REQUEST_PERMISSION_READ_STORAGE) {
+            PrefsHelper.get().setShouldAskReadStoragePerm(false);
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mPermissionsCombo.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+                mFab.setVisibility(View.VISIBLE);
+                new UpdateCameraFilesTask().execute();
+            } else {
+                mIsUpdating = false;
             }
         }
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            String filePath = PrefsHelper.get().getPhotoFilePath();
-            if (filePath == null) return;
-            String fileUriStr = BitmapHelper.FILE_PREFIX + filePath;
-            mRecyclerView.getLayoutManager().scrollToPosition(0);
-            ((PicturesGridAdapter) mRecyclerView.getAdapter()).add(fileUriStr, 0);
+    private void dispatchRunCameraIntent() {
+        Intent auxIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            PackageManager pm = getContext().getPackageManager();
+            ResolveInfo mInfo = pm.resolveActivity(auxIntent, 0);
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName(mInfo.activityInfo.packageName, mInfo.activityInfo.name));
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.i(TAG, "Unable to launch camera: " + e);
         }
     }
 
@@ -157,7 +148,7 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
         String filePath;
         long lastModified;
 
-        public FileContainer(String filePath, long lastModified) {
+        private FileContainer(String filePath, long lastModified) {
             this.filePath = filePath;
             this.lastModified = lastModified;
         }
@@ -167,6 +158,54 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
             long diff = ((FileContainer) another).lastModified - lastModified;
             if (diff == 0) return 0;
             return diff > 0 ? 1 : -1;
+        }
+    }
+
+    private class UpdateCameraFilesTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            ArrayList<FileContainer> foundFiles = new ArrayList<>();
+            File cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+            scanDirectoryForPictures(cameraDir, foundFiles);
+            //sort - most recent pictures first
+            Collections.sort(foundFiles);
+            ArrayList<String> result = new ArrayList<>();
+            for (FileContainer fileContainer : foundFiles) {
+                result.add(fileContainer.filePath);
+            }
+            mFilesList = result;
+            return null;
+        }
+
+        private void scanDirectoryForPictures(File root, final ArrayList<FileContainer> filePaths) {
+            if (root == null) return;
+            File[] list = root.listFiles();
+            if (list == null) return;
+
+            for (File f : list) {
+                if (f.isHidden()) continue;
+                if (f.isDirectory()) {
+                    scanDirectoryForPictures(f, filePaths);
+                } else if (BitmapHelper.isPicture(f)) {
+                    filePaths.add(new FileContainer(BitmapHelper.FILE_PREFIX +
+                            f.getAbsolutePath(), f.lastModified()));
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            initData();
+            mIsUpdating = false;
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 }

@@ -20,4 +20,6 @@
     <string name="flickr_search">ค้้นหาโดยFlickr </string>
     <string name="display_tile_numbers_on">เปิดหมายเลขบนแผ่นภาพ</string>
     <string name="display_tile_numbers_off">ปิดหมายเลขบนแผ่นภาพ</string>
+    <string name="missing_storage_permissions">The app is not allowed to read local storage.</string>
+    <string name="request_storage_permissions">Allow</string>
 </resources>

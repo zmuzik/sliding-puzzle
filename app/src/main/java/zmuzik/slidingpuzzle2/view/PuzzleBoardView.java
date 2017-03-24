@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle2.gfx;
+package zmuzik.slidingpuzzle2.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -81,7 +81,6 @@ public class PuzzleBoardView extends View {
         mBounds = new Rect();
 
         mDisplayNumbers = PrefsHelper.get().getDisplayTileNumbers();
-        Crashlytics.log(Log.DEBUG, TAG, "puzzle initialized");
     }
 
     public void setDimensions(int width, int height) {
@@ -176,7 +175,6 @@ public class PuzzleBoardView extends View {
         }
         Log.d(TAG, "puzzle complete");
         Toast.makeText(App.get(), App.get().getText(R.string.congrats), Toast.LENGTH_SHORT).show();
-        Crashlytics.log(Log.DEBUG, TAG, "puzzle complete");
         return true;
     }
 

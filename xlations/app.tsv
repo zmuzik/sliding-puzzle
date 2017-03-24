@@ -1,5 +1,5 @@
 key	en	cs	th	ja
-app_name	Sliding Puzzle	Patnáctka	จิ๊กซอว์ภาพเลื่อน	スライディングパズル
+app_name	Sliding Puzzle	Posouvací hlavolam	จิ๊กซอว์ภาพเลื่อน	スライディングパズル
 congrats	Congratulations!	Gratuluji!	ขอแสดงความยินดี	よくできました
 title_section1	Saved	Uložené	อัลบั้ม	保存
 title_section2	Camera	Fotoaparát	กล้อง	カメラ
@@ -19,3 +19,5 @@ err_querying_flickr	Error while querying Flickr	Chyba při kontaktování Flickr
 flickr_search	Flickr search	Vyhledávání na Flickru	ค้้นหาโดยFlickr 	Flickrで検索
 display_tile_numbers_on	Displaying tile numbers is on	Zobrazování čísel dílů zapnuto	เปิดหมายเลขบนแผ่นภาพ	数字を表示します
 display_tile_numbers_off	Displaying tile numbers is off	Zobrazování čísel dílů vypnuto	ปิดหมายเลขบนแผ่นภาพ	数字を非表示にします
+missing_storage_permissions	The app is not allowed to read local storage.	Tato funkčnost potřebuje povolení ke čtení lokálního úložiště.	The app is not allowed to read local storage.	The app is not allowed to read local storage.
+request_storage_permissions	Allow	Povolit	Allow	Allow

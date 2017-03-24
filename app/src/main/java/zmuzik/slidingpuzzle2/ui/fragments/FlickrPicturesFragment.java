@@ -112,7 +112,6 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
     }
 
     private void search(String keywords) {
-        Crashlytics.log(Log.DEBUG, TAG, "search " + keywords);
         if (!App.get().isOnline()) {
             Toast.makeText(App.get(),
                     App.get().getResources().getString(R.string.internet_unavailable),
@@ -166,7 +165,6 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
                 resp = call.execute().body();
             } catch (Exception e) {
                 resp = null;
-                Crashlytics.log("keyword = " + (query == null ? "" : query));
                 Crashlytics.logException(e);
             }
             if (resp != null && resp.getPhotos() != null) {
@@ -177,7 +175,6 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
 
         @Override protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Crashlytics.log(Log.DEBUG, TAG, "onPostExecute");
             if (resp == null) {
                 Toast.makeText(App.get(),
                         App.get().getResources().getString(R.string.err_querying_flickr),

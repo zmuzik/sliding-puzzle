@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle2.gfx;
+package zmuzik.slidingpuzzle2.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

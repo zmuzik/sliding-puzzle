@@ -22,7 +22,7 @@ import java.util.List;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.gfx.SquareImageView;
+import zmuzik.slidingpuzzle2.view.SquareImageView;
 import zmuzik.slidingpuzzle2.helpers.BitmapHelper;
 import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
 
@@ -108,7 +108,6 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Crashlytics.log(Log.DEBUG, TAG, "run game");
                 runGame(position);
             }
         });
@@ -129,7 +128,6 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         holder.nextTv.setVisibility(View.VISIBLE);
         holder.nextTv.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                Crashlytics.log(Log.DEBUG, TAG, "more clicked");
                 showNextPage();
             }
         });
