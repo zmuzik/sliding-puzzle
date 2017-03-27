@@ -203,8 +203,9 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (!isAdded() || !isResumed()) return;
-            initData();
+            if (isAdded() & isResumed()) {
+                initData();
+            }
             mIsUpdating = false;
             mProgressBar.setVisibility(View.GONE);
         }
