@@ -40,7 +40,7 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
     }
 
     int getPageSize() {
-        return Conf.PAGE_SIZE_FLICKR;
+        return Conf.PAGE_SIZE;
     }
 
     @Override public void runGame(int position) {

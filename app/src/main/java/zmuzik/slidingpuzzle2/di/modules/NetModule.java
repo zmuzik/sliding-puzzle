@@ -20,7 +20,7 @@ public class NetModule {
     @Singleton
     FlickrApi provideFlickrApi() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Conf.FLICKR_API_ROOT)
+                .baseUrl(FlickrApi.FLICKR_API_ROOT)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         return retrofit.create(FlickrApi.class);

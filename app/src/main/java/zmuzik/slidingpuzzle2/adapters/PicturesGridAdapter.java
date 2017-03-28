@@ -150,7 +150,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     }
 
     int getPageSize() {
-        return Conf.PAGE_SIZE_LOCAL;
+        return Conf.PAGE_SIZE;
     }
 
     int getDisplayedPicsCount() {

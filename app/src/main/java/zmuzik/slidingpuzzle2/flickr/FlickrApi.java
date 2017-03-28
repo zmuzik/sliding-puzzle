@@ -8,6 +8,8 @@ import zmuzik.slidingpuzzle2.Conf;
 
 public interface FlickrApi {
 
+    public static final String FLICKR_API_ROOT = "https://api.flickr.com/services/rest/";
+
     @GET("?method=flickr.photos.search" +
             "&format=json" +
             "&nojsoncallback=1" +
