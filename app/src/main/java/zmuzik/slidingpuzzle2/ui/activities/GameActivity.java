@@ -84,7 +84,7 @@ public class GameActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.getComponent(this).inject(this);
+        App.getComponent().inject(this);
         Intent intent = getIntent();
         if (intent == null) finish();
         boolean isHorizontal = getIntent().getExtras().getBoolean(PicturesGridAdapter.IS_HORIZONTAL);

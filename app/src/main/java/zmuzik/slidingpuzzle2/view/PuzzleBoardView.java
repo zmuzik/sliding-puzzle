@@ -85,7 +85,7 @@ public class PuzzleBoardView extends View {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        App.getComponent(getContext()).inject(this);
+        App.getComponent().inject(this);
     }
 
     public void setDimensions(int width, int height) {

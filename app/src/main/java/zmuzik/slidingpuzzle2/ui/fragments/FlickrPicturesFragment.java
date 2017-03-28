@@ -48,7 +48,7 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.getComponent(getContext()).inject(this);
+        App.getComponent().inject(this);
     }
 
     @Override
