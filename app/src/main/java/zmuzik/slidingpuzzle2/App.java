@@ -23,15 +23,13 @@ public class App extends Application {
 
     private static App mApp;
     private List<Photo> mFlickrPhotos = new ArrayList<>();
-
-    AppComponent mAppComponent;
+    private AppComponent mAppComponent;
 
     @Override
     public void onCreate() {
         mApp = this;
         super.onCreate();
         mAppComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
-
         Fabric.with(this, new Crashlytics());
     }
 
@@ -45,20 +43,6 @@ public class App extends Application {
 
     public void setFlickrPhotos(List<Photo> photos) {
         mFlickrPhotos = photos;
-    }
-
-    public boolean isDebuggable() {
-        return 0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE);
-    }
-
-    public boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-
-    public boolean isTablet() {
-        return getResources().getBoolean(R.bool.isTablet);
     }
 
     public static App get(Context context) {

@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
 import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
@@ -128,7 +129,7 @@ public class GameActivity extends Activity {
             String photoStr = getIntent().getExtras().getString(FlickrGridAdapter.PHOTO);
             Gson gson = new Gson();
             Photo photo = gson.fromJson(photoStr, Photo.class);
-            if (App.get().isOnline()) {
+            if (Utils.isOnline(this)) {
                 new GetFlickrPhotoSizesTask(photo, getMaxScreenDim(), callback).execute();
             } else {
                 Toast.makeText(App.get(), App.get().getString(R.string.internet_unavailable), Toast.LENGTH_LONG).show();

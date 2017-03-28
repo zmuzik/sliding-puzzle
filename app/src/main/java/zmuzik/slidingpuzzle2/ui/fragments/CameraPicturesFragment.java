@@ -29,7 +29,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.helpers.BitmapHelper;
+import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 
 public class CameraPicturesFragment extends SavedPicturesFragment {
@@ -201,8 +201,8 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
                 if (f.isHidden()) continue;
                 if (f.isDirectory()) {
                     scanDirectoryForPictures(f, filePaths);
-                } else if (BitmapHelper.isPicture(f)) {
-                    filePaths.add(new FileContainer(BitmapHelper.FILE_PREFIX +
+                } else if (Utils.isPicture(f)) {
+                    filePaths.add(new FileContainer(Utils.FILE_PREFIX +
                             f.getAbsolutePath(), f.lastModified()));
                 }
             }

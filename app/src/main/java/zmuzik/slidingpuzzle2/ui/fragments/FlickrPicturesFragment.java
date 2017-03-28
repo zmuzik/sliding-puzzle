@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
@@ -124,7 +125,7 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
     }
 
     private void search(String keywords) {
-        if (!App.get().isOnline()) {
+        if (!Utils.isOnline(getContext())) {
             Toast.makeText(App.get(),
                     App.get().getResources().getString(R.string.internet_unavailable),
                     Toast.LENGTH_LONG).show();

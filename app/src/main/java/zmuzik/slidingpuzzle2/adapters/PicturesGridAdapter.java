@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -23,7 +22,7 @@ import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.view.SquareImageView;
-import zmuzik.slidingpuzzle2.helpers.BitmapHelper;
+import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
 
 public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapter.ViewHolder> {
@@ -114,7 +113,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     }
 
     public void runGame(int position) {
-        boolean isHorizontal = BitmapHelper.isBitmapHorizontal(mFilePaths.get(position));
+        boolean isHorizontal = Utils.isBitmapHorizontal(mFilePaths.get(position));
         Intent intent = new Intent(mContext, GameActivity.class);
         intent.putExtra(FILE_URI, mFilePaths.get(position));
         intent.putExtra(IS_HORIZONTAL, isHorizontal);
@@ -146,7 +145,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     public void setOrientationIcon(ImageView orientationIcon, int position) {
         Resources res = App.get().getResources();
         orientationIcon.setVisibility(View.VISIBLE);
-        boolean isHorizontal = BitmapHelper.isBitmapHorizontal(mFilePaths.get(position));
+        boolean isHorizontal = Utils.isBitmapHorizontal(mFilePaths.get(position));
         orientationIcon.setRotation(isHorizontal ? 270f : 0f);
     }
 
