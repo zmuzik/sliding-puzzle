@@ -30,6 +30,7 @@ import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
 import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
+import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
 import zmuzik.slidingpuzzle2.flickr.Size;
@@ -53,6 +54,9 @@ public class GameActivity extends Activity {
 
     @Inject
     PrefsHelper mPrefsHelper;
+
+    @Inject
+    FlickrApi mFlickrApi;
 
     Target mTarget = new Target() {
         @Override
@@ -210,7 +214,7 @@ public class GameActivity extends Activity {
         protected Void doInBackground(Void... params) {
             String photoId = photo.getId();
             try {
-                Call<PhotoSizesResponse> call = App.get().getFlickrApi().getSizes(photoId);
+                Call<PhotoSizesResponse> call = mFlickrApi.getSizes(photoId);
                 sizes = call.execute().body().getSizes().getSize();
             } catch (Exception e) {
                 result = null;

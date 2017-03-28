@@ -12,12 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import zmuzik.slidingpuzzle2.di.components.AppComponent;
 import zmuzik.slidingpuzzle2.di.components.DaggerAppComponent;
 import zmuzik.slidingpuzzle2.di.modules.AppModule;
-import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 
 public class App extends Application {
@@ -26,7 +23,6 @@ public class App extends Application {
 
     private static App mApp;
     private List<Photo> mFlickrPhotos = new ArrayList<>();
-    private FlickrApi mFlickrApi;
 
     AppComponent mAppComponent;
 
@@ -37,24 +33,10 @@ public class App extends Application {
         mAppComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
 
         Fabric.with(this, new Crashlytics());
-        initFlickrApi();
-    }
-
-    void initFlickrApi() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Conf.FLICKR_API_ROOT)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        mFlickrApi = retrofit.create(FlickrApi.class);
     }
 
     public static App get() {
         return mApp;
-    }
-
-    public FlickrApi getFlickrApi() {
-        return mFlickrApi;
     }
 
     public List<Photo> getFlickrPhotos() {

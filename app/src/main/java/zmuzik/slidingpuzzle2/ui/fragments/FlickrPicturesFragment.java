@@ -3,9 +3,9 @@ package zmuzik.slidingpuzzle2.ui.fragments;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +21,13 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
+import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.SearchResponse;
 
@@ -34,6 +37,15 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
 
     ProgressBar mProgressBar;
     FloatingActionButton mFab;
+
+    @Inject
+    FlickrApi mFlickrApi;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        App.getComponent(getContext()).inject(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -153,15 +165,17 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
             buttonToDisable = v;
         }
 
-        @Override protected void onPreExecute() {
+        @Override
+        protected void onPreExecute() {
             super.onPreExecute();
             buttonToDisable.setEnabled(false);
             mProgressBar.setVisibility(View.VISIBLE);
         }
 
-        @Override protected Void doInBackground(Void... params) {
+        @Override
+        protected Void doInBackground(Void... params) {
             try {
-                Call<SearchResponse> call = App.get().getFlickrApi().getPhotos(query);
+                Call<SearchResponse> call = mFlickrApi.getPhotos(query);
                 resp = call.execute().body();
             } catch (Exception e) {
                 resp = null;
@@ -173,7 +187,8 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
             return null;
         }
 
-        @Override protected void onPostExecute(Void aVoid) {
+        @Override
+        protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             if (resp == null) {
                 Toast.makeText(App.get(),
