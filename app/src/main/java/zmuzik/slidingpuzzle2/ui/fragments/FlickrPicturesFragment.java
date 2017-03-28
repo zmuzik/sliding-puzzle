@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,6 +39,8 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
 
     ProgressBar mProgressBar;
     FloatingActionButton mFab;
+
+    private List<Photo> mFlickrPhotos = new ArrayList<>();
 
     @Inject
     FlickrApi mFlickrApi;
@@ -143,7 +146,7 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
     }
 
     public FlickrGridAdapter getAdapter(int columns) {
-        return new FlickrGridAdapter(getActivity(), App.get().getFlickrPhotos(), columns);
+        return new FlickrGridAdapter(getActivity(), mFlickrPhotos, columns);
     }
 
     @Override
@@ -183,7 +186,7 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
                 Crashlytics.logException(e);
             }
             if (resp != null && resp.getPhotos() != null) {
-                App.get().setFlickrPhotos(resp.getPhotos().getPhoto());
+                mFlickrPhotos = resp.getPhotos().getPhoto();
             }
             return null;
         }
@@ -196,7 +199,7 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
                         App.get().getResources().getString(R.string.err_querying_flickr),
                         Toast.LENGTH_LONG).show();
             } else {
-                List<Photo> photos = App.get().getFlickrPhotos();
+                List<Photo> photos = mFlickrPhotos;
                 if (photos != null && photos.size() > 0 && isAdded()) {
                     mRecyclerView.setAdapter(new FlickrGridAdapter(getActivity(), photos, getColumnsNumber()));
                 }
