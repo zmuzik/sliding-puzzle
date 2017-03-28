@@ -16,8 +16,9 @@ repositories {
 }
 
 ext {
-    supportLibVersion = '25.3.0'
+    supportLibVersion = '25.3.1'
     retrofitVersion = '2.2.0'
+    daggerVersion = '2.8'
 }
 
 def getVersionCode = { ->
@@ -83,4 +84,8 @@ dependencies {
     compile("com.crashlytics.sdk.android:crashlytics:2.6.7@aar") {
         transitive = true;
     }
+    compile "com.google.dagger:dagger:${daggerVersion}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
+    provided 'javax.annotation:jsr250-api:1.0'
+    compile 'javax.inject:javax.inject:1'
 }

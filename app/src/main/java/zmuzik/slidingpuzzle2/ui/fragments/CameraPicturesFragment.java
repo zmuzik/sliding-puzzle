@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.helpers.BitmapHelper;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
@@ -41,6 +43,12 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
     private ArrayList<String> mFilesList;
     private LinearLayout mPermissionsCombo;
     private Button mRequestPermissionsButton;
+
+    @Inject PrefsHelper prefsHelper;
+
+    public CameraPicturesFragment() {
+        super();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -91,7 +99,7 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
     private void maybeRequestUpdate() {
         if (!mIsUpdating) {
             mIsUpdating = true;
-            if (!isReadExternalGranted() && PrefsHelper.get().shouldAskReadStoragePerm()) {
+            if (!isReadExternalGranted() && prefsHelper.shouldAskReadStoragePerm()) {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         REQUEST_PERMISSION_READ_STORAGE);
             } else {
@@ -117,7 +125,7 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION_READ_STORAGE) {
-            PrefsHelper.get().setShouldAskReadStoragePerm(false);
+            prefsHelper.setShouldAskReadStoragePerm(false);
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 mPermissionsCombo.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);

@@ -12,14 +12,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-
 import java.util.StringTokenizer;
+
+import javax.inject.Inject;
 
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
@@ -41,9 +40,13 @@ public class MainActivity extends AppCompatActivity {
     PagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
 
+    @Inject
+    PrefsHelper mPrefsHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.getComponent(this).inject(this);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -119,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeGridSize() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        int prevPosition = PrefsHelper.get().getGridDimsPosition();
+        int prevPosition = mPrefsHelper.getGridDimsPosition();
         builder.setTitle(getString(R.string.select_grid_size));
         builder.setSingleChoiceItems(GRID_SIZES, prevPosition, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
@@ -127,9 +130,9 @@ public class MainActivity extends AppCompatActivity {
                 StringTokenizer tokenizer = new StringTokenizer(positionsStr, "x");
                 String shorterStr = tokenizer.nextToken();
                 String longerStr = tokenizer.nextToken();
-                PrefsHelper.get().setGridDimsPosition(item);
-                PrefsHelper.get().setGridDimShort(Integer.parseInt(shorterStr));
-                PrefsHelper.get().setGridDimLong(Integer.parseInt(longerStr));
+                mPrefsHelper.setGridDimsPosition(item);
+                mPrefsHelper.setGridDimShort(Integer.parseInt(shorterStr));
+                mPrefsHelper.setGridDimLong(Integer.parseInt(longerStr));
                 dialog.dismiss();
                 String msg = String.format(App.get().getString(R.string.grid_size_selected_to), positionsStr);
                 Toast.makeText(App.get(), msg, Toast.LENGTH_SHORT).show();
@@ -139,9 +142,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toggleShowNumbers() {
-        boolean value = PrefsHelper.get().getDisplayTileNumbers();
+        boolean value = mPrefsHelper.getDisplayTileNumbers();
         value = !value;
-        PrefsHelper.get().setDisplayTileNumbers(value);
+        mPrefsHelper.setDisplayTileNumbers(value);
         String msg = getString(value ? R.string.display_tile_numbers_on : R.string.display_tile_numbers_off);
         Toast.makeText(App.get(), msg, Toast.LENGTH_SHORT).show();
     }

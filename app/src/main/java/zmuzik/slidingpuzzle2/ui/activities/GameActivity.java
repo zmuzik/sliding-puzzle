@@ -8,7 +8,6 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +23,8 @@ import com.squareup.picasso.Target;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
@@ -32,8 +33,8 @@ import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
 import zmuzik.slidingpuzzle2.flickr.Size;
-import zmuzik.slidingpuzzle2.view.PuzzleBoardView;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
+import zmuzik.slidingpuzzle2.view.PuzzleBoardView;
 
 public class GameActivity extends Activity {
 
@@ -50,6 +51,9 @@ public class GameActivity extends Activity {
 
     public String mFileUri;
 
+    @Inject
+    PrefsHelper mPrefsHelper;
+
     Target mTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -60,19 +64,22 @@ public class GameActivity extends Activity {
             board.setVisibility(View.VISIBLE);
         }
 
-        @Override public void onBitmapFailed(Drawable errorDrawable) {
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
             progressBar.setVisibility(View.GONE);
             Toast.makeText(App.get(), App.get().getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
             finish();
         }
 
-        @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
         }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.getComponent(this).inject(this);
         Intent intent = getIntent();
         if (intent == null) finish();
         boolean isHorizontal = getIntent().getExtras().getBoolean(PicturesGridAdapter.IS_HORIZONTAL);
@@ -84,7 +91,8 @@ public class GameActivity extends Activity {
         shuffleBtn = (Button) findViewById(R.id.shuffleBtn);
 
         resolvePictureUri(new Callback() {
-            @Override public void onFinished() {
+            @Override
+            public void onFinished() {
                 Picasso.with(GameActivity.this)
                         .load(mFileUri)
                         .memoryPolicy(MemoryPolicy.NO_STORE)
@@ -94,7 +102,8 @@ public class GameActivity extends Activity {
                         .into(mTarget);
             }
 
-            @Override public void onError() {
+            @Override
+            public void onError() {
                 Toast.makeText(App.get(), App.get().getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
                 GameActivity.this.finish();
             }
@@ -165,9 +174,12 @@ public class GameActivity extends Activity {
             mBoardHeight = mScreenHeight;
             mBoardWidth = (int) (mScreenHeight * origPictureSideRatio);
         }
-        PrefsHelper ph = PrefsHelper.get();
-        int widthMultiple = (mBoardWidth > mBoardHeight) ? ph.getGridDimLong() : ph.getGridDimShort();
-        int heightMultiple = (mBoardWidth > mBoardHeight) ? ph.getGridDimShort() : ph.getGridDimLong();
+        int widthMultiple = (mBoardWidth > mBoardHeight)
+                ? mPrefsHelper.getGridDimLong()
+                : mPrefsHelper.getGridDimShort();
+        int heightMultiple = (mBoardWidth > mBoardHeight)
+                ? mPrefsHelper.getGridDimShort()
+                : mPrefsHelper.getGridDimLong();
         mBoardWidth = mBoardWidth - (mBoardWidth % widthMultiple);
         mBoardHeight = mBoardHeight - (mBoardHeight % heightMultiple);
 
@@ -194,7 +206,8 @@ public class GameActivity extends Activity {
             this.callback = callback;
         }
 
-        @Override protected Void doInBackground(Void... params) {
+        @Override
+        protected Void doInBackground(Void... params) {
             String photoId = photo.getId();
             try {
                 Call<PhotoSizesResponse> call = App.get().getFlickrApi().getSizes(photoId);
@@ -208,7 +221,8 @@ public class GameActivity extends Activity {
             return null;
         }
 
-        @Override protected void onPostExecute(Void aVoid) {
+        @Override
+        protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             mFileUri = result;
             callback.onFinished();
@@ -217,6 +231,7 @@ public class GameActivity extends Activity {
 
     private interface Callback {
         void onFinished();
+
         void onError();
     }
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -15,27 +14,28 @@ import java.util.List;
 import io.fabric.sdk.android.Fabric;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import zmuzik.slidingpuzzle2.di.components.AppComponent;
+import zmuzik.slidingpuzzle2.di.components.DaggerAppComponent;
+import zmuzik.slidingpuzzle2.di.modules.AppModule;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 
 public class App extends Application {
+
     private final String TAG = this.getClass().getSimpleName();
 
     private static App mApp;
-
     private List<Photo> mFlickrPhotos = new ArrayList<>();
-
     private FlickrApi mFlickrApi;
 
-    public static App get() {
-        return mApp;
-    }
+    AppComponent mAppComponent;
 
     @Override
     public void onCreate() {
-        Log.i(TAG, "====================Initializing app====================");
         mApp = this;
         super.onCreate();
+        mAppComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
+
         Fabric.with(this, new Crashlytics());
         initFlickrApi();
     }
@@ -47,6 +47,10 @@ public class App extends Application {
                 .build();
 
         mFlickrApi = retrofit.create(FlickrApi.class);
+    }
+
+    public static App get() {
+        return mApp;
     }
 
     public FlickrApi getFlickrApi() {
@@ -73,5 +77,13 @@ public class App extends Application {
 
     public boolean isTablet() {
         return getResources().getBoolean(R.bool.isTablet);
+    }
+
+    public static App get(Context context) {
+        return (App) context.getApplicationContext();
+    }
+
+    public static AppComponent getComponent(Context context) {
+        return ((App) context.getApplicationContext()).mAppComponent;
     }
 }

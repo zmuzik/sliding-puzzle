@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-
 import java.util.Random;
+
+import javax.inject.Inject;
 
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
@@ -47,27 +47,28 @@ public class PuzzleBoardView extends View {
     private int mBlackTileX, mBlackTileY;
     private boolean mPuzzleComplete;
     private boolean mGameInProgress = false;
-    private boolean mDisplayNumbers;
+    private Boolean mDisplayNumbers;
+
+    @Inject
+    public PrefsHelper mPrefsHelper;
 
     public PuzzleBoardView(Context context) {
         super(context);
-        mContext = context;
-        init();
+        init(context);
     }
 
     public PuzzleBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mContext = context;
-        init();
+        init(context);
     }
 
     public PuzzleBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mContext = context;
-        init();
+        init(context);
     }
 
-    public void init() {
+    public void init(Context context) {
+        mContext = context;
         mPaint = new Paint();
         mPaint.setStrokeWidth(0);
         mPaint.setFilterBitmap(false);
@@ -79,8 +80,12 @@ public class PuzzleBoardView extends View {
         mTextPaint.setStrokeWidth(3);
         mTextPaint.setAntiAlias(true);
         mBounds = new Rect();
+    }
 
-        mDisplayNumbers = PrefsHelper.get().getDisplayTileNumbers();
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        App.getComponent(getContext()).inject(this);
     }
 
     public void setDimensions(int width, int height) {
@@ -89,8 +94,8 @@ public class PuzzleBoardView extends View {
         params.width = width;
         setLayoutParams(params);
         invalidate();
-        int shorterSideTiles =  PrefsHelper.get().getGridDimLong();
-        int longerSideTiles =  PrefsHelper.get().getGridDimShort();
+        int shorterSideTiles = mPrefsHelper.getGridDimLong();
+        int longerSideTiles = mPrefsHelper.getGridDimShort();
         mTilesX = width < height ? longerSideTiles : shorterSideTiles;
         mTilesY = width < height ? shorterSideTiles : longerSideTiles;
 
@@ -99,7 +104,7 @@ public class PuzzleBoardView extends View {
         mViewWidth = width;
         mViewHeight = height;
 
-        mTextPaint.setTextSize(Math.max(mTileHeight, mTileWidth)/ 4);
+        mTextPaint.setTextSize(Math.max(mTileHeight, mTileWidth) / 4);
     }
 
     public void setBitmap(Bitmap bitmap) {
@@ -155,13 +160,20 @@ public class PuzzleBoardView extends View {
     }
 
     void drawNumberOnTile(Canvas canvas, int number, int tileX, int tileY, int addX, int addY) {
-        if (!mPuzzleComplete && mDisplayNumbers) {
+        if (!mPuzzleComplete && getDisplayNumbers()) {
             String numStr = "" + number;
             mTextPaint.getTextBounds(numStr, 0, numStr.length(), mBounds);
             int xCoord = tileX * mTileWidth + addX + (mTileWidth / 2 - mBounds.width() / 2);
             int yCoord = tileY * mTileHeight + addY + (mTileHeight / 2 + mBounds.height() / 2);
             canvas.drawText(numStr, xCoord, yCoord, mTextPaint);
         }
+    }
+
+    private boolean getDisplayNumbers() {
+        if (mDisplayNumbers == null) {
+            mDisplayNumbers = mPrefsHelper.getDisplayTileNumbers();
+        }
+        return mDisplayNumbers;
     }
 
     private boolean isPuzzleComplete() {
