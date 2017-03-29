@@ -3,10 +3,9 @@ package zmuzik.slidingpuzzle2.ui.activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.StringTokenizer;
@@ -22,10 +22,9 @@ import javax.inject.Inject;
 
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.adapters.MainScreenPagerAdapter;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
-import zmuzik.slidingpuzzle2.ui.fragments.CameraPicturesFragment;
-import zmuzik.slidingpuzzle2.ui.fragments.FlickrPicturesFragment;
-import zmuzik.slidingpuzzle2.ui.fragments.SavedPicturesFragment;
+import zmuzik.slidingpuzzle2.view.SavedPicturesGridView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
             "4x4", "4x5", "4x6",
             "5x5", "5x6", "6x6",};
 
-    PagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
 
     @Inject
@@ -65,10 +63,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_section3)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        mSectionsPagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         if (mViewPager != null) {
-            mViewPager.setAdapter(mSectionsPagerAdapter);
+            mViewPager.setAdapter(new MainScreenPagerAdapter(this));
         }
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -109,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -147,34 +143,5 @@ public class MainActivity extends AppCompatActivity {
         mPrefsHelper.setDisplayTileNumbers(value);
         String msg = getString(value ? R.string.display_tile_numbers_on : R.string.display_tile_numbers_off);
         Toast.makeText(App.get(), msg, Toast.LENGTH_SHORT).show();
-    }
-
-    public class PagerAdapter extends FragmentStatePagerAdapter {
-
-        int mNumOfTabs;
-
-        public PagerAdapter(FragmentManager fm, int numOfTabs) {
-            super(fm);
-            this.mNumOfTabs = numOfTabs;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new SavedPicturesFragment();
-                case 1:
-                    return new CameraPicturesFragment();
-                case 2:
-                    return new FlickrPicturesFragment();
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return mNumOfTabs;
-        }
     }
 }
