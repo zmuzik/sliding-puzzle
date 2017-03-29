@@ -48,6 +48,7 @@
         android:layout_alignParentRight="true"
         android:elevation="8dp"
         android:src="@drawable/ic_photo_camera_24dp"
+        android:visibility="gone"
         app:elevation="8dp"
         app:useCompatPadding="true" />
 

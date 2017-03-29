@@ -30,12 +30,10 @@ public class SavedPicturesGridView extends BasePicturesGridView {
 
     public SavedPicturesGridView(Context context) {
         super(context);
-        mFab.setVisibility(GONE);
     }
 
     public SavedPicturesGridView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        mFab.setVisibility(GONE);
     }
 
     @Override

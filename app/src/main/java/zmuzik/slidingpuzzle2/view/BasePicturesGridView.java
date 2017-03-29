@@ -56,22 +56,22 @@ public class BasePicturesGridView extends RelativeLayout {
         mPermissionsCombo = (LinearLayout) findViewById(R.id.permissionsCombo);
         mPermissionMessage = (TextView) findViewById(R.id.permissionMessage);
         mRequestPermissionsButton = (Button) findViewById(R.id.requestPermissionsButton);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getColumnsNumber()));
         mRequestPermissionsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 onRequestPermissionsButtonClicked(v);
             }
         });
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 onFabClicked(v);
             }
         });
-
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getColumnsNumber()));
     }
 
 
@@ -99,6 +99,7 @@ public class BasePicturesGridView extends RelativeLayout {
 
     public void setFabIcon(Drawable drawable) {
         mFab.setImageDrawable(drawable);
+        mFab.setVisibility(VISIBLE);
     }
 
     public void onFabClicked(View fab) {
