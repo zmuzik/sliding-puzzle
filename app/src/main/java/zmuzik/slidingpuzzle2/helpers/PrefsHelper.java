@@ -12,7 +12,6 @@ public class PrefsHelper {
 
     private static final String GRID_DIM_SHORT = "GRID_DIM_SHORT";
     private static final String GRID_DIM_LONG = "GRID_DIM_LONG";
-    private static final String GRID_DIMS_POSITION = "GRID_DIMS_POSITION";
     private static final String DISPLAY_TILE_NUMBERS = "DISPLAY_TILE_NUMBERS";
     private static final String SHOULD_ASK_READ_STORAGE_PERM = "SHOULD_ASK_READ_STORAGE_PERM";
 
@@ -37,14 +36,6 @@ public class PrefsHelper {
 
     public int getGridDimLong() {
         return mSharedPreferences.getInt(GRID_DIM_LONG, Conf.DEFAULT_GRID_DIM_LONG);
-    }
-
-    public void setGridDimsPosition(int timestamp) {
-        mSharedPreferences.edit().putInt(GRID_DIMS_POSITION, timestamp).commit();
-    }
-
-    public int getGridDimsPosition() {
-        return mSharedPreferences.getInt(GRID_DIMS_POSITION, Conf.DEFAULT_GRID_DIMS_POSITION);
     }
 
     public boolean getDisplayTileNumbers() {

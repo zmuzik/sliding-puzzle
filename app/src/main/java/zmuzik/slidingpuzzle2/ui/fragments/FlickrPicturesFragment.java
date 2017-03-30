@@ -42,13 +42,11 @@ public class FlickrPicturesFragment extends SavedPicturesFragment {
 
     private List<Photo> mFlickrPhotos = new ArrayList<>();
 
-    @Inject
     FlickrApi mFlickrApi;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.getComponent().inject(this);
     }
 
     @Override

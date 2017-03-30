@@ -1,6 +1,11 @@
 package zmuzik.slidingpuzzle2;
 
 public class Conf {
+    public static final String[] GRID_SIZES = {
+            "3x3", "3x4", "3x5", "3x6",
+            "4x4", "4x5", "4x6",
+            "5x5", "5x6", "6x6",};
+
     public static final int DEFAULT_GRID_DIM_SHORT = 4;
     public static final int DEFAULT_GRID_DIM_LONG = 4;
     public static final int DEFAULT_GRID_DIMS_POSITION = 4;

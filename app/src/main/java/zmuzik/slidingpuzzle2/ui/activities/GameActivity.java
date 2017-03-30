@@ -31,6 +31,8 @@ import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
 import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
+import zmuzik.slidingpuzzle2.di.components.DaggerGameActivityComponent;
+import zmuzik.slidingpuzzle2.di.components.GameActivityComponent;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
@@ -80,11 +82,13 @@ public class GameActivity extends Activity {
         public void onPrepareLoad(Drawable placeHolderDrawable) {
         }
     };
+    private GameActivityComponent mComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.getComponent().inject(this);
+        mComponent = DaggerGameActivityComponent.builder().appComponent(App.getComponent()).build();
+        mComponent.inject(this);
         Intent intent = getIntent();
         if (intent == null) finish();
         boolean isHorizontal = getIntent().getExtras().getBoolean(PicturesGridAdapter.IS_HORIZONTAL);

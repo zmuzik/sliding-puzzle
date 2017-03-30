@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="zmuzik.slidingpuzzle2.ui.activities.MainActivity">
+    tools:context="zmuzik.slidingpuzzle2.mainscreen.MainActivity">
 
     <item
         android:id="@+id/action_change_grid_size"

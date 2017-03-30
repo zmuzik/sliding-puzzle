@@ -11,9 +11,6 @@ import zmuzik.slidingpuzzle2.di.modules.AppModule;
 import zmuzik.slidingpuzzle2.di.modules.NetModule;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
-import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
-import zmuzik.slidingpuzzle2.ui.activities.MainActivity;
-import zmuzik.slidingpuzzle2.ui.fragments.FlickrPicturesFragment;
 import zmuzik.slidingpuzzle2.view.PuzzleBoardView;
 
 /**
@@ -22,12 +19,6 @@ import zmuzik.slidingpuzzle2.view.PuzzleBoardView;
 @Singleton
 @Component(modules = {AppModule.class, NetModule.class})
 public interface AppComponent {
-
-    void inject(MainActivity a);
-
-    void inject(GameActivity b);
-
-    void inject(FlickrPicturesFragment fragment);
 
     void inject(PuzzleBoardView view);
 
