@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +16,8 @@ import java.util.StringTokenizer;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
@@ -30,7 +31,12 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
 
     final String TAG = this.getClass().getSimpleName();
 
+    @BindView(R.id.viewPager)
     ViewPager mViewPager;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.tabLayout)
+    TabLayout mTabLayout;
 
     MainActivityComponent mComponent;
 
@@ -40,32 +46,20 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inject();
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        inject();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setTitle(null);
-            actionBar.setSubtitle(null);
-        }
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_section1)));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_section2)));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_section3)));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        if (mViewPager != null) {
-            mViewPager.setAdapter(new MainScreenPagerAdapter(this));
-        }
-
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mViewPager.setAdapter(new MainScreenPagerAdapter(this));
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.title_section1)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.title_section2)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.title_section3)));
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 mViewPager.setCurrentItem(tab.getPosition());

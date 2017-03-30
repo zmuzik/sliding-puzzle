@@ -19,6 +19,7 @@ ext {
     supportLibVersion = '25.3.1'
     retrofitVersion = '2.2.0'
     daggerVersion = '2.8'
+    butterknifeVersion = '8.5.1'
 }
 
 def getVersionCode = { ->
@@ -88,4 +89,6 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'javax.inject:javax.inject:1'
+    compile "com.jakewharton:butterknife:${butterknifeVersion}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
 }
