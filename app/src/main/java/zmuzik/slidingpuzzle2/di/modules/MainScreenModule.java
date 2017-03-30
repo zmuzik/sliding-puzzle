@@ -36,7 +36,7 @@ public class MainScreenModule {
     @Provides
     @ActivityScope
     MainScreenPresenter providePresenter() {
-        return new MainScreenPresenter(mActivity);
+        return new MainScreenPresenter();
     }
 
     @Provides

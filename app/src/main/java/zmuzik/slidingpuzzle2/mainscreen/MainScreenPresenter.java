@@ -15,7 +15,6 @@ import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 public class MainScreenPresenter {
 
     final String TAG = this.getClass().getSimpleName();
-    private final Context mContext;
 
     @Inject
     PrefsHelper mPrefsHelper;
@@ -24,8 +23,7 @@ public class MainScreenPresenter {
     MainScreenView mView;
 
     @Inject
-    public MainScreenPresenter(Context context) {
-        mContext = context;
+    public MainScreenPresenter() {
     }
 
     boolean toggleShowNumbers() {
