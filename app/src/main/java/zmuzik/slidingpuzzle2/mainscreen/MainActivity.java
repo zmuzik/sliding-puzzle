@@ -41,10 +41,11 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mComponent = DaggerMainActivityComponent.builder()
-                .appComponent(App.getComponent())
+                .appComponent(((App) getApplication()).getComponent(this))
                 .mainScreenModule(new MainScreenModule(this))
                 .build();
         mComponent.inject(this);
+        mComponent.inject(mPresenter);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -85,6 +86,9 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
         });
     }
 
+    public MainActivityComponent getDiComponent() {
+        return mComponent;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

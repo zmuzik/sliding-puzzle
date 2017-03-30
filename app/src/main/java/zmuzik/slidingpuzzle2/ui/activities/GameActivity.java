@@ -61,6 +61,8 @@ public class GameActivity extends Activity {
     @Inject
     FlickrApi mFlickrApi;
 
+    private GameActivityComponent mComponent;
+
     Target mTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -82,12 +84,13 @@ public class GameActivity extends Activity {
         public void onPrepareLoad(Drawable placeHolderDrawable) {
         }
     };
-    private GameActivityComponent mComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mComponent = DaggerGameActivityComponent.builder().appComponent(App.getComponent()).build();
+        mComponent = DaggerGameActivityComponent.builder()
+                .appComponent(((App) getApplication()).getComponent(this))
+                .build();
         mComponent.inject(this);
         Intent intent = getIntent();
         if (intent == null) finish();
@@ -117,6 +120,10 @@ public class GameActivity extends Activity {
                 GameActivity.this.finish();
             }
         });
+    }
+
+    public GameActivityComponent getDiComponent() {
+        return mComponent;
     }
 
     void resolvePictureUri(Callback callback) {

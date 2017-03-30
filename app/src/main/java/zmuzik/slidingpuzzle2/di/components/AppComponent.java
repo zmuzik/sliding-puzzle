@@ -17,7 +17,12 @@ import zmuzik.slidingpuzzle2.view.PuzzleBoardView;
  * Created by Zbynek Muzik on 2017-03-28.
  */
 @Singleton
-@Component(modules = {AppModule.class, NetModule.class})
+@Component(
+        modules = {
+                AppModule.class,
+                NetModule.class
+        }
+)
 public interface AppComponent {
 
     void inject(PuzzleBoardView view);

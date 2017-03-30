@@ -5,6 +5,7 @@ import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
+import zmuzik.slidingpuzzle2.di.ActivityScope;
 import zmuzik.slidingpuzzle2.mainscreen.MainScreenPresenter;
 
 /**
@@ -31,8 +32,9 @@ public class MainScreenModule {
     }
 
     @Provides
+    @ActivityScope
     MainScreenPresenter providePresenter() {
-        return new MainScreenPresenter();
+        return new MainScreenPresenter(mActivity);
     }
 
 }

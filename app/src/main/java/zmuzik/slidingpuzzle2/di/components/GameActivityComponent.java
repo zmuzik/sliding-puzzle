@@ -10,7 +10,10 @@ import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
  */
 
 @ActivityScope
-@Component(dependencies = AppComponent.class, modules = GameScreenModule.class)
+@Component(
+        dependencies = AppComponent.class,
+        modules = GameScreenModule.class
+)
 public interface GameActivityComponent {
 
     void inject(GameActivity mainActivity);

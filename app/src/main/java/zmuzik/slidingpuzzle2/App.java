@@ -1,6 +1,7 @@
 package zmuzik.slidingpuzzle2;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -14,7 +15,7 @@ public class App extends Application {
     private final String TAG = this.getClass().getSimpleName();
 
     private static App mApp;
-    private static AppComponent mAppComponent;
+    private AppComponent mAppComponent;
 
     @Override
     public void onCreate() {
@@ -28,7 +29,11 @@ public class App extends Application {
         return mApp;
     }
 
-    public static AppComponent getComponent() {
-        return mAppComponent;
+    public static App get(Context context) {
+        return ((App) context.getApplicationContext());
+    }
+
+    public AppComponent getComponent(Context context) {
+        return get(context).mAppComponent;
     }
 }

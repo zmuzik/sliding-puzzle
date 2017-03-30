@@ -7,12 +7,14 @@ import javax.inject.Inject;
 
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.di.ActivityScope;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 
 /**
  * Created by Zbynek Muzik on 2017-03-30.
  */
 
+@ActivityScope
 public class MainScreenPresenter {
 
     final String TAG = this.getClass().getSimpleName();
@@ -22,11 +24,15 @@ public class MainScreenPresenter {
             "4x4", "4x5", "4x6",
             "5x5", "5x6", "6x6",};
 
+    private Context mContext;
+
     @Inject
     PrefsHelper mPrefsHelper;
 
     @Inject
-    Context mContext;
+    public MainScreenPresenter(Context context) {
+        mContext = context;
+    }
 
     public void changeGridSize() {
 
