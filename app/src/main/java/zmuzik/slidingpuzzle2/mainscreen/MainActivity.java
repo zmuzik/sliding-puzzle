@@ -10,18 +10,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.StringTokenizer;
 
 import javax.inject.Inject;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.adapters.MainScreenPagerAdapter;
+import zmuzik.slidingpuzzle2.common.Toaster;
 import zmuzik.slidingpuzzle2.di.components.DaggerMainActivityComponent;
 import zmuzik.slidingpuzzle2.di.components.MainActivityComponent;
 import zmuzik.slidingpuzzle2.di.modules.MainScreenModule;
@@ -37,6 +38,17 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     Toolbar mToolbar;
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
+
+    @BindString(R.string.title_section1)
+    String titleSection1;
+    @BindString(R.string.title_section2)
+    String titleSection2;
+    @BindString(R.string.title_section3)
+    String titleSection3;
+    @BindString(R.string.select_grid_size)
+    String selectGridSize;
+    @BindString(R.string.grid_size_selected_to)
+    String gridSizeSelectedTo;
 
     MainActivityComponent mComponent;
 
@@ -55,9 +67,9 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
 
         mViewPager.setAdapter(new MainScreenPagerAdapter(this));
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.title_section1)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.title_section2)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.title_section3)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(titleSection1));
+        mTabLayout.addTab(mTabLayout.newTab().setText(titleSection2));
+        mTabLayout.addTab(mTabLayout.newTab().setText(titleSection3));
         mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -105,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
 
     public void openChangeGridSizeDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.select_grid_size));
+        builder.setTitle(selectGridSize);
         builder.setSingleChoiceItems(Conf.GRID_SIZES, getGridDimsPosition(), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 String positionsStr = Conf.GRID_SIZES[item];
@@ -114,8 +126,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
                 String longerStr = tokenizer.nextToken();
                 mPresenter.setGridDimensions(Integer.parseInt(shorterStr), Integer.parseInt(longerStr));
                 dialog.dismiss();
-                String msg = String.format(App.get().getString(R.string.grid_size_selected_to), positionsStr);
-                Toast.makeText(App.get(), msg, Toast.LENGTH_SHORT).show();
+                Toaster.toast(String.format(gridSizeSelectedTo, positionsStr));
             }
         });
         builder.show();
@@ -128,6 +139,4 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
         }
         return 0;
     }
-
-
 }
