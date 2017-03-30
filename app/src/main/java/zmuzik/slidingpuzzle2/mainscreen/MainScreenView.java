@@ -5,6 +5,4 @@ package zmuzik.slidingpuzzle2.mainscreen;
  */
 
 public interface MainScreenView {
-
-
 }

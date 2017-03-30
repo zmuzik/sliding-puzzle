@@ -49,6 +49,10 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     String selectGridSize;
     @BindString(R.string.grid_size_selected_to)
     String gridSizeSelectedTo;
+    @BindString(R.string.display_tile_numbers_on)
+    String displayTitleNumbersOn;
+    @BindString(R.string.display_tile_numbers_off)
+    String displayTitleNumbersOff;
 
     MainActivityComponent mComponent;
 
@@ -109,13 +113,18 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
                 openChangeGridSizeDialog();
                 return true;
             case R.id.action_toggle_display_numbers:
-                mPresenter.toggleShowNumbers();
+                toggleShowNumbers();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void openChangeGridSizeDialog() {
+    private void toggleShowNumbers() {
+        boolean onOff = mPresenter.toggleShowNumbers();
+        Toaster.toast(onOff ? displayTitleNumbersOn : displayTitleNumbersOff);
+    }
+
+    private void openChangeGridSizeDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(selectGridSize);
         builder.setSingleChoiceItems(Conf.GRID_SIZES, getGridDimsPosition(), new DialogInterface.OnClickListener() {
