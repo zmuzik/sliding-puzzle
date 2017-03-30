@@ -4,12 +4,15 @@ package zmuzik.slidingpuzzle2.mainscreen;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.StringTokenizer;
 
@@ -21,11 +24,12 @@ import butterknife.ButterKnife;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.adapters.MainScreenPagerAdapter;
 import zmuzik.slidingpuzzle2.common.Toaster;
 import zmuzik.slidingpuzzle2.di.components.DaggerMainActivityComponent;
 import zmuzik.slidingpuzzle2.di.components.MainActivityComponent;
 import zmuzik.slidingpuzzle2.di.modules.MainScreenModule;
+import zmuzik.slidingpuzzle2.view.BasePicturesGridView;
+import zmuzik.slidingpuzzle2.view.SavedPicturesGridView;
 
 
 public class MainActivity extends AppCompatActivity implements MainScreenView {
@@ -69,26 +73,9 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        mViewPager.setAdapter(new MainScreenPagerAdapter(this));
+        mViewPager.setAdapter(new ViewPagerAdapter());
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-        mTabLayout.addTab(mTabLayout.newTab().setText(titleSection1));
-        mTabLayout.addTab(mTabLayout.newTab().setText(titleSection2));
-        mTabLayout.addTab(mTabLayout.newTab().setText(titleSection3));
         mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mViewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
     }
 
     private void inject() {
@@ -147,5 +134,30 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
             if (currentDims.equals(Conf.GRID_SIZES[i])) return i;
         }
         return 0;
+    }
+
+    private class ViewPagerAdapter extends PagerAdapter {
+        @Override
+        public Object instantiateItem(ViewGroup collection, int position) {
+            BasePicturesGridView gridView = new SavedPicturesGridView(MainActivity.this);
+            gridView.requestUpdate();
+            collection.addView(gridView);
+            return gridView;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup collection, int position, Object view) {
+            collection.removeView((View) view);
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
     }
 }
