@@ -55,11 +55,6 @@ public class BasePicturesGridView extends RelativeLayout {
         init();
     }
 
-    public BasePicturesGridView(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
-        init();
-    }
-
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.pictures_grid, this);
         ButterKnife.bind(this, this);
@@ -106,18 +101,10 @@ public class BasePicturesGridView extends RelativeLayout {
     }
 
     public void requestUpdate() {
+        // this should call the presenter to request pictures
     }
 
-    public void update() {
-        mAdapter = getAdapter();
-        mRecyclerView.setAdapter(mAdapter);
-    }
-
-    public PicturesGridAdapter getAdapter() {
-        return new PicturesGridAdapter(getContext(), getPictures(), getColumnsNumber());
-    }
-
-    public List<String> getPictures() {
-        return null;
+    public void update(List<String> pictures) {
+        // this should be called by the presenter (via proxy/activity) to update the pictures
     }
 }

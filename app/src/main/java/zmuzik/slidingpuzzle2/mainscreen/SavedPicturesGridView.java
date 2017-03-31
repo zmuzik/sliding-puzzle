@@ -1,7 +1,6 @@
 package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.content.Context;
-import android.util.AttributeSet;
 
 import java.util.List;
 
@@ -15,18 +14,14 @@ public class SavedPicturesGridView extends BasePicturesGridView {
         super(context);
     }
 
-    public SavedPicturesGridView(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
-    }
-
     @Override
     public void requestUpdate() {
-        // synchronous update, no need to load pictures list in the background
-        update();
+        mPresenter.requestUpdateSavedPictures();
     }
 
     @Override
-    public List<String> getPictures() {
-        return mPresenter.getSavedPicturesList();
+    public void update(List<String> pictures) {
+        mAdapter = new PicturesGridAdapter(getContext(), pictures, getColumnsNumber());
+        mRecyclerView.setAdapter(mAdapter);
     }
 }

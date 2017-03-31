@@ -4,14 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 
 import java.util.Arrays;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.common.Keys;
-import zmuzik.slidingpuzzle2.common.di.ActivityScope;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
+import zmuzik.slidingpuzzle2.common.di.ActivityScope;
 import zmuzik.slidingpuzzle2.gamescreen.GameActivity;
 
 /**
@@ -23,7 +22,7 @@ public class MainScreenPresenter {
 
     private final String TAG = this.getClass().getSimpleName();
 
-    final String[] originalPictures = {
+    private final String[] SAVED_PICTURES = {
             Utils.ASSET_PREFIX + "game_pic_00.jpg",
             Utils.ASSET_PREFIX + "game_pic_01.jpg",
             Utils.ASSET_PREFIX + "game_pic_07.jpg",
@@ -73,7 +72,19 @@ public class MainScreenPresenter {
         mContext.startActivity(intent);
     }
 
-    public List<String> getSavedPicturesList() {
-        return Arrays.asList(originalPictures);
+    public void requestUpdateSavedPictures() {
+        updateSavedPictures();
+    }
+
+    private void updateSavedPictures() {
+        mView.updateSavedPictures(Arrays.asList(SAVED_PICTURES));
+    }
+
+    public void requestUpdateCameraPictures() {
+        updateCameraPictures();
+    }
+
+    private void updateCameraPictures() {
+        mView.updateCameraPictures(Arrays.asList(SAVED_PICTURES));
     }
 }

@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.inject.Inject;
@@ -54,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     String displayTitleNumbersOff;
 
     MainActivityComponent mComponent;
+    WeakReference<BasePicturesGridView> mSavedPicturesView;
+    WeakReference<BasePicturesGridView> mCameraPicturesView;
+    WeakReference<BasePicturesGridView> mFlickrPicturesView;
 
     @Inject
     MainScreenPresenter mPresenter;
@@ -135,6 +140,27 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
         return mComponent;
     }
 
+    @Override
+    public void updateSavedPictures(List<String> pictures) {
+        if (mSavedPicturesView.get() != null) {
+            mSavedPicturesView.get().update(pictures);
+        }
+    }
+
+    @Override
+    public void updateCameraPictures(List<String> pictures) {
+        if (mCameraPicturesView.get() != null) {
+            mCameraPicturesView.get().update(pictures);
+        }
+    }
+
+    @Override
+    public void updateFlickrPictures(List<String> pictures) {
+        if (mFlickrPicturesView.get() != null) {
+            mFlickrPicturesView.get().update(pictures);
+        }
+    }
+
     private class ViewPagerAdapter extends PagerAdapter {
         @Override
         public Object instantiateItem(ViewGroup collection, int position) {
@@ -142,18 +168,18 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
             switch (position) {
                 case 0:
                     gridView = new SavedPicturesGridView(MainActivity.this);
+                    mSavedPicturesView = new WeakReference<BasePicturesGridView>(gridView);
                     break;
                 case 1:
                     gridView = new SavedPicturesGridView(MainActivity.this);
+                    mCameraPicturesView = new WeakReference<BasePicturesGridView>(gridView);
                     break;
                 case 2:
                     gridView = new SavedPicturesGridView(MainActivity.this);
+                    mFlickrPicturesView = new WeakReference<BasePicturesGridView>(gridView);
                     break;
             }
-            if (gridView != null) {
-                mComponent.inject(gridView);
-                gridView.requestUpdate();
-            }
+            gridView.requestUpdate();
             collection.addView(gridView);
             return gridView;
         }
