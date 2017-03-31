@@ -131,6 +131,10 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
         return 0;
     }
 
+    public MainActivityComponent getComponent() {
+        return mComponent;
+    }
+
     private class ViewPagerAdapter extends PagerAdapter {
         @Override
         public Object instantiateItem(ViewGroup collection, int position) {

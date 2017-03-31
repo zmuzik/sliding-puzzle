@@ -19,6 +19,8 @@ public interface MainActivityComponent {
 
     void inject(MainScreenPresenter presenter);
 
+    void inject(PicturesGridAdapter adapter);
+
     void inject(BasePicturesGridView gridView);
 
     void inject(SavedPicturesGridView gridView);

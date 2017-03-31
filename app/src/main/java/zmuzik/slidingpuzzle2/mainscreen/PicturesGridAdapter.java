@@ -25,8 +25,8 @@ import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.common.Keys;
-import zmuzik.slidingpuzzle2.gamescreen.GameActivity;
 import zmuzik.slidingpuzzle2.common.view.SquareImageView;
+import zmuzik.slidingpuzzle2.gamescreen.GameActivity;
 
 public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapter.ViewHolder> {
 
@@ -40,8 +40,6 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     private int mPage = 1;
 
     @Inject
-    MainScreenView mView;
-    @Inject
     MainScreenPresenter mPresenter;
 
     @Inject
@@ -49,6 +47,9 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         mContext = ctx;
         mColumns = columns;
         mFilePaths = filePaths;
+        if (mContext instanceof MainActivity) {
+            ((MainActivity) mContext).getComponent().inject(this);
+        }
     }
 
     @Override
