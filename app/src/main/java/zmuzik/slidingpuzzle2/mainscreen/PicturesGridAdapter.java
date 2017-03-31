@@ -1,6 +1,5 @@
-package zmuzik.slidingpuzzle2.adapters;
+package zmuzik.slidingpuzzle2.mainscreen;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -22,15 +21,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.common.Keys;
-import zmuzik.slidingpuzzle2.mainscreen.MainScreenPresenter;
-import zmuzik.slidingpuzzle2.mainscreen.MainScreenView;
-import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
-import zmuzik.slidingpuzzle2.view.SquareImageView;
+import zmuzik.slidingpuzzle2.gamescreen.GameActivity;
+import zmuzik.slidingpuzzle2.common.view.SquareImageView;
 
 public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapter.ViewHolder> {
 

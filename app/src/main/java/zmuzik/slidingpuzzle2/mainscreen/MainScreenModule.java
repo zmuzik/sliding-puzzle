@@ -1,14 +1,10 @@
-package zmuzik.slidingpuzzle2.di.modules;
+package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.app.Activity;
-import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
-import zmuzik.slidingpuzzle2.di.ActivityScope;
-import zmuzik.slidingpuzzle2.mainscreen.MainActivity;
-import zmuzik.slidingpuzzle2.mainscreen.MainScreenPresenter;
-import zmuzik.slidingpuzzle2.mainscreen.MainScreenView;
+import zmuzik.slidingpuzzle2.common.di.ActivityScope;
 
 /**
  * Created by Zbynek Muzik on 2017-03-30.

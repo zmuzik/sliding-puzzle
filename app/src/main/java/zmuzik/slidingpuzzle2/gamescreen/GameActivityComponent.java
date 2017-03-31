@@ -1,9 +1,8 @@
-package zmuzik.slidingpuzzle2.di.components;
+package zmuzik.slidingpuzzle2.gamescreen;
 
 import dagger.Component;
-import zmuzik.slidingpuzzle2.di.ActivityScope;
-import zmuzik.slidingpuzzle2.di.modules.GameScreenModule;
-import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
+import zmuzik.slidingpuzzle2.common.di.AppComponent;
+import zmuzik.slidingpuzzle2.common.di.ActivityScope;
 
 /**
  * Created by Zbynek Muzik on 2017-03-30.

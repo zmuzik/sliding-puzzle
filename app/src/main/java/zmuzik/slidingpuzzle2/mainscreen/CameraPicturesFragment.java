@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle2.ui.fragments;
+package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.Manifest;
 import android.content.ComponentName;

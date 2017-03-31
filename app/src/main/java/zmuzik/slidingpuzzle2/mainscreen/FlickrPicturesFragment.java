@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle2.ui.fragments;
+package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -22,13 +22,10 @@ import com.crashlytics.android.Crashlytics;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import retrofit2.Call;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
-import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.SearchResponse;

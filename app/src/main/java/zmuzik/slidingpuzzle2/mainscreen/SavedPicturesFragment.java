@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle2.ui.fragments;
+package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -12,10 +12,9 @@ import android.view.ViewGroup;
 import java.util.Arrays;
 import java.util.List;
 
-import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
+import zmuzik.slidingpuzzle2.mainscreen.PicturesGridAdapter;
 import zmuzik.slidingpuzzle2.Utils;
 
 public class SavedPicturesFragment extends Fragment {

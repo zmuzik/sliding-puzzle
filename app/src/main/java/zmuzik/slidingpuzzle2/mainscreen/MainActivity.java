@@ -25,11 +25,6 @@ import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.common.Toaster;
-import zmuzik.slidingpuzzle2.di.components.DaggerMainActivityComponent;
-import zmuzik.slidingpuzzle2.di.components.MainActivityComponent;
-import zmuzik.slidingpuzzle2.di.modules.MainScreenModule;
-import zmuzik.slidingpuzzle2.view.BasePicturesGridView;
-import zmuzik.slidingpuzzle2.view.SavedPicturesGridView;
 
 
 public class MainActivity extends AppCompatActivity implements MainScreenView {

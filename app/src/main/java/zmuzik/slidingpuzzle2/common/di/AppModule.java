@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle2.di.modules;
+package zmuzik.slidingpuzzle2.common.di;
 
 import android.app.Application;
 import android.content.Context;

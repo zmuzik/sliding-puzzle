@@ -1,8 +1,7 @@
-package zmuzik.slidingpuzzle2.adapters;
+package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -11,12 +10,10 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
-import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.common.Keys;
 import zmuzik.slidingpuzzle2.flickr.Photo;
-import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
+import zmuzik.slidingpuzzle2.gamescreen.GameActivity;
 
 public class FlickrGridAdapter extends PicturesGridAdapter {
 

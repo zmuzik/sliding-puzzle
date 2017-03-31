@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle2.di;
+package zmuzik.slidingpuzzle2.common.di;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,5 +11,5 @@ import javax.inject.Qualifier;
 
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AppContext {
+public @interface ActivityContext {
 }

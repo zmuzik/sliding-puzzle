@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle2.view;
+package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -23,7 +23,7 @@ import butterknife.OnClick;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
-import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
+import zmuzik.slidingpuzzle2.mainscreen.PicturesGridAdapter;
 
 /**
  * Created by Zbynek Muzik on 2017-03-28.

@@ -5,9 +5,9 @@
                 android:background="@color/black"
                 android:gravity="center"
                 android:padding="0dp"
-                tools:context=".ui.activities.GameActivity">
+                tools:context=".gamescreen.GameActivity">
 
-    <zmuzik.slidingpuzzle2.view.PuzzleBoardView
+    <zmuzik.slidingpuzzle2.gamescreen.PuzzleBoardView
         android:id="@+id/board"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

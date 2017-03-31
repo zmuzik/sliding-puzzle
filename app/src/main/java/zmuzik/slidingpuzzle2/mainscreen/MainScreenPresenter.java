@@ -6,9 +6,9 @@ import android.content.Intent;
 import javax.inject.Inject;
 
 import zmuzik.slidingpuzzle2.common.Keys;
-import zmuzik.slidingpuzzle2.di.ActivityScope;
+import zmuzik.slidingpuzzle2.common.di.ActivityScope;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
-import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
+import zmuzik.slidingpuzzle2.gamescreen.GameActivity;
 
 /**
  * Created by Zbynek Muzik on 2017-03-30.

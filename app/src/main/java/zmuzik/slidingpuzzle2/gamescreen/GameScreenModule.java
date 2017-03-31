@@ -1,11 +1,11 @@
-package zmuzik.slidingpuzzle2.di.modules;
+package zmuzik.slidingpuzzle2.gamescreen;
 
 import android.app.Activity;
 import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
-import zmuzik.slidingpuzzle2.di.ActivityContext;
+import zmuzik.slidingpuzzle2.common.di.ActivityContext;
 
 /**
  * Created by Zbynek Muzik on 2017-03-30.

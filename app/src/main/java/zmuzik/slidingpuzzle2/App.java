@@ -6,9 +6,9 @@ import android.content.Context;
 import com.crashlytics.android.Crashlytics;
 
 import io.fabric.sdk.android.Fabric;
-import zmuzik.slidingpuzzle2.di.components.AppComponent;
-import zmuzik.slidingpuzzle2.di.components.DaggerAppComponent;
-import zmuzik.slidingpuzzle2.di.modules.AppModule;
+import zmuzik.slidingpuzzle2.common.di.AppComponent;
+import zmuzik.slidingpuzzle2.common.di.AppModule;
+import zmuzik.slidingpuzzle2.common.di.DaggerAppComponent;
 
 public class App extends Application {
 

@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle2.ui.activities;
+package zmuzik.slidingpuzzle2.gamescreen;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,16 +29,13 @@ import retrofit2.Call;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
-import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
 import zmuzik.slidingpuzzle2.common.Keys;
-import zmuzik.slidingpuzzle2.di.components.DaggerGameActivityComponent;
-import zmuzik.slidingpuzzle2.di.components.GameActivityComponent;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
 import zmuzik.slidingpuzzle2.flickr.Size;
 import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
-import zmuzik.slidingpuzzle2.view.PuzzleBoardView;
+import zmuzik.slidingpuzzle2.mainscreen.FlickrGridAdapter;
 
 public class GameActivity extends Activity {
 

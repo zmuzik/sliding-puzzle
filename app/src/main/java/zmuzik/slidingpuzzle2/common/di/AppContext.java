@@ -1,15 +1,15 @@
-package zmuzik.slidingpuzzle2.di;
+package zmuzik.slidingpuzzle2.common.di;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import javax.inject.Scope;
+import javax.inject.Qualifier;
 
 /**
  * Created by Zbynek Muzik on 2017-03-30.
  */
 
-@Scope
+@Qualifier
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ActivityScope {
+public @interface AppContext {
 }

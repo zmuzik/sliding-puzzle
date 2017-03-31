@@ -23,7 +23,7 @@
         </activity>
 
         <activity
-            android:name="zmuzik.slidingpuzzle2.ui.activities.GameActivity"
+            android:name="zmuzik.slidingpuzzle2.gamescreen.GameActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.Fullscreen">
         </activity>
