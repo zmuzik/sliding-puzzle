@@ -17,13 +17,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
-import zmuzik.slidingpuzzle2.mainscreen.PicturesGridAdapter;
 
 /**
  * Created by Zbynek Muzik on 2017-03-28.
@@ -44,6 +45,9 @@ public class BasePicturesGridView extends RelativeLayout {
     @BindView(R.id.fab)
     FloatingActionButton mFab;
 
+    @Inject
+    MainScreenPresenter mPresenter;
+
     PicturesGridAdapter mAdapter;
 
     public BasePicturesGridView(Context context) {
@@ -59,7 +63,9 @@ public class BasePicturesGridView extends RelativeLayout {
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.pictures_grid, this);
         ButterKnife.bind(this, this);
-
+        if (getContext() instanceof MainActivity) {
+            ((MainActivity) getContext()).getComponent().inject(this);
+        }
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getColumnsNumber()));
     }

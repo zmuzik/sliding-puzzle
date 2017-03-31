@@ -14,22 +14,21 @@ import java.util.List;
 
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.mainscreen.PicturesGridAdapter;
 import zmuzik.slidingpuzzle2.Utils;
 
 public class SavedPicturesFragment extends Fragment {
 
     final String[] originalPictures = {
-            Utils.ASSET_PREFIX + "game_pic_0.jpg",
-            Utils.ASSET_PREFIX + "game_pic_1.jpg",
-            Utils.ASSET_PREFIX + "game_pic_7.jpg",
-            Utils.ASSET_PREFIX + "game_pic_2.jpg",
-            Utils.ASSET_PREFIX + "game_pic_3.jpg",
-            Utils.ASSET_PREFIX + "game_pic_4.jpg",
-            Utils.ASSET_PREFIX + "game_pic_5.jpg",
-            Utils.ASSET_PREFIX + "game_pic_6.jpg",
-            Utils.ASSET_PREFIX + "game_pic_8.jpg",
-            Utils.ASSET_PREFIX + "game_pic_9.jpg",
+            Utils.ASSET_PREFIX + "game_pic_00.jpg",
+            Utils.ASSET_PREFIX + "game_pic_01.jpg",
+            Utils.ASSET_PREFIX + "game_pic_07.jpg",
+            Utils.ASSET_PREFIX + "game_pic_02.jpg",
+            Utils.ASSET_PREFIX + "game_pic_03.jpg",
+            Utils.ASSET_PREFIX + "game_pic_04.jpg",
+            Utils.ASSET_PREFIX + "game_pic_05.jpg",
+            Utils.ASSET_PREFIX + "game_pic_06.jpg",
+            Utils.ASSET_PREFIX + "game_pic_08.jpg",
+            Utils.ASSET_PREFIX + "game_pic_09.jpg",
             Utils.ASSET_PREFIX + "game_pic_10.jpg",
             Utils.ASSET_PREFIX + "game_pic_11.jpg"};
 
