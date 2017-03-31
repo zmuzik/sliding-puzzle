@@ -14,6 +14,7 @@ import java.util.List;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.common.Keys;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
 
@@ -49,7 +50,7 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
         Intent intent = new Intent(mContext, GameActivity.class);
         String photoStr = new Gson().toJson(photo);
         intent.putExtra(PHOTO, photoStr);
-        intent.putExtra(IS_HORIZONTAL, isHorizontal);
+        intent.putExtra(Keys.IS_HORIZONTAL, isHorizontal);
         mContext.startActivity(intent);
     }
 }

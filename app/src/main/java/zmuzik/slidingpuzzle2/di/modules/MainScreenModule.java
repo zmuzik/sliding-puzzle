@@ -24,11 +24,6 @@ public class MainScreenModule {
     }
 
     @Provides
-    Context provideContext() {
-        return mActivity;
-    }
-
-    @Provides
     Activity provideActivity() {
         return mActivity;
     }

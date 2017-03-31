@@ -1,8 +1,8 @@
 package zmuzik.slidingpuzzle2.adapters;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,56 +18,51 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.view.SquareImageView;
 import zmuzik.slidingpuzzle2.Utils;
+import zmuzik.slidingpuzzle2.common.Keys;
+import zmuzik.slidingpuzzle2.mainscreen.MainScreenPresenter;
+import zmuzik.slidingpuzzle2.mainscreen.MainScreenView;
 import zmuzik.slidingpuzzle2.ui.activities.GameActivity;
+import zmuzik.slidingpuzzle2.view.SquareImageView;
 
 public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapter.ViewHolder> {
 
     final String TAG = this.getClass().getSimpleName();
-    public static final String FILE_URI = "FILE_URI";
-    public static final String IS_HORIZONTAL = "IS_HORIZONTAL";
 
-    protected List<String> mFilePaths;
-    protected Context mContext;
-    protected int mColumns;
-    protected int mDim;
-    protected int mPage = 1;
+    List<String> mFilePaths;
+    Context mContext;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public SquareImageView image;
-        public ImageView orientationIcon;
-        public ProgressBar progressBar;
-        public TextView nextTv;
+    private int mColumns;
+    private int mDim;
+    private int mPage = 1;
 
-        public ViewHolder(View v) {
-            super(v);
-            image = (SquareImageView) v.findViewById(R.id.image);
-            orientationIcon = (ImageView) v.findViewById(R.id.orientationIcon);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
-            nextTv = (TextView) v.findViewById(R.id.nextTv);
-        }
-    }
+    @Inject
+    MainScreenView mView;
+    @Inject
+    MainScreenPresenter mPresenter;
 
+    @Inject
     public PicturesGridAdapter(Context ctx, List<String> filePaths, int columns) {
         mContext = ctx;
         mColumns = columns;
         mFilePaths = filePaths;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public PicturesGridAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pictures_grid, parent, false);
-        // set the view's size, margins, paddings and layout parameters
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_pictures_grid, parent, false);
         mDim = parent.getWidth() / mColumns;
         return new ViewHolder(v);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         if (isFooterItem(position)) {
@@ -77,12 +72,12 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         }
     }
 
-    void bindNormalItem(final ViewHolder holder, final int position) {
+    private void bindNormalItem(final ViewHolder holder, final int position) {
         final String uriString = mFilePaths.get(position);
         holder.nextTv.setVisibility(View.GONE);
         holder.progressBar.setVisibility(View.VISIBLE);
-        Picasso.with(App.get()).cancelRequest(holder.image);
-        Picasso.with(App.get()).load(uriString)
+        Picasso.with(mContext).cancelRequest(holder.image);
+        Picasso.with(mContext).load(uriString)
                 .resize(mDim, mDim)
                 .centerCrop()
                 .into(holder.image, new Callback() {
@@ -115,24 +110,26 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     public void runGame(int position) {
         boolean isHorizontal = Utils.isBitmapHorizontal(mFilePaths.get(position));
         Intent intent = new Intent(mContext, GameActivity.class);
-        intent.putExtra(FILE_URI, mFilePaths.get(position));
-        intent.putExtra(IS_HORIZONTAL, isHorizontal);
+        intent.putExtra(Keys.PICTURE_URI, mFilePaths.get(position));
+        intent.putExtra(Keys.IS_HORIZONTAL, isHorizontal);
         mContext.startActivity(intent);
+        mPresenter.runGame(mFilePaths.get(position), isHorizontal);
     }
 
-    void bindFooterItem(final ViewHolder holder, final int position) {
+    private void bindFooterItem(final ViewHolder holder, final int position) {
         holder.image.setVisibility(View.GONE);
         holder.progressBar.setVisibility(View.GONE);
         holder.orientationIcon.setVisibility(View.GONE);
         holder.nextTv.setVisibility(View.VISIBLE);
         holder.nextTv.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 showNextPage();
             }
         });
     }
 
-    void showNextPage() {
+    private void showNextPage() {
         int startPosition = getItemCount() - 1;
         mPage++;
         notifyItemChanged(startPosition++);
@@ -143,7 +140,6 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     }
 
     public void setOrientationIcon(ImageView orientationIcon, int position) {
-        Resources res = App.get().getResources();
         orientationIcon.setVisibility(View.VISIBLE);
         boolean isHorizontal = Utils.isBitmapHorizontal(mFilePaths.get(position));
         orientationIcon.setRotation(isHorizontal ? 270f : 0f);
@@ -153,12 +149,12 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         return Conf.PAGE_SIZE;
     }
 
-    int getDisplayedPicsCount() {
+    private int getDisplayedPicsCount() {
         if (mFilePaths == null) return 0;
         return (mFilePaths.size() < getPageSize() * mPage) ? mFilePaths.size() : getPageSize() * mPage;
     }
 
-    boolean isMoreToDisplay() {
+    private boolean isMoreToDisplay() {
         if (mFilePaths == null) return false;
         return mFilePaths.size() > getPageSize() * mPage;
     }
@@ -169,7 +165,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         return (isMoreToDisplay()) ? getDisplayedPicsCount() + 1 : getDisplayedPicsCount();
     }
 
-    boolean isFooterItem(int position) {
+    private boolean isFooterItem(int position) {
         return position == getItemCount() - 1 && isMoreToDisplay();
     }
 
@@ -178,5 +174,21 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         if (mFilePaths.contains(item)) return;
         mFilePaths.add(position, item);
         notifyDataSetChanged();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.image)
+        SquareImageView image;
+        @BindView(R.id.orientationIcon)
+        ImageView orientationIcon;
+        @BindView(R.id.progressBar)
+        ProgressBar progressBar;
+        @BindView(R.id.nextTv)
+        TextView nextTv;
+
+        ViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
     }
 }

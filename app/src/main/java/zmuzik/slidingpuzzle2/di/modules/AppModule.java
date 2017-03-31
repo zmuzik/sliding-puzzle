@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import zmuzik.slidingpuzzle2.App;
 
 /**
  * Created by Zbynek Muzik on 2017-03-28.
@@ -31,6 +32,12 @@ public class AppModule {
     @Singleton
     Application provideApplication() {
         return mApplication;
+    }
+
+    @Provides
+    @Singleton
+    App provideApp() {
+        return (App) mApplication;
     }
 
     @Provides

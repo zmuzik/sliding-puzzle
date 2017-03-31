@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.di.modules.AppModule;
 import zmuzik.slidingpuzzle2.di.modules.NetModule;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
@@ -32,6 +33,8 @@ public interface AppComponent {
     Context getContext();
 
     Application getApplication();
+
+    App getApp();
 
     SharedPreferences getSharedPreferences();
 

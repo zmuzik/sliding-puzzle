@@ -139,8 +139,22 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     private class ViewPagerAdapter extends PagerAdapter {
         @Override
         public Object instantiateItem(ViewGroup collection, int position) {
-            BasePicturesGridView gridView = new SavedPicturesGridView(MainActivity.this);
-            gridView.requestUpdate();
+            BasePicturesGridView gridView = null;
+            switch (position) {
+                case 0:
+                    gridView = new SavedPicturesGridView(MainActivity.this);
+                    break;
+                case 1:
+                    gridView = new SavedPicturesGridView(MainActivity.this);
+                    break;
+                case 2:
+                    gridView = new SavedPicturesGridView(MainActivity.this);
+                    break;
+            }
+            if (gridView != null) {
+                mComponent.inject(gridView);
+                gridView.requestUpdate();
+            }
             collection.addView(gridView);
             return gridView;
         }

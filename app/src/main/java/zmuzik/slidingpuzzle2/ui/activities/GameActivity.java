@@ -30,7 +30,7 @@ import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.adapters.FlickrGridAdapter;
-import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
+import zmuzik.slidingpuzzle2.common.Keys;
 import zmuzik.slidingpuzzle2.di.components.DaggerGameActivityComponent;
 import zmuzik.slidingpuzzle2.di.components.GameActivityComponent;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
@@ -88,13 +88,10 @@ public class GameActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mComponent = DaggerGameActivityComponent.builder()
-                .appComponent(((App) getApplication()).getComponent(this))
-                .build();
-        mComponent.inject(this);
+        inject();
         Intent intent = getIntent();
         if (intent == null) finish();
-        boolean isHorizontal = getIntent().getExtras().getBoolean(PicturesGridAdapter.IS_HORIZONTAL);
+        boolean isHorizontal = getIntent().getExtras().getBoolean(Keys.IS_HORIZONTAL);
         setScreenOrientation(isHorizontal);
         resolveScreenDimensions();
         setContentView(R.layout.activity_game);
@@ -122,9 +119,13 @@ public class GameActivity extends Activity {
         });
     }
 
-    public GameActivityComponent getDiComponent() {
-        return mComponent;
+    void inject() {
+        mComponent = DaggerGameActivityComponent.builder()
+                .appComponent(((App) getApplication()).getComponent(this))
+                .build();
+        mComponent.inject(this);
     }
+
 
     void resolvePictureUri(Callback callback) {
         progressBar.setVisibility(View.VISIBLE);
@@ -133,7 +134,7 @@ public class GameActivity extends Activity {
             Toast.makeText(App.get(), App.get().getString(R.string.picture_not_supplied), Toast.LENGTH_LONG).show();
             finish();
         }
-        mFileUri = getIntent().getExtras().getString(PicturesGridAdapter.FILE_URI);
+        mFileUri = getIntent().getExtras().getString(Keys.PICTURE_URI);
         if (mFileUri != null) {
             callback.onFinished();
         } else {
