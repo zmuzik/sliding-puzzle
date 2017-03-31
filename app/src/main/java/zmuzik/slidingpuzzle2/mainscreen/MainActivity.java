@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     private void inject() {
         mComponent = DaggerMainActivityComponent.builder()
                 .appComponent(((App) getApplication()).getComponent(this))
-                .mainScreenModule(new MainActivityModule(this))
+                .mainActivityModule(new MainActivityModule(this))
                 .build();
         mComponent.inject(this);
         mComponent.inject(mPresenter);

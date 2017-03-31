@@ -30,11 +30,11 @@ import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.common.Keys;
+import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
 import zmuzik.slidingpuzzle2.flickr.Size;
-import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.mainscreen.FlickrGridAdapter;
 
 public class GameActivity extends Activity {

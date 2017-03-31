@@ -28,7 +28,7 @@ public interface AppComponent {
 
     void inject(PreferencesHelper helper);
 
-    Context getContext();
+    Context getApplicationContext();
 
     Application getApplication();
 
