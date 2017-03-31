@@ -30,7 +30,7 @@ import javax.inject.Inject;
 
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
-import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
+import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 
 public class CameraPicturesFragment extends SavedPicturesFragment {
 
@@ -44,7 +44,8 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
     private LinearLayout mPermissionsCombo;
     private Button mRequestPermissionsButton;
 
-    @Inject PrefsHelper prefsHelper;
+    @Inject
+    PreferencesHelper prefsHelper;
 
     public CameraPicturesFragment() {
         super();

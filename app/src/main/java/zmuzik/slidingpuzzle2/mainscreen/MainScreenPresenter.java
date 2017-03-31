@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 import zmuzik.slidingpuzzle2.common.Keys;
 import zmuzik.slidingpuzzle2.common.di.ActivityScope;
-import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
+import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.gamescreen.GameActivity;
 
 /**
@@ -20,7 +20,7 @@ public class MainScreenPresenter {
     private final String TAG = this.getClass().getSimpleName();
 
     @Inject
-    PrefsHelper mPrefsHelper;
+    PreferencesHelper mPrefsHelper;
 
     @Inject
     MainScreenView mView;

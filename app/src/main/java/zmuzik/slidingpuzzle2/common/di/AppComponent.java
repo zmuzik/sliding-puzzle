@@ -8,8 +8,8 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import zmuzik.slidingpuzzle2.App;
+import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
-import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
 import zmuzik.slidingpuzzle2.gamescreen.PuzzleBoardView;
 
 /**
@@ -26,7 +26,7 @@ public interface AppComponent {
 
     void inject(PuzzleBoardView view);
 
-    void inject(PrefsHelper helper);
+    void inject(PreferencesHelper helper);
 
     Context getContext();
 
@@ -36,7 +36,7 @@ public interface AppComponent {
 
     SharedPreferences getSharedPreferences();
 
-    PrefsHelper getPrefsHelper();
+    PreferencesHelper getPrefsHelper();
 
     FlickrApi getFlickrApi();
 }

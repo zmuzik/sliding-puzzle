@@ -34,7 +34,7 @@ import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
 import zmuzik.slidingpuzzle2.flickr.Size;
-import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
+import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.mainscreen.FlickrGridAdapter;
 
 public class GameActivity extends Activity {
@@ -53,7 +53,7 @@ public class GameActivity extends Activity {
     public String mFileUri;
 
     @Inject
-    PrefsHelper mPrefsHelper;
+    PreferencesHelper mPrefsHelper;
 
     @Inject
     FlickrApi mFlickrApi;

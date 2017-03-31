@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.helpers.PrefsHelper;
+import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.model.Tile;
 
 public class PuzzleBoardView extends View {
@@ -50,7 +50,7 @@ public class PuzzleBoardView extends View {
     private Boolean mDisplayNumbers;
 
     @Inject
-    public PrefsHelper mPrefsHelper;
+    public PreferencesHelper mPrefsHelper;
 
     public PuzzleBoardView(Context context) {
         super(context);

@@ -1,4 +1,4 @@
-package zmuzik.slidingpuzzle2.helpers;
+package zmuzik.slidingpuzzle2.common;
 
 import android.content.SharedPreferences;
 
@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 import zmuzik.slidingpuzzle2.Conf;
 
 @Singleton
-public class PrefsHelper {
+public class PreferencesHelper {
 
     private static final String GRID_DIM_SHORT = "GRID_DIM_SHORT";
     private static final String GRID_DIM_LONG = "GRID_DIM_LONG";
@@ -18,7 +18,7 @@ public class PrefsHelper {
     private SharedPreferences mSharedPreferences;
 
     @Inject
-    public PrefsHelper(SharedPreferences sharedPreferences) {
+    public PreferencesHelper(SharedPreferences sharedPreferences) {
         mSharedPreferences = sharedPreferences;
     }
 
