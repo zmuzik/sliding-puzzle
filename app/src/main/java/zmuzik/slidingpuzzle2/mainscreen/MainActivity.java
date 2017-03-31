@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
                     mSavedPicturesView = new WeakReference<BasePicturesGridView>(gridView);
                     break;
                 case 1:
-                    gridView = new SavedPicturesGridView(MainActivity.this);
+                    gridView = new CameraPicturesGridView(MainActivity.this);
                     mCameraPicturesView = new WeakReference<BasePicturesGridView>(gridView);
                     break;
                 case 2:

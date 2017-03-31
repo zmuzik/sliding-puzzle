@@ -104,7 +104,9 @@ public class BasePicturesGridView extends RelativeLayout {
         // this should call the presenter to request pictures
     }
 
+    // this should be called by the presenter (via proxy/activity) to update the pictures
     public void update(List<String> pictures) {
-        // this should be called by the presenter (via proxy/activity) to update the pictures
+        mAdapter = new PicturesGridAdapter(getContext(), pictures, getColumnsNumber());
+        mRecyclerView.setAdapter(mAdapter);
     }
 }
