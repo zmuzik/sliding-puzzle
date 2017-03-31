@@ -7,10 +7,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -19,6 +17,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
@@ -30,11 +31,17 @@ import zmuzik.slidingpuzzle2.adapters.PicturesGridAdapter;
 
 public class BasePicturesGridView extends RelativeLayout {
 
+    @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
+    @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
+    @BindView(R.id.permissionsCombo)
     LinearLayout mPermissionsCombo;
+    @BindView(R.id.permissionMessage)
     TextView mPermissionMessage;
+    @BindView(R.id.requestPermissionsButton)
     Button mRequestPermissionsButton;
+    @BindView(R.id.fab)
     FloatingActionButton mFab;
 
     PicturesGridAdapter mAdapter;
@@ -51,29 +58,11 @@ public class BasePicturesGridView extends RelativeLayout {
 
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.pictures_grid, this);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mPermissionsCombo = (LinearLayout) findViewById(R.id.permissionsCombo);
-        mPermissionMessage = (TextView) findViewById(R.id.permissionMessage);
-        mRequestPermissionsButton = (Button) findViewById(R.id.requestPermissionsButton);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        ButterKnife.bind(this, this);
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getColumnsNumber()));
-        mRequestPermissionsButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onRequestPermissionsButtonClicked(v);
-            }
-        });
-        mFab.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onFabClicked(v);
-            }
-        });
     }
-
 
     @Override
     protected void onFinishInflate() {
@@ -102,9 +91,11 @@ public class BasePicturesGridView extends RelativeLayout {
         mFab.setVisibility(VISIBLE);
     }
 
+    @OnClick(R.id.fab)
     public void onFabClicked(View fab) {
     }
 
+    @OnClick(R.id.requestPermissionsButton)
     public void onRequestPermissionsButtonClicked(View fab) {
     }
 
