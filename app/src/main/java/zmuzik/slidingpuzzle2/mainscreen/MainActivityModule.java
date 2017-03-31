@@ -11,11 +11,11 @@ import zmuzik.slidingpuzzle2.common.di.ActivityScope;
  */
 
 @Module
-public class MainScreenModule {
+public class MainActivityModule {
 
     private final Activity mActivity;
 
-    public MainScreenModule(Activity activity) {
+    public MainActivityModule(Activity activity) {
         mActivity = activity;
     }
 

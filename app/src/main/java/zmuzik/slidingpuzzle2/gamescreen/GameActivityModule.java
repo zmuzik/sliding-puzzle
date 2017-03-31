@@ -12,11 +12,11 @@ import zmuzik.slidingpuzzle2.common.di.ActivityContext;
  */
 
 @Module
-public class GameScreenModule {
+public class GameActivityModule {
 
     private Activity mActivity;
 
-    public GameScreenModule(Activity activity) {
+    public GameActivityModule(Activity activity) {
         mActivity = activity;
     }
 

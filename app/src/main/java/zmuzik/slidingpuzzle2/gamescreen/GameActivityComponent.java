@@ -11,7 +11,7 @@ import zmuzik.slidingpuzzle2.common.di.ActivityScope;
 @ActivityScope
 @Component(
         dependencies = AppComponent.class,
-        modules = GameScreenModule.class
+        modules = GameActivityModule.class
 )
 public interface GameActivityComponent {
 
