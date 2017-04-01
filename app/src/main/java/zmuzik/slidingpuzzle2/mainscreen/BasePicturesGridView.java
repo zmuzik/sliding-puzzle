@@ -55,7 +55,7 @@ public class BasePicturesGridView extends RelativeLayout {
         init();
     }
 
-    private void init() {
+    public void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.pictures_grid, this);
         ButterKnife.bind(this, this);
         if (getContext() instanceof MainActivity) {
