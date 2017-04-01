@@ -63,12 +63,11 @@ public class MainScreenPresenter {
     public MainScreenPresenter() {
     }
 
-    public void onResume() {
+    void onResume() {
         requestUpdateCameraPictures();
     }
 
-    public void onPause() {
-
+    void onPause() {
     }
 
     boolean toggleShowNumbers() {
@@ -94,6 +93,8 @@ public class MainScreenPresenter {
         mContext.startActivity(intent);
     }
 
+    //***SavedPicturesGridView***
+
     void requestUpdateSavedPictures() {
         updateSavedPictures();
     }
@@ -101,6 +102,8 @@ public class MainScreenPresenter {
     void updateSavedPictures() {
         mView.updateSavedPictures(Arrays.asList(SAVED_PICTURES));
     }
+
+    //***CameraPicturesGridView***
 
     void requestUpdateCameraPictures() {
         if (!isReadExternalGranted()) {
@@ -157,4 +160,8 @@ public class MainScreenPresenter {
             Log.i(TAG, "Unable to launch camera: " + e);
         }
     }
+
+    //***FlickrPicturesGridView***
+
+
 }
