@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +22,8 @@ import zmuzik.slidingpuzzle2.common.Keys;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.common.di.ActivityContext;
 import zmuzik.slidingpuzzle2.common.di.ActivityScope;
+import zmuzik.slidingpuzzle2.flickr.FlickrApi;
+import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.gamescreen.GameActivity;
 
 /**
@@ -54,10 +57,14 @@ public class MainScreenPresenter {
     MainScreenView mView;
 
     @Inject
+    FlickrApi mFlickrApi;
+
+    @Inject
     @ActivityContext
     Context mContext;
 
     private boolean isCameraPicturesUpdating;
+    private List<Photo> mFlickerPictures;
 
     @Inject
     public MainScreenPresenter() {
@@ -163,5 +170,19 @@ public class MainScreenPresenter {
 
     //***FlickrPicturesGridView***
 
+    public void requestFlickrSearch(String keywords) {
+        new GetFlickrPicsPageTask(keywords, this, mFlickrApi).execute();
+    }
 
+    void requestUpdateFlickrPictures() {
+    }
+
+    void updateFlickrPictures(List<Photo> photos) {
+        mFlickerPictures = photos;
+        ArrayList<String>flickerThunbUrls = new ArrayList<>();
+        for (Photo photo : photos) {
+            flickerThunbUrls.add(photo.getThumbUrl());
+        }
+        mView.updateFlickrPictures(flickerThunbUrls);
+    }
 }

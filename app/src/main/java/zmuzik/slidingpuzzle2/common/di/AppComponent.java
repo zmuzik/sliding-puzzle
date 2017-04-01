@@ -11,6 +11,7 @@ import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.gamescreen.PuzzleBoardView;
+import zmuzik.slidingpuzzle2.mainscreen.GetFlickrPicsPageTask;
 
 /**
  * Created by Zbynek Muzik on 2017-03-28.
@@ -27,6 +28,8 @@ public interface AppComponent {
     void inject(PuzzleBoardView view);
 
     void inject(PreferencesHelper helper);
+
+    void inject(GetFlickrPicsPageTask task);
 
     @AppContext
     Context getApplicationContext();

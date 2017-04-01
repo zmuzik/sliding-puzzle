@@ -17,6 +17,14 @@ public class Toaster {
     private static Handler mainThreadHandler = new Handler(Looper.getMainLooper());
     private static int DEFAULT_TOAST_LENGTH = Toast.LENGTH_SHORT;
 
+    public static void toast(int stringId) {
+        toast(App.get().getString(stringId));
+    }
+
+    public static void toast(int stringId, int length) {
+        toast(App.get().getString(stringId), length);
+    }
+
     public static void toast(final String message) {
         toast(message, DEFAULT_TOAST_LENGTH);
     }
