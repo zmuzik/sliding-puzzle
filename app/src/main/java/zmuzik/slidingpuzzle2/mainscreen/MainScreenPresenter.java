@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.common.Keys;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
+import zmuzik.slidingpuzzle2.common.di.ActivityContext;
 import zmuzik.slidingpuzzle2.common.di.ActivityScope;
 import zmuzik.slidingpuzzle2.gamescreen.GameActivity;
 
@@ -50,7 +51,9 @@ public class MainScreenPresenter {
     MainScreenView mView;
 
     @Inject
+    @ActivityContext
     Context mContext;
+
     private boolean isCameraPicturesUpdating;
 
     @Inject

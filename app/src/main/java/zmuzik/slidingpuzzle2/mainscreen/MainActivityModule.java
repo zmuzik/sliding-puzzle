@@ -1,9 +1,11 @@
 package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.app.Activity;
+import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
+import zmuzik.slidingpuzzle2.common.di.ActivityContext;
 import zmuzik.slidingpuzzle2.common.di.ActivityScope;
 
 /**
@@ -17,6 +19,12 @@ public class MainActivityModule {
 
     public MainActivityModule(Activity activity) {
         mActivity = activity;
+    }
+
+    @Provides
+    @ActivityContext
+    Context provideContext() {
+        return mActivity;
     }
 
     @Provides
