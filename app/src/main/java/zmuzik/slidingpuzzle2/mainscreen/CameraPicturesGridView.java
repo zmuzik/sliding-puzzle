@@ -21,12 +21,18 @@ public class CameraPicturesGridView extends BasePicturesGridView {
     @Override
     public void init() {
         super.init();
+        mFab.setVisibility(VISIBLE);
         mPermissionsCombo.setVisibility(mPresenter.isReadExternalGranted() ? GONE : VISIBLE);
     }
 
     @OnClick(R.id.requestPermissionsButton)
     public void onRequestPermissionsButtonClicked(View fab) {
         mPresenter.requestReadExternalPermission();
+    }
+
+    @OnClick(R.id.fab)
+    public void onFabClicked(View fab) {
+        mPresenter.launchCameraApp();
     }
 
     @Override

@@ -13,5 +13,4 @@ public interface MainScreenView {
 
     void updateFlickrPictures(List<String> strings);
 
-    void setIsReadStorageGranted(boolean yesNo);
 }

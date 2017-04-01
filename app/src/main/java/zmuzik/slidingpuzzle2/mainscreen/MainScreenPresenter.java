@@ -1,12 +1,15 @@
 package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import java.util.Arrays;
 import java.util.List;
@@ -60,6 +63,14 @@ public class MainScreenPresenter {
     public MainScreenPresenter() {
     }
 
+    public void onResume() {
+        requestUpdateCameraPictures();
+    }
+
+    public void onPause() {
+
+    }
+
     boolean toggleShowNumbers() {
         boolean onOff = mPrefsHelper.getDisplayTileNumbers();
         onOff = !onOff;
@@ -102,7 +113,6 @@ public class MainScreenPresenter {
 
     void updateCameraPictures(List<String> pictures) {
         isCameraPicturesUpdating = false;
-        mView.setIsReadStorageGranted(isReadExternalGranted());
         mView.updateCameraPictures(pictures);
     }
 
@@ -130,6 +140,21 @@ public class MainScreenPresenter {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 requestUpdateCameraPictures();
             }
+        }
+    }
+
+    public void launchCameraApp() {
+        Intent auxIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            PackageManager pm = mContext.getPackageManager();
+            ResolveInfo mInfo = pm.resolveActivity(auxIntent, 0);
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName(mInfo.activityInfo.packageName, mInfo.activityInfo.name));
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            mContext.startActivity(intent);
+        } catch (Exception e) {
+            Log.i(TAG, "Unable to launch camera: " + e);
         }
     }
 }

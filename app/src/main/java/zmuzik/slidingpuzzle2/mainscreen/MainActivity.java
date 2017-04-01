@@ -94,6 +94,18 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPresenter.onPause();
+    }
+
     private void inject() {
         mComponent = DaggerMainActivityComponent.builder()
                 .appComponent(((App) getApplication()).getComponent(this))
@@ -174,13 +186,6 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     public void updateFlickrPictures(List<String> pictures) {
         if (mFlickrPicturesView.get() != null) {
             mFlickrPicturesView.get().update(pictures);
-        }
-    }
-
-    @Override
-    public void setIsReadStorageGranted(boolean yesNo) {
-        if (mCameraPicturesView.get() != null) {
-
         }
     }
 
