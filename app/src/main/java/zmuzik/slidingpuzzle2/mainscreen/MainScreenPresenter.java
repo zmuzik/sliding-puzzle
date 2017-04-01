@@ -106,7 +106,7 @@ public class MainScreenPresenter {
     //***CameraPicturesGridView***
 
     void requestUpdateCameraPictures() {
-        if (!isReadExternalGranted()) {
+        if (!isReadExternalGranted() && mPrefsHelper.shouldAskReadStoragePerm()) {
             requestReadExternalPermission();
         } else if (!isCameraPicturesUpdating) {
             isCameraPicturesUpdating = true;
