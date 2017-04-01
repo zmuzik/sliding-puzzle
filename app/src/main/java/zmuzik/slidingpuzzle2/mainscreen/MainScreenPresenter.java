@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -44,6 +45,7 @@ public class MainScreenPresenter {
 
     @Inject
     Context mContext;
+    private boolean isCameraPicturesUpdating;
 
     @Inject
     public MainScreenPresenter() {
@@ -65,26 +67,30 @@ public class MainScreenPresenter {
         mPrefsHelper.setGridDimLong(gridDimLong);
     }
 
-    public void runGame(String pictureUri, boolean isHorizontal) {
+    void runGame(String pictureUri, boolean isHorizontal) {
         Intent intent = new Intent(mContext, GameActivity.class);
         intent.putExtra(Keys.PICTURE_URI, pictureUri);
         intent.putExtra(Keys.IS_HORIZONTAL, isHorizontal);
         mContext.startActivity(intent);
     }
 
-    public void requestUpdateSavedPictures() {
+    void requestUpdateSavedPictures() {
         updateSavedPictures();
     }
 
-    private void updateSavedPictures() {
+    void updateSavedPictures() {
         mView.updateSavedPictures(Arrays.asList(SAVED_PICTURES));
     }
 
-    public void requestUpdateCameraPictures() {
-        updateCameraPictures();
+    void requestUpdateCameraPictures() {
+        if (!isCameraPicturesUpdating) {
+            isCameraPicturesUpdating = true;
+            new UpdateCameraFilesTask(this).execute();
+        }
     }
 
-    private void updateCameraPictures() {
-        mView.updateCameraPictures(Arrays.asList(SAVED_PICTURES));
+    void updateCameraPictures(List<String> pictures) {
+        isCameraPicturesUpdating = false;
+        mView.updateCameraPictures(pictures);
     }
 }

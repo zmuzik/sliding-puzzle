@@ -25,6 +25,4 @@ public interface MainActivityComponent {
 
     void inject(SavedPicturesGridView gridView);
 
-    void inject(CameraPicturesFragment gridView);
-
 }

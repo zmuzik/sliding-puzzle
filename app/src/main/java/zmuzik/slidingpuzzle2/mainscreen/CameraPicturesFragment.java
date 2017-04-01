@@ -103,8 +103,6 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
             if (!isReadExternalGranted() && prefsHelper.shouldAskReadStoragePerm()) {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         REQUEST_PERMISSION_READ_STORAGE);
-            } else {
-                new UpdateCameraFilesTask().execute();
             }
         }
     }
@@ -131,7 +129,6 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
                 mPermissionsCombo.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mFab.setVisibility(View.VISIBLE);
-                new UpdateCameraFilesTask().execute();
             } else {
                 mIsUpdating = false;
             }
@@ -150,73 +147,6 @@ public class CameraPicturesFragment extends SavedPicturesFragment {
             startActivity(intent);
         } catch (Exception e) {
             Log.i(TAG, "Unable to launch camera: " + e);
-        }
-    }
-
-    private class FileContainer implements Comparable {
-        String filePath;
-        long lastModified;
-
-        private FileContainer(String filePath, long lastModified) {
-            this.filePath = filePath;
-            this.lastModified = lastModified;
-        }
-
-        @Override
-        public int compareTo(Object another) {
-            long diff = ((FileContainer) another).lastModified - lastModified;
-            if (diff == 0) return 0;
-            return diff > 0 ? 1 : -1;
-        }
-    }
-
-    private class UpdateCameraFilesTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            ArrayList<FileContainer> foundFiles = new ArrayList<>();
-            File cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-            scanDirectoryForPictures(cameraDir, foundFiles);
-            //sort - most recent pictures first
-            Collections.sort(foundFiles);
-            ArrayList<String> result = new ArrayList<>();
-            for (FileContainer fileContainer : foundFiles) {
-                result.add(fileContainer.filePath);
-            }
-            mFilesList = result;
-            return null;
-        }
-
-        private void scanDirectoryForPictures(File root, final ArrayList<FileContainer> filePaths) {
-            if (root == null) return;
-            File[] list = root.listFiles();
-            if (list == null) return;
-
-            for (File f : list) {
-                if (f.isHidden()) continue;
-                if (f.isDirectory()) {
-                    scanDirectoryForPictures(f, filePaths);
-                } else if (Utils.isPicture(f)) {
-                    filePaths.add(new FileContainer(Utils.FILE_PREFIX +
-                            f.getAbsolutePath(), f.lastModified()));
-                }
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (isAdded() & isResumed()) {
-                initData();
-            }
-            mIsUpdating = false;
-            mProgressBar.setVisibility(View.GONE);
         }
     }
 }
