@@ -170,21 +170,21 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
 
     @Override
     public void updateSavedPictures(List<String> pictures) {
-        if (mSavedPicturesView.get() != null) {
+        if (mSavedPicturesView != null && mSavedPicturesView.get() != null) {
             mSavedPicturesView.get().update(pictures);
         }
     }
 
     @Override
     public void updateCameraPictures(List<String> pictures) {
-        if (mCameraPicturesView.get() != null) {
+        if (mCameraPicturesView != null && mCameraPicturesView.get() != null) {
             mCameraPicturesView.get().update(pictures);
         }
     }
 
     @Override
     public void updateFlickrPictures(List<String> pictures) {
-        if (mFlickrPicturesView.get() != null) {
+        if (mFlickrPicturesView != null && mFlickrPicturesView.get() != null) {
             mFlickrPicturesView.get().update(pictures);
         }
     }
