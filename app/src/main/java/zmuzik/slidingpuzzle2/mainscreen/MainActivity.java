@@ -3,6 +3,7 @@ package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -32,6 +33,7 @@ import zmuzik.slidingpuzzle2.common.Toaster;
 public class MainActivity extends AppCompatActivity implements MainScreenView {
 
     final String TAG = this.getClass().getSimpleName();
+    public static final int REQUEST_PERMISSION_READ_STORAGE = 101;
 
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
@@ -56,9 +58,9 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     String displayTitleNumbersOff;
 
     MainActivityComponent mComponent;
-    WeakReference<BasePicturesGridView> mSavedPicturesView;
-    WeakReference<BasePicturesGridView> mCameraPicturesView;
-    WeakReference<BasePicturesGridView> mFlickrPicturesView;
+    WeakReference<SavedPicturesGridView> mSavedPicturesView;
+    WeakReference<CameraPicturesGridView> mCameraPicturesView;
+    WeakReference<FlickrPicturesGridView> mFlickrPicturesView;
 
     @Inject
     MainScreenPresenter mPresenter;
@@ -175,6 +177,19 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
         }
     }
 
+    @Override
+    public void setIsReadStorageGranted(boolean yesNo) {
+        if (mCameraPicturesView.get() != null) {
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        mPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
     private class ViewPagerAdapter extends PagerAdapter {
         @Override
         public Object instantiateItem(ViewGroup collection, int position) {
@@ -182,15 +197,18 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
             switch (position) {
                 case 0:
                     gridView = new SavedPicturesGridView(MainActivity.this);
-                    mSavedPicturesView = new WeakReference<BasePicturesGridView>(gridView);
+                    mSavedPicturesView = new WeakReference<SavedPicturesGridView>
+                            ((SavedPicturesGridView) gridView);
                     break;
                 case 1:
                     gridView = new CameraPicturesGridView(MainActivity.this);
-                    mCameraPicturesView = new WeakReference<BasePicturesGridView>(gridView);
+                    mCameraPicturesView = new WeakReference<CameraPicturesGridView>
+                            ((CameraPicturesGridView) gridView);
                     break;
                 case 2:
-                    gridView = new SavedPicturesGridView(MainActivity.this);
-                    mFlickrPicturesView = new WeakReference<BasePicturesGridView>(gridView);
+                    gridView = new FlickrPicturesGridView(MainActivity.this);
+                    mFlickrPicturesView = new WeakReference<FlickrPicturesGridView>
+                            ((FlickrPicturesGridView) gridView);
                     break;
             }
             gridView.requestUpdate();

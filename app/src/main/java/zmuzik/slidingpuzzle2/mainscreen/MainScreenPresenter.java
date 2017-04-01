@@ -1,7 +1,12 @@
 package zmuzik.slidingpuzzle2.mainscreen;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +27,7 @@ import zmuzik.slidingpuzzle2.gamescreen.GameActivity;
 public class MainScreenPresenter {
 
     private final String TAG = this.getClass().getSimpleName();
+    public static final int REQUEST_PERMISSION_READ_STORAGE = 101;
 
     private final String[] SAVED_PICTURES = {
             Utils.ASSET_PREFIX + "game_pic_00.jpg",
@@ -83,7 +89,9 @@ public class MainScreenPresenter {
     }
 
     void requestUpdateCameraPictures() {
-        if (!isCameraPicturesUpdating) {
+        if (!isReadExternalGranted()) {
+            requestReadExternalPermission();
+        } else if (!isCameraPicturesUpdating) {
             isCameraPicturesUpdating = true;
             new UpdateCameraFilesTask(this).execute();
         }
@@ -91,6 +99,34 @@ public class MainScreenPresenter {
 
     void updateCameraPictures(List<String> pictures) {
         isCameraPicturesUpdating = false;
+        mView.setIsReadStorageGranted(isReadExternalGranted());
         mView.updateCameraPictures(pictures);
+    }
+
+    boolean isReadExternalGranted() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            return ContextCompat.checkSelfPermission(mContext,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        } else {
+            return true;
+        }
+    }
+
+    void requestReadExternalPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ((MainActivity) mContext).
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            REQUEST_PERMISSION_READ_STORAGE);
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSION_READ_STORAGE) {
+            mPrefsHelper.setShouldAskReadStoragePerm(false);
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                requestUpdateCameraPictures();
+            }
+        }
     }
 }

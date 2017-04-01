@@ -16,4 +16,6 @@ public class CameraPicturesGridView extends BasePicturesGridView {
     public void requestUpdate() {
         mPresenter.requestUpdateCameraPictures();
     }
+
+
 }

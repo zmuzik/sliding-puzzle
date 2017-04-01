@@ -12,4 +12,6 @@ public interface MainScreenView {
     void updateCameraPictures(List<String> strings);
 
     void updateFlickrPictures(List<String> strings);
+
+    void setIsReadStorageGranted(boolean yesNo);
 }
