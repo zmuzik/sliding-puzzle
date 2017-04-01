@@ -1,10 +1,12 @@
 package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import java.util.List;
 
+import butterknife.BindDrawable;
 import butterknife.OnClick;
 import zmuzik.slidingpuzzle2.R;
 
@@ -14,6 +16,9 @@ import zmuzik.slidingpuzzle2.R;
 
 public class CameraPicturesGridView extends BasePicturesGridView {
 
+    @BindDrawable(R.drawable.ic_photo_camera_24dp)
+    Drawable mFabIcon;
+
     public CameraPicturesGridView(Context context) {
         super(context);
     }
@@ -21,6 +26,7 @@ public class CameraPicturesGridView extends BasePicturesGridView {
     @Override
     public void init() {
         super.init();
+        mFab.setImageDrawable(mFabIcon);
         mFab.setVisibility(VISIBLE);
         mPermissionsCombo.setVisibility(mPresenter.isReadExternalGranted() ? GONE : VISIBLE);
     }
