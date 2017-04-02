@@ -24,10 +24,10 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
     public FlickrGridAdapter(Context ctx, List<Photo> photos, int columns) {
         super(ctx, null, columns);
         mPhotos = photos;
-        mFilePaths = new ArrayList<>();
-        for (Photo photo : photos) {
-            mFilePaths.add(photo.getThumbUrl());
-        }
+//        mFilePaths = new ArrayList<>();
+//        for (Photo photo : photos) {
+//            mFilePaths.add(photo.getThumbUrl());
+//        }
     }
 
     @Override public void setOrientationIcon(ImageView orientationIcon, int position) {

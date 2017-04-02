@@ -2,6 +2,7 @@ package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
     final String TAG = this.getClass().getSimpleName();
 
-    List<String> mFilePaths;
+    List<Picture> mPictures;
     Context mContext;
 
     private int mColumns;
@@ -43,10 +45,13 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     MainScreenPresenter mPresenter;
 
     @Inject
-    public PicturesGridAdapter(Context ctx, List<String> filePaths, int columns) {
+    public PicturesGridAdapter(Context ctx, List<String> uris, int columns) {
         mContext = ctx;
         mColumns = columns;
-        mFilePaths = filePaths;
+        mPictures = new ArrayList<>();
+        for (String uri : uris) {
+            mPictures.add(new Picture(uri));
+        }
         if (mContext instanceof MainActivity) {
             ((MainActivity) mContext).getComponent().inject(this);
         }
@@ -70,13 +75,14 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     }
 
     private void bindNormalItem(final ViewHolder holder, final int position) {
-        final String uriString = mFilePaths.get(position);
+        final String uriString = mPictures.get(position).uri;
         holder.nextTv.setVisibility(View.GONE);
         holder.progressBar.setVisibility(View.VISIBLE);
         Picasso.with(mContext).cancelRequest(holder.image);
         Picasso.with(mContext).load(uriString)
                 .resize(mDim, mDim)
                 .centerCrop()
+                .transform(new MeasuringSquareTransformation(position))
                 .into(holder.image, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -104,13 +110,14 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         });
     }
 
+
     public void runGame(int position) {
-        boolean isHorizontal = Utils.isBitmapHorizontal(mFilePaths.get(position));
+        boolean isHorizontal = Utils.isBitmapHorizontal(mPictures.get(position).uri);
         Intent intent = new Intent(mContext, GameActivity.class);
-        intent.putExtra(Keys.PICTURE_URI, mFilePaths.get(position));
+        intent.putExtra(Keys.PICTURE_URI, mPictures.get(position).uri);
         intent.putExtra(Keys.IS_HORIZONTAL, isHorizontal);
         mContext.startActivity(intent);
-        mPresenter.runGame(mFilePaths.get(position), isHorizontal);
+        mPresenter.runGame(mPictures.get(position).uri, isHorizontal);
     }
 
     private void bindFooterItem(final ViewHolder holder, final int position) {
@@ -138,8 +145,8 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
     public void setOrientationIcon(ImageView orientationIcon, int position) {
         orientationIcon.setVisibility(View.VISIBLE);
-        boolean isHorizontal = Utils.isBitmapHorizontal(mFilePaths.get(position));
-        orientationIcon.setRotation(isHorizontal ? 270f : 0f);
+        Picture picture = mPictures.get(position);
+        orientationIcon.setRotation(picture.isHorizontal() ? 270f : 0f);
     }
 
     int getPageSize() {
@@ -147,18 +154,18 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     }
 
     private int getDisplayedPicsCount() {
-        if (mFilePaths == null) return 0;
-        return (mFilePaths.size() < getPageSize() * mPage) ? mFilePaths.size() : getPageSize() * mPage;
+        if (mPictures == null) return 0;
+        return (mPictures.size() < getPageSize() * mPage) ? mPictures.size() : getPageSize() * mPage;
     }
 
     private boolean isMoreToDisplay() {
-        if (mFilePaths == null) return false;
-        return mFilePaths.size() > getPageSize() * mPage;
+        if (mPictures == null) return false;
+        return mPictures.size() > getPageSize() * mPage;
     }
 
     @Override
     public int getItemCount() {
-        if (mFilePaths == null) return 0;
+        if (mPictures == null) return 0;
         return (isMoreToDisplay()) ? getDisplayedPicsCount() + 1 : getDisplayedPicsCount();
     }
 
@@ -166,11 +173,50 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         return position == getItemCount() - 1 && isMoreToDisplay();
     }
 
-    public void add(String item, int position) {
-        if (mFilePaths == null) mFilePaths = new ArrayList<>();
-        if (mFilePaths.contains(item)) return;
-        mFilePaths.add(position, item);
-        notifyDataSetChanged();
+    private class MeasuringSquareTransformation implements Transformation {
+
+        int mPos;
+
+        MeasuringSquareTransformation(int position) {
+            mPos = position;
+        }
+
+        @Override
+        public Bitmap transform(Bitmap source) {
+            Picture picture = mPictures.get(mPos);
+            picture.origWidth = source.getWidth();
+            picture.origHeight = source.getHeight();
+
+            int squareDim = Math.min(picture.origWidth, picture.origHeight);
+            int width = (picture.origWidth - squareDim) / 2;
+            int height = (picture.origHeight - squareDim) / 2;
+            //crop to square
+            Bitmap squareBitmap = Bitmap.createBitmap(source, width, height, squareDim, squareDim);
+            if (squareBitmap != source) source.recycle();
+            //scale down
+            Bitmap result = Bitmap.createScaledBitmap(squareBitmap, mDim, mDim, true);
+            if (result != squareBitmap) squareBitmap.recycle();
+            return result;
+        }
+
+        @Override
+        public String key() {
+            return "MeasuringSquareTransformation(" + mPos + ")";
+        }
+    }
+
+    private class Picture {
+        String uri;
+        int origWidth;
+        int origHeight;
+
+        Picture(String uri) {
+            this.uri = uri;
+        }
+
+        boolean isHorizontal() {
+            return origWidth > origHeight;
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
