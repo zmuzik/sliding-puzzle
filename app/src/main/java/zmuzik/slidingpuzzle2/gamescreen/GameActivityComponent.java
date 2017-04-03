@@ -17,4 +17,6 @@ public interface GameActivityComponent {
 
     void inject(GameActivity mainActivity);
 
+    void inject(PuzzleBoardView view);
+
 }

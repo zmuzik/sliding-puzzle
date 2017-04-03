@@ -11,13 +11,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.Random;
 
 import javax.inject.Inject;
 
-import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.common.Toaster;
@@ -87,7 +85,9 @@ public class PuzzleBoardView extends View {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        App.get(mContext).getComponent(mContext).inject(this);
+        if (getContext() instanceof GameActivity) {
+            ((GameActivity) getContext()).getComponent().inject(this);
+        }
     }
 
     public void setDimensions(int width, int height) {

@@ -68,9 +68,9 @@ public class GameActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        inject();
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
-        inject();
         Intent intent = getIntent();
         if (intent == null) finish();
 
@@ -102,6 +102,10 @@ public class GameActivity extends Activity {
                 .appComponent(((App) getApplication()).getComponent(this))
                 .build();
         mComponent.inject(this);
+    }
+
+    public GameActivityComponent getComponent() {
+        return mComponent;
     }
 
     void resolvePictureUri(Callback callback) {

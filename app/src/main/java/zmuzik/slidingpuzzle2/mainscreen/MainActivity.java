@@ -71,9 +71,9 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        inject();
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        inject();
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
