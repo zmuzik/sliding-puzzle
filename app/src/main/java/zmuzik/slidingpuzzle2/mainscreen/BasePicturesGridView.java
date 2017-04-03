@@ -2,6 +2,7 @@ package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Picture;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
@@ -104,8 +105,8 @@ public class BasePicturesGridView extends RelativeLayout {
     }
 
     // this should be called by the presenter (via proxy/activity) to update the pictures
-    public void update(List<String> pictures) {
-        mAdapter = new PicturesGridAdapter(getContext(), pictures, getColumnsNumber());
+    public void update(List<String> uris) {
+        mAdapter = new PicturesGridAdapter(getContext(), uris, getColumnsNumber());
         mRecyclerView.setAdapter(mAdapter);
     }
 }

@@ -1,8 +1,6 @@
 package zmuzik.slidingpuzzle2.mainscreen;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +23,14 @@ import butterknife.ButterKnife;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
-import zmuzik.slidingpuzzle2.common.Keys;
 import zmuzik.slidingpuzzle2.common.view.SquareImageView;
-import zmuzik.slidingpuzzle2.gamescreen.GameActivity;
+import zmuzik.slidingpuzzle2.flickr.Photo;
 
 public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapter.ViewHolder> {
 
     final String TAG = this.getClass().getSimpleName();
 
-    List<Picture> mPictures;
+    List<OrientedPicture> mPictures;
     Context mContext;
 
     private int mColumns;
@@ -44,13 +40,26 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     @Inject
     MainScreenPresenter mPresenter;
 
-    @Inject
     public PicturesGridAdapter(Context ctx, List<String> uris, int columns) {
         mContext = ctx;
         mColumns = columns;
         mPictures = new ArrayList<>();
         for (String uri : uris) {
-            mPictures.add(new Picture(uri));
+            mPictures.add(new OrientedPicture(uri));
+        }
+        if (mContext instanceof MainActivity) {
+            ((MainActivity) mContext).getComponent().inject(this);
+        }
+    }
+
+    public PicturesGridAdapter(Context ctx, int columns, List<Photo> flickrPhotos) {
+        mContext = ctx;
+        mColumns = columns;
+        mPictures = new ArrayList<>();
+        for (Photo flickrPhoto : flickrPhotos) {
+            OrientedPicture picture = new OrientedPicture(flickrPhoto.getThumbUrl());
+            picture.setIsHorizontal(flickrPhoto.getWidth_l() > flickrPhoto.getHeight_l());
+            mPictures.add(picture);
         }
         if (mContext instanceof MainActivity) {
             ((MainActivity) mContext).getComponent().inject(this);
@@ -82,7 +91,6 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         Picasso.with(mContext).load(uriString)
                 .resize(mDim, mDim)
                 .centerCrop()
-                .transform(new MeasuringSquareTransformation(position))
                 .into(holder.image, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -112,12 +120,8 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
 
     public void runGame(int position) {
-        boolean isHorizontal = Utils.isBitmapHorizontal(mPictures.get(position).uri);
-        Intent intent = new Intent(mContext, GameActivity.class);
-        intent.putExtra(Keys.PICTURE_URI, mPictures.get(position).uri);
-        intent.putExtra(Keys.IS_HORIZONTAL, isHorizontal);
-        mContext.startActivity(intent);
-        mPresenter.runGame(mPictures.get(position).uri, isHorizontal);
+        OrientedPicture picture = mPictures.get(position);
+        mPresenter.runGame(picture.uri, picture.isHorizontal());
     }
 
     private void bindFooterItem(final ViewHolder holder, final int position) {
@@ -145,7 +149,8 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
     public void setOrientationIcon(ImageView orientationIcon, int position) {
         orientationIcon.setVisibility(View.VISIBLE);
-        Picture picture = mPictures.get(position);
+        OrientedPicture picture = mPictures.get(position);
+
         orientationIcon.setRotation(picture.isHorizontal() ? 270f : 0f);
     }
 
@@ -173,49 +178,23 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         return position == getItemCount() - 1 && isMoreToDisplay();
     }
 
-    private class MeasuringSquareTransformation implements Transformation {
-
-        int mPos;
-
-        MeasuringSquareTransformation(int position) {
-            mPos = position;
-        }
-
-        @Override
-        public Bitmap transform(Bitmap source) {
-            Picture picture = mPictures.get(mPos);
-            picture.origWidth = source.getWidth();
-            picture.origHeight = source.getHeight();
-
-            int squareDim = Math.min(picture.origWidth, picture.origHeight);
-            int width = (picture.origWidth - squareDim) / 2;
-            int height = (picture.origHeight - squareDim) / 2;
-            //crop to square
-            Bitmap squareBitmap = Bitmap.createBitmap(source, width, height, squareDim, squareDim);
-            if (squareBitmap != source) source.recycle();
-            //scale down
-            Bitmap result = Bitmap.createScaledBitmap(squareBitmap, mDim, mDim, true);
-            if (result != squareBitmap) squareBitmap.recycle();
-            return result;
-        }
-
-        @Override
-        public String key() {
-            return "MeasuringSquareTransformation(" + mPos + ")";
-        }
-    }
-
-    private class Picture {
+    private class OrientedPicture {
         String uri;
-        int origWidth;
-        int origHeight;
+        Boolean isHorizontal;
 
-        Picture(String uri) {
+        OrientedPicture(String uri) {
             this.uri = uri;
         }
 
+        void setIsHorizontal(boolean isHorizontal) {
+            this.isHorizontal = isHorizontal;
+        }
+
         boolean isHorizontal() {
-            return origWidth > origHeight;
+            if (isHorizontal == null) {
+                isHorizontal = Utils.isBitmapHorizontal(uri);
+            }
+            return isHorizontal;
         }
     }
 
