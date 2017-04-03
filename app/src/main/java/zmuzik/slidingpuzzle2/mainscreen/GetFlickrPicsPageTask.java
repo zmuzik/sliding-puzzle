@@ -8,8 +8,6 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import retrofit2.Call;
-import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.common.Toaster;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.SearchResponse;
@@ -51,9 +49,7 @@ public class GetFlickrPicsPageTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if (resp == null) {
-            Toaster.show(R.string.err_querying_flickr);
-        } else if (mPresenter != null && mPresenter.get() != null) {
+        if (mPresenter != null && mPresenter.get() != null) {
             mPresenter.get().updateFlickrPictures(mFlickrPhotos);
         }
     }

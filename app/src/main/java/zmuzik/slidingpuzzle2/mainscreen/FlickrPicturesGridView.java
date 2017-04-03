@@ -15,11 +15,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import butterknife.BindDrawable;
-import butterknife.BindString;
 import butterknife.OnClick;
 import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.Utils;
-import zmuzik.slidingpuzzle2.common.Toaster;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 
 /**
@@ -30,10 +27,6 @@ class FlickrPicturesGridView extends BasePicturesGridView {
 
     @BindDrawable(R.drawable.ic_search_24dp)
     Drawable mFabIcon;
-    @BindString(R.string.internet_unavailable)
-    String mMsgInternetUnavailable;
-    @BindString(R.string.keyword_not_supplied)
-    String mMsgKeywordNotSupplied;
 
     public FlickrPicturesGridView(Context context) {
         super(context);
@@ -108,15 +101,6 @@ class FlickrPicturesGridView extends BasePicturesGridView {
     }
 
     private void search(String keywords) {
-        if (!Utils.isOnline(getContext())) {
-            Toaster.show(mMsgInternetUnavailable);
-            return;
-        }
-
-        if (keywords == null || "".equals(keywords)) {
-            Toaster.show(mMsgKeywordNotSupplied);
-            return;
-        }
         mPresenter.requestFlickrSearch(keywords);
     }
 

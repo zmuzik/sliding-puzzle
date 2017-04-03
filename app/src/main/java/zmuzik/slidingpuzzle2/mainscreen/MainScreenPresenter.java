@@ -18,9 +18,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.common.Keys;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
+import zmuzik.slidingpuzzle2.common.Toaster;
 import zmuzik.slidingpuzzle2.common.di.ActivityContext;
 import zmuzik.slidingpuzzle2.common.di.ActivityScope;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
@@ -181,6 +183,15 @@ public class MainScreenPresenter {
     //***FlickrPicturesGridView***
 
     public void requestFlickrSearch(String keywords) {
+        if (!Utils.isOnline(mContext)) {
+            Toaster.show(R.string.internet_unavailable);
+            return;
+        }
+
+        if (keywords == null || "".equals(keywords)) {
+            Toaster.show(R.string.keyword_not_supplied);
+            return;
+        }
         new GetFlickrPicsPageTask(keywords, this, mFlickrApi).execute();
     }
 
@@ -191,7 +202,11 @@ public class MainScreenPresenter {
     }
 
     void updateFlickrPictures(List<Photo> photos) {
-        mFlickerPictures = photos;
-        mView.updateFlickrPictures(mFlickerPictures);
+        if (photos == null) {
+            Toaster.show(R.string.err_querying_flickr);
+        } else {
+            mFlickerPictures = photos;
+            mView.updateFlickrPictures(mFlickerPictures);
+        }
     }
 }
