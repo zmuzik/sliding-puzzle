@@ -34,7 +34,6 @@ import zmuzik.slidingpuzzle2.flickr.Photo;
 public class MainActivity extends AppCompatActivity implements MainScreenView {
 
     final String TAG = this.getClass().getSimpleName();
-    public static final int REQUEST_PERMISSION_READ_STORAGE = 101;
 
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
@@ -44,19 +43,15 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     TabLayout mTabLayout;
 
     @BindString(R.string.title_section1)
-    String titleSection1;
+    String mTitleSection1;
     @BindString(R.string.title_section2)
-    String titleSection2;
+    String mTitleSection2;
     @BindString(R.string.title_section3)
-    String titleSection3;
+    String mTitleSection3;
     @BindString(R.string.select_grid_size)
-    String selectGridSize;
+    String mSelectGridSize;
     @BindString(R.string.grid_size_selected_to)
-    String gridSizeSelectedTo;
-    @BindString(R.string.display_tile_numbers_on)
-    String displayTitleNumbersOn;
-    @BindString(R.string.display_tile_numbers_off)
-    String displayTitleNumbersOff;
+    String mGridSizeSelectedTo;
 
     MainActivityComponent mComponent;
     WeakReference<SavedPicturesGridView> mSavedPicturesView;
@@ -139,12 +134,12 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
 
     private void toggleShowNumbers() {
         boolean onOff = mPresenter.toggleShowNumbers();
-        mToaster.show(onOff ? displayTitleNumbersOn : displayTitleNumbersOff);
+        mToaster.show(onOff ? R.string.display_tile_numbers_on : R.string.display_tile_numbers_off);
     }
 
     private void openChangeGridSizeDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(selectGridSize);
+        builder.setTitle(mSelectGridSize);
         builder.setSingleChoiceItems(Conf.GRID_SIZES, getGridDimsPosition(), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 String positionsStr = Conf.GRID_SIZES[item];
@@ -153,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
                 String longerStr = tokenizer.nextToken();
                 mPresenter.setGridDimensions(Integer.parseInt(shorterStr), Integer.parseInt(longerStr));
                 dialog.dismiss();
-                mToaster.show(String.format(gridSizeSelectedTo, positionsStr));
+                mToaster.show(String.format(mGridSizeSelectedTo, positionsStr));
             }
         });
         builder.show();
