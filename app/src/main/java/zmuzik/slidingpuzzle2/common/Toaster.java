@@ -1,10 +1,11 @@
 package zmuzik.slidingpuzzle2.common;
 
+import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import zmuzik.slidingpuzzle2.App;
+import javax.inject.Inject;
 
 /**
  * Created by Zbynek Muzik on 2017-03-30.
@@ -14,29 +15,36 @@ import zmuzik.slidingpuzzle2.App;
 
 public class Toaster {
 
-    private static Handler mainThreadHandler = new Handler(Looper.getMainLooper());
-    private static int DEFAULT_TOAST_LENGTH = Toast.LENGTH_SHORT;
+    Application mApplication;
 
-    public static void show(int stringId) {
-        show(App.get().getString(stringId));
+    @Inject
+    public Toaster(Application application) {
+        mApplication = application;
     }
 
-    public static void show(int stringId, int length) {
-        show(App.get().getString(stringId), length);
+    private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+    private int DEFAULT_TOAST_LENGTH = Toast.LENGTH_SHORT;
+
+    public void show(int stringId) {
+        show(mApplication.getString(stringId));
     }
 
-    public static void show(final String message) {
+    public void show(int stringId, int length) {
+        show(mApplication.getString(stringId), length);
+    }
+
+    public void show(final String message) {
         show(message, DEFAULT_TOAST_LENGTH);
     }
 
-    public static void show(final String message, final int length) {
+    public void show(final String message, final int length) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            Toast.makeText(App.get(), message, length).show();
+            Toast.makeText(mApplication, message, length).show();
         } else {
             mainThreadHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(App.get(), message, length).show();
+                    Toast.makeText(mApplication, message, length).show();
                 }
             });
         }

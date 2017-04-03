@@ -10,6 +10,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -55,12 +56,12 @@ public class MainScreenPresenter {
 
     @Inject
     PreferencesHelper mPrefsHelper;
-
-    @Inject
-    MainScreenView mView;
-
     @Inject
     FlickrApi mFlickrApi;
+    @Inject
+    Toaster mToaster;
+    @Inject
+    MainScreenView mView;
 
     @Inject
     @ActivityContext
@@ -184,12 +185,12 @@ public class MainScreenPresenter {
 
     public void requestFlickrSearch(String keywords) {
         if (!Utils.isOnline(mContext)) {
-            Toaster.show(R.string.internet_unavailable);
+            mToaster.show(R.string.internet_unavailable);
             return;
         }
 
         if (keywords == null || "".equals(keywords)) {
-            Toaster.show(R.string.keyword_not_supplied);
+            mToaster.show(R.string.keyword_not_supplied);
             return;
         }
         new GetFlickrPicsPageTask(keywords, this, mFlickrApi).execute();
@@ -203,7 +204,7 @@ public class MainScreenPresenter {
 
     void updateFlickrPictures(List<Photo> photos) {
         if (photos == null) {
-            Toaster.show(R.string.err_querying_flickr);
+            mToaster.show(R.string.err_querying_flickr);
         } else {
             mFlickerPictures = photos;
             mView.updateFlickrPictures(mFlickerPictures);

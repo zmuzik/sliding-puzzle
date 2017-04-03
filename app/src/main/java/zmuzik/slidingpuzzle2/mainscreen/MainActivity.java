@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
 
     @Inject
     MainScreenPresenter mPresenter;
+    @Inject
+    Toaster mToaster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
 
     private void toggleShowNumbers() {
         boolean onOff = mPresenter.toggleShowNumbers();
-        Toaster.show(onOff ? displayTitleNumbersOn : displayTitleNumbersOff);
+        mToaster.show(onOff ? displayTitleNumbersOn : displayTitleNumbersOff);
     }
 
     private void openChangeGridSizeDialog() {
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
                 String longerStr = tokenizer.nextToken();
                 mPresenter.setGridDimensions(Integer.parseInt(shorterStr), Integer.parseInt(longerStr));
                 dialog.dismiss();
-                Toaster.show(String.format(gridSizeSelectedTo, positionsStr));
+                mToaster.show(String.format(gridSizeSelectedTo, positionsStr));
             }
         });
         builder.show();

@@ -51,6 +51,8 @@ public class PuzzleBoardView extends View {
 
     @Inject
     public PreferencesHelper mPrefsHelper;
+    @Inject
+    public Toaster mToaster;
 
     public PuzzleBoardView(Context context) {
         super(context);
@@ -186,7 +188,7 @@ public class PuzzleBoardView extends View {
             }
         }
         Log.d(TAG, "puzzle complete");
-        Toaster.show(R.string.congrats);
+        mToaster.show(R.string.congrats);
         return true;
     }
 

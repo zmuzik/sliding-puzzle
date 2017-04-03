@@ -14,19 +14,13 @@ public class App extends Application {
 
     private final String TAG = this.getClass().getSimpleName();
 
-    private static App mApp;
     private AppComponent mAppComponent;
 
     @Override
     public void onCreate() {
-        mApp = this;
         super.onCreate();
         mAppComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
         Fabric.with(this, new Crashlytics());
-    }
-
-    public static App get() {
-        return mApp;
     }
 
     public static App get(Context context) {

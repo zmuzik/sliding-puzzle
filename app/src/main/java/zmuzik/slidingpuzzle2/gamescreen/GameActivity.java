@@ -59,6 +59,8 @@ public class GameActivity extends Activity {
     @Inject
     PreferencesHelper mPrefsHelper;
     @Inject
+    Toaster mToaster;
+    @Inject
     FlickrApi mFlickrApi;
 
     private GameActivityComponent mComponent;
@@ -89,7 +91,7 @@ public class GameActivity extends Activity {
 
             @Override
             public void onError() {
-                Toaster.show(R.string.unable_to_load_flickr_picture);
+                mToaster.show(R.string.unable_to_load_flickr_picture);
                 GameActivity.this.finish();
             }
         });
@@ -106,7 +108,7 @@ public class GameActivity extends Activity {
         progressBar.setVisibility(View.VISIBLE);
         board.setVisibility(View.GONE);
         if (getIntent().getExtras() == null) {
-            Toaster.show(R.string.picture_not_supplied);
+            mToaster.show(R.string.picture_not_supplied);
             finish();
         }
         mFileUri = getIntent().getExtras().getString(Keys.PICTURE_URI);
@@ -119,7 +121,7 @@ public class GameActivity extends Activity {
             if (Utils.isOnline(this)) {
                 new GetFlickrPhotoSizesTask(photo, getMaxScreenDim(), callback).execute();
             } else {
-                Toaster.show(R.string.internet_unavailable);
+                mToaster.show(R.string.internet_unavailable);
                 finish();
             }
         }
@@ -232,7 +234,7 @@ public class GameActivity extends Activity {
         @Override
         public void onBitmapFailed(Drawable errorDrawable) {
             progressBar.setVisibility(View.GONE);
-            Toaster.show(R.string.unable_to_load_flickr_picture);
+            mToaster.show(R.string.unable_to_load_flickr_picture);
             finish();
         }
 
