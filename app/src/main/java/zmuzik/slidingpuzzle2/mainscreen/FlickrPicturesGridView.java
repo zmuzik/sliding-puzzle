@@ -109,12 +109,12 @@ class FlickrPicturesGridView extends BasePicturesGridView {
 
     private void search(String keywords) {
         if (!Utils.isOnline(getContext())) {
-            Toaster.toast(mMsgInternetUnavailable);
+            Toaster.show(mMsgInternetUnavailable);
             return;
         }
 
         if (keywords == null || "".equals(keywords)) {
-            Toaster.toast(mMsgKeywordNotSupplied);
+            Toaster.show(mMsgKeywordNotSupplied);
             return;
         }
         mPresenter.requestFlickrSearch(keywords);

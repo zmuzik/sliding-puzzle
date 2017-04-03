@@ -12,7 +12,6 @@ import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -33,6 +32,7 @@ import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.common.Keys;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
+import zmuzik.slidingpuzzle2.common.Toaster;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
@@ -89,7 +89,7 @@ public class GameActivity extends Activity {
 
             @Override
             public void onError() {
-                Toast.makeText(App.get(), App.get().getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
+                Toaster.show(R.string.unable_to_load_flickr_picture);
                 GameActivity.this.finish();
             }
         });
@@ -106,7 +106,7 @@ public class GameActivity extends Activity {
         progressBar.setVisibility(View.VISIBLE);
         board.setVisibility(View.GONE);
         if (getIntent().getExtras() == null) {
-            Toast.makeText(App.get(), App.get().getString(R.string.picture_not_supplied), Toast.LENGTH_LONG).show();
+            Toaster.show(R.string.picture_not_supplied);
             finish();
         }
         mFileUri = getIntent().getExtras().getString(Keys.PICTURE_URI);
@@ -119,7 +119,7 @@ public class GameActivity extends Activity {
             if (Utils.isOnline(this)) {
                 new GetFlickrPhotoSizesTask(photo, getMaxScreenDim(), callback).execute();
             } else {
-                Toast.makeText(App.get(), App.get().getString(R.string.internet_unavailable), Toast.LENGTH_LONG).show();
+                Toaster.show(R.string.internet_unavailable);
                 finish();
             }
         }
@@ -232,7 +232,7 @@ public class GameActivity extends Activity {
         @Override
         public void onBitmapFailed(Drawable errorDrawable) {
             progressBar.setVisibility(View.GONE);
-            Toast.makeText(App.get(), App.get().getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
+            Toaster.show(R.string.unable_to_load_flickr_picture);
             finish();
         }
 

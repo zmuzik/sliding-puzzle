@@ -52,7 +52,7 @@ public class GetFlickrPicsPageTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         if (resp == null) {
-            Toaster.toast(R.string.err_querying_flickr);
+            Toaster.show(R.string.err_querying_flickr);
         } else if (mPresenter != null && mPresenter.get() != null) {
             mPresenter.get().updateFlickrPictures(mFlickrPhotos);
         }

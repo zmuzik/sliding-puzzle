@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
+import zmuzik.slidingpuzzle2.common.Toaster;
 
 public class PuzzleBoardView extends View {
 
@@ -185,7 +186,7 @@ public class PuzzleBoardView extends View {
             }
         }
         Log.d(TAG, "puzzle complete");
-        Toast.makeText(App.get(), App.get().getText(R.string.congrats), Toast.LENGTH_SHORT).show();
+        Toaster.show(R.string.congrats);
         return true;
     }
 
