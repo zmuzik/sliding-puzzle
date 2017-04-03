@@ -12,12 +12,15 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.List;
+
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.OnClick;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.common.Toaster;
+import zmuzik.slidingpuzzle2.flickr.Photo;
 
 /**
  * Created by Zbynek Muzik on 2017-03-31.
@@ -119,6 +122,11 @@ class FlickrPicturesGridView extends BasePicturesGridView {
 
     @Override
     public void requestUpdate() {
-        mPresenter.requestUpdateCameraPictures();
+        mPresenter.requestUpdateFlickrPictures();
+    }
+
+    public void updatePhotos(List<Photo> photos) {
+        mAdapter = new PicturesGridAdapter(getContext(), getColumnsNumber(), photos);
+        mRecyclerView.setAdapter(mAdapter);
     }
 }

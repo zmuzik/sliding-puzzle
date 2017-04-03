@@ -179,10 +179,6 @@ public class MainScreenPresenter {
 
     void updateFlickrPictures(List<Photo> photos) {
         mFlickerPictures = photos;
-        ArrayList<String>flickerThunbUrls = new ArrayList<>();
-        for (Photo photo : photos) {
-            flickerThunbUrls.add(photo.getThumbUrl());
-        }
-        mView.updateFlickrPictures(flickerThunbUrls);
+        mView.updateFlickrPictures(mFlickerPictures);
     }
 }

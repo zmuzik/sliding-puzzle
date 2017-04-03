@@ -28,6 +28,7 @@ import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.common.Toaster;
+import zmuzik.slidingpuzzle2.flickr.Photo;
 
 
 public class MainActivity extends AppCompatActivity implements MainScreenView {
@@ -183,9 +184,9 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     }
 
     @Override
-    public void updateFlickrPictures(List<String> pictures) {
+    public void updateFlickrPictures(List<Photo> photos) {
         if (mFlickrPicturesView != null && mFlickrPicturesView.get() != null) {
-            mFlickrPicturesView.get().update(pictures);
+            mFlickrPicturesView.get().updatePhotos(photos);
         }
     }
 
