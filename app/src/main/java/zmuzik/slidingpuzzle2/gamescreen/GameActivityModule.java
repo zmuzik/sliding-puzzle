@@ -6,6 +6,7 @@ import android.content.Context;
 import dagger.Module;
 import dagger.Provides;
 import zmuzik.slidingpuzzle2.common.di.ActivityContext;
+import zmuzik.slidingpuzzle2.common.di.ActivityScope;
 
 /**
  * Created by Zbynek Muzik on 2017-03-30.
@@ -29,6 +30,18 @@ public class GameActivityModule {
     @Provides
     Activity provideActivity() {
         return mActivity;
+    }
+
+    @Provides
+    @ActivityScope
+    GameScreenPresenter providePresenter() {
+        return new GameScreenPresenter();
+    }
+
+    @Provides
+    @ActivityScope
+    GameScreenView provideView() {
+        return new GameActivity();
     }
 
 }

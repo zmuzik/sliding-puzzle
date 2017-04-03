@@ -200,18 +200,15 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
             switch (position) {
                 case 0:
                     gridView = new SavedPicturesGridView(MainActivity.this);
-                    mSavedPicturesView = new WeakReference<SavedPicturesGridView>
-                            ((SavedPicturesGridView) gridView);
+                    mSavedPicturesView = new WeakReference<>((SavedPicturesGridView) gridView);
                     break;
                 case 1:
                     gridView = new CameraPicturesGridView(MainActivity.this);
-                    mCameraPicturesView = new WeakReference<CameraPicturesGridView>
-                            ((CameraPicturesGridView) gridView);
+                    mCameraPicturesView = new WeakReference<>((CameraPicturesGridView) gridView);
                     break;
                 case 2:
                     gridView = new FlickrPicturesGridView(MainActivity.this);
-                    mFlickrPicturesView = new WeakReference<FlickrPicturesGridView>
-                            ((FlickrPicturesGridView) gridView);
+                    mFlickrPicturesView = new WeakReference<>((FlickrPicturesGridView) gridView);
                     break;
             }
             gridView.requestUpdate();

@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -24,14 +23,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
-import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.common.Keys;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.common.Toaster;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
-import zmuzik.slidingpuzzle2.flickr.Photo;
 
-public class GameActivity extends Activity {
+public class GameActivity extends Activity implements GameScreenView {
 
     final String TAG = this.getClass().getSimpleName();
 
@@ -47,14 +44,14 @@ public class GameActivity extends Activity {
     int mBoardWidth;
     int mBoardHeight;
 
-    public String mFileUri;
-
     @Inject
     PreferencesHelper mPrefsHelper;
     @Inject
     Toaster mToaster;
     @Inject
     FlickrApi mFlickrApi;
+    @Inject
+    GameScreenPresenter mPresenter;
 
     private GameActivityComponent mComponent;
 
@@ -65,64 +62,46 @@ public class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        if (intent == null) finish();
+        if (intent == null) {
+            mToaster.show(R.string.picture_not_supplied);
+            finish();
+        }
 
         setScreenOrientation(getIntent().getExtras().getBoolean(Keys.IS_HORIZONTAL));
         resolveScreenDimensions();
 
-        resolvePictureUri(new Callback() {
-            @Override
-            public void onFinished() {
-                Picasso.with(GameActivity.this)
-                        .load(mFileUri)
-                        .memoryPolicy(MemoryPolicy.NO_STORE)
-                        .networkPolicy(NetworkPolicy.NO_STORE)
-                        .resize(mScreenWidth, mScreenHeight)
-                        .centerInside()
-                        .into(mTarget);
-            }
+        mProgressBar.setVisibility(View.VISIBLE);
+        mBoard.setVisibility(View.GONE);
+        mPresenter.requestPictureUri(intent);
 
-            @Override
-            public void onError() {
-                mToaster.show(R.string.unable_to_load_flickr_picture);
-                GameActivity.this.finish();
-            }
-        });
+    }
+
+    public void finishWithMessage(int stringId) {
+        mToaster.show(stringId);
+        finish();
+    }
+
+    public void loadPicture(String uri) {
+        Picasso.with(this)
+                .load(uri)
+                .memoryPolicy(MemoryPolicy.NO_STORE)
+                .networkPolicy(NetworkPolicy.NO_STORE)
+                .resize(mScreenWidth, mScreenHeight)
+                .centerInside()
+                .into(mTarget);
     }
 
     void inject() {
         mComponent = DaggerGameActivityComponent.builder()
                 .appComponent(((App) getApplication()).getComponent(this))
-                //.gameActivityModule(new GameActivityModule(this))
+                .gameActivityModule(new GameActivityModule(this))
                 .build();
         mComponent.inject(this);
+        mComponent.inject(mPresenter);
     }
 
     public GameActivityComponent getComponent() {
         return mComponent;
-    }
-
-    void resolvePictureUri(Callback callback) {
-        mProgressBar.setVisibility(View.VISIBLE);
-        mBoard.setVisibility(View.GONE);
-        if (getIntent().getExtras() == null) {
-            mToaster.show(R.string.picture_not_supplied);
-            finish();
-        }
-        mFileUri = getIntent().getExtras().getString(Keys.PICTURE_URI);
-        if (mFileUri != null) {
-            callback.onFinished();
-        } else {
-            String photoStr = getIntent().getExtras().getString(Keys.PHOTO);
-            Gson gson = new Gson();
-            Photo photo = gson.fromJson(photoStr, Photo.class);
-            if (Utils.isOnline(this)) {
-                new GetFlickrPhotoSizesTask(this, photo, getMaxScreenDim(), callback).execute();
-            } else {
-                mToaster.show(R.string.internet_unavailable);
-                finish();
-            }
-        }
     }
 
     void setScreenOrientation(boolean isHorizontal) {
@@ -139,7 +118,7 @@ public class GameActivity extends Activity {
         mScreenHeight = size.y;
     }
 
-    int getMaxScreenDim() {
+    public int getMaxScreenDim() {
         return (mScreenWidth > mScreenHeight) ? mScreenWidth : mScreenHeight;
     }
 
@@ -174,12 +153,6 @@ public class GameActivity extends Activity {
     public void onStop() {
         Picasso.with(this).cancelRequest(mTarget);
         super.onStop();
-    }
-
-    interface Callback {
-        void onFinished();
-
-        void onError();
     }
 
     Target mTarget = new Target() {

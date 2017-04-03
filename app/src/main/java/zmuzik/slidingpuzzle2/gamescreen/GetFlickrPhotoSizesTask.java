@@ -7,6 +7,8 @@ import com.crashlytics.android.Crashlytics;
 import java.util.List;
 
 import retrofit2.Call;
+import zmuzik.slidingpuzzle2.R;
+import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
 import zmuzik.slidingpuzzle2.flickr.Size;
@@ -16,40 +18,38 @@ import zmuzik.slidingpuzzle2.flickr.Size;
  */
 class GetFlickrPhotoSizesTask extends AsyncTask<Void, Void, Void> {
 
-    private GameActivity mGameActivity;
-    Photo photo;
-    List<Size> sizes;
-    GameActivity.Callback callback;
-    int maxScreenDim;
-    String result;
+    private final FlickrApi mApi;
+    private final Photo mPhoto;
+    private final int mMaxScreenDim;
+    private final GameScreenPresenter mPresenter;
+    private String mResult;
+    private List<Size> mSizes;
 
-    public GetFlickrPhotoSizesTask(GameActivity gameActivity, Photo photo, int maxScreenDim,
-                                   GameActivity.Callback callback) {
-        mGameActivity = gameActivity;
-        this.photo = photo;
-        this.maxScreenDim = maxScreenDim;
-        this.callback = callback;
+    public GetFlickrPhotoSizesTask(Photo photo, GameScreenPresenter presenter, FlickrApi api) {
+        mPhoto = photo;
+        mPresenter = presenter;
+        mApi = api;
+        mMaxScreenDim = mPresenter.getMaxScreenDim();
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-        String photoId = photo.getId();
+        String photoId = mPhoto.getId();
         try {
-            Call<PhotoSizesResponse> call = mGameActivity.mFlickrApi.getSizes(photoId);
-            sizes = call.execute().body().getSizes().getSize();
+            Call<PhotoSizesResponse> call = mApi.getSizes(photoId);
+            mSizes = call.execute().body().getSizes().getSize();
         } catch (Exception e) {
-            result = null;
+            mResult = null;
             Crashlytics.logException(e);
-            callback.onError();
+            mPresenter.finishWithMessage(R.string.unable_to_load_flickr_picture);
         }
-        result = photo.getFullPicUrl(maxScreenDim, sizes);
+        mResult = mPhoto.getFullPicUrl(mMaxScreenDim, mSizes);
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        mGameActivity.mFileUri = result;
-        callback.onFinished();
+        mPresenter.loadPictureUri(mResult);
     }
 }
