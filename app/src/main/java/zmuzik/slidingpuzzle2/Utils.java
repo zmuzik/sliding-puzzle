@@ -1,5 +1,6 @@
 package zmuzik.slidingpuzzle2;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.graphics.BitmapFactory;
@@ -17,12 +18,13 @@ public class Utils {
     public static final String ASSET_PREFIX = "file:///android_asset/";
     public static final String FILE_PREFIX = "file://";
 
-    public static boolean isBitmapHorizontal(String filePath) {
+    public static boolean isBitmapHorizontal(Application application, String filePath) {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         if (isAsset(filePath)) {
             try {
-                InputStream stream = App.get().getAssets().open(getAssetName(filePath));
+                // use application context because the activity may be theoretically GCed
+                InputStream stream = application.getAssets().open(getAssetName(filePath));
                 BitmapFactory.decodeStream(stream, null, bmOptions);
             } catch (IOException e) {
                 e.printStackTrace();

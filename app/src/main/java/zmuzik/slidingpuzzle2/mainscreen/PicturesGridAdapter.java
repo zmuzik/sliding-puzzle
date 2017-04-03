@@ -1,5 +1,6 @@
 package zmuzik.slidingpuzzle2.mainscreen;
 
+import android.app.Application;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,6 +41,8 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
     @Inject
     MainScreenPresenter mPresenter;
+    @Inject
+    Application mApplication;
 
     public PicturesGridAdapter(Context ctx, List<String> uris, int columns) {
         mContext = ctx;
@@ -181,7 +184,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
 
         boolean isHorizontal() {
             if (isHorizontal == null) {
-                isHorizontal = Utils.isBitmapHorizontal(uri);
+                isHorizontal = Utils.isBitmapHorizontal(mApplication, uri);
             }
             return isHorizontal;
         }
