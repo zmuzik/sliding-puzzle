@@ -13,7 +13,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -186,6 +185,9 @@ public class MainScreenPresenter {
     }
 
     void requestUpdateFlickrPictures() {
+        if (mFlickerPictures != null) {
+            updateFlickrPictures(mFlickerPictures);
+        }
     }
 
     void updateFlickrPictures(List<Photo> photos) {
