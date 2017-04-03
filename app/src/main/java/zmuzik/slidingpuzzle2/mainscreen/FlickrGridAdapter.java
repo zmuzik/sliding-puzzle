@@ -17,8 +17,6 @@ import zmuzik.slidingpuzzle2.gamescreen.GameActivity;
 
 public class FlickrGridAdapter extends PicturesGridAdapter {
 
-    public static final String PHOTO = "PHOTO";
-
     public List<Photo> mPhotos;
 
     public FlickrGridAdapter(Context ctx, List<Photo> photos, int columns) {
@@ -51,5 +49,6 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
         intent.putExtra(Keys.PHOTO, photoStr);
         intent.putExtra(Keys.IS_HORIZONTAL, isHorizontal);
         mContext.startActivity(intent);
+        mPresenter.runGame(mPhotos.get(position));
     }
 }
