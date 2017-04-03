@@ -23,6 +23,7 @@ import zmuzik.slidingpuzzle2.common.Toaster;
 public class PuzzleBoardView extends View {
 
     final String TAG = this.getClass().getSimpleName();
+
     int mTilesX;
     int mTilesY;
     Tile[][] mTiles;
@@ -34,8 +35,6 @@ public class PuzzleBoardView extends View {
     Bitmap mCompletePictureBitmap;
 
     private Paint mPaint;
-    private int mViewWidth;
-    private int mViewHeight;
     private int mTileWidth;
     private int mTileHeight;
 
@@ -44,7 +43,7 @@ public class PuzzleBoardView extends View {
     private int mActiveTileX, mActiveTileY;
     private int mBlackTileX, mBlackTileY;
     private boolean mPuzzleComplete;
-    private boolean mGameInProgress = false;
+    private boolean mGameInProgress;
     private Boolean mDisplayNumbers;
 
     @Inject
@@ -57,13 +56,13 @@ public class PuzzleBoardView extends View {
         init(context);
     }
 
-    public PuzzleBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public PuzzleBoardView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         init(context);
     }
 
-    public PuzzleBoardView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public PuzzleBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         init(context);
     }
 
@@ -103,8 +102,6 @@ public class PuzzleBoardView extends View {
 
         mTileWidth = width / mTilesX;
         mTileHeight = height / mTilesY;
-        mViewWidth = width;
-        mViewHeight = height;
 
         mTextPaint.setTextSize(Math.max(mTileHeight, mTileWidth) / 4);
     }

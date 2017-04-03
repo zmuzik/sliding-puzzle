@@ -6,27 +6,22 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
@@ -35,8 +30,6 @@ import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.common.Toaster;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
-import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
-import zmuzik.slidingpuzzle2.flickr.Size;
 
 public class GameActivity extends Activity {
 
@@ -124,7 +117,7 @@ public class GameActivity extends Activity {
             Gson gson = new Gson();
             Photo photo = gson.fromJson(photoStr, Photo.class);
             if (Utils.isOnline(this)) {
-                new GetFlickrPhotoSizesTask(photo, getMaxScreenDim(), callback).execute();
+                new GetFlickrPhotoSizesTask(this, photo, getMaxScreenDim(), callback).execute();
             } else {
                 mToaster.show(R.string.internet_unavailable);
                 finish();
@@ -183,44 +176,7 @@ public class GameActivity extends Activity {
         super.onStop();
     }
 
-    private class GetFlickrPhotoSizesTask extends AsyncTask<Void, Void, Void> {
-
-        Photo photo;
-        List<Size> sizes;
-        Callback callback;
-        int maxScreenDim;
-        String result;
-
-        public GetFlickrPhotoSizesTask(Photo photo, int maxScreenDim, Callback callback) {
-            this.photo = photo;
-            this.maxScreenDim = maxScreenDim;
-            this.callback = callback;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            String photoId = photo.getId();
-            try {
-                Call<PhotoSizesResponse> call = mFlickrApi.getSizes(photoId);
-                sizes = call.execute().body().getSizes().getSize();
-            } catch (Exception e) {
-                result = null;
-                Crashlytics.logException(e);
-                callback.onError();
-            }
-            result = photo.getFullPicUrl(maxScreenDim, sizes);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            mFileUri = result;
-            callback.onFinished();
-        }
-    }
-
-    private interface Callback {
+    interface Callback {
         void onFinished();
 
         void onError();
