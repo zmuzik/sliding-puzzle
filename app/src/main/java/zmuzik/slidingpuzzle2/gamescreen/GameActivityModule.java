@@ -15,9 +15,9 @@ import zmuzik.slidingpuzzle2.common.di.ActivityScope;
 @Module
 public class GameActivityModule {
 
-    private Activity mActivity;
+    private GameActivity mActivity;
 
-    public GameActivityModule(Activity activity) {
+    public GameActivityModule(GameActivity activity) {
         mActivity = activity;
     }
 
@@ -41,7 +41,7 @@ public class GameActivityModule {
     @Provides
     @ActivityScope
     GameScreenView provideView() {
-        return new GameActivity();
+        return mActivity;
     }
 
 }
