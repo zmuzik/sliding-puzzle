@@ -43,11 +43,11 @@ public class GameActivity extends Activity {
     final String TAG = this.getClass().getSimpleName();
 
     @BindView(R.id.board)
-    PuzzleBoardView board;
+    PuzzleBoardView mBoard;
     @BindView(R.id.progressBar)
-    ProgressBar progressBar;
+    ProgressBar mProgressBar;
     @BindView(R.id.shuffleBtn)
-    Button shuffleBtn;
+    Button mShuffleBtn;
 
     int mScreenWidth;
     int mScreenHeight;
@@ -100,6 +100,7 @@ public class GameActivity extends Activity {
     void inject() {
         mComponent = DaggerGameActivityComponent.builder()
                 .appComponent(((App) getApplication()).getComponent(this))
+                //.gameActivityModule(new GameActivityModule(this))
                 .build();
         mComponent.inject(this);
     }
@@ -109,8 +110,8 @@ public class GameActivity extends Activity {
     }
 
     void resolvePictureUri(Callback callback) {
-        progressBar.setVisibility(View.VISIBLE);
-        board.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mBoard.setVisibility(View.GONE);
         if (getIntent().getExtras() == null) {
             mToaster.show(R.string.picture_not_supplied);
             finish();
@@ -150,8 +151,8 @@ public class GameActivity extends Activity {
     }
 
     public void shuffle(View v) {
-        if (board != null) board.shuffle();
-        shuffleBtn.setVisibility(View.GONE);
+        if (mBoard != null) mBoard.shuffle();
+        mShuffleBtn.setVisibility(View.GONE);
     }
 
     void adjustBoardDimensions(PuzzleBoardView board, Bitmap bitmap) {
@@ -228,16 +229,16 @@ public class GameActivity extends Activity {
     Target mTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            adjustBoardDimensions(board, bitmap);
-            board.setBitmap(bitmap);
-            shuffleBtn.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
-            board.setVisibility(View.VISIBLE);
+            adjustBoardDimensions(mBoard, bitmap);
+            mBoard.setBitmap(bitmap);
+            mShuffleBtn.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
+            mBoard.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onBitmapFailed(Drawable errorDrawable) {
-            progressBar.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
             mToaster.show(R.string.unable_to_load_flickr_picture);
             finish();
         }
