@@ -21,11 +21,12 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.security.Key;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
@@ -36,14 +37,16 @@ import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 import zmuzik.slidingpuzzle2.flickr.Photo;
 import zmuzik.slidingpuzzle2.flickr.PhotoSizesResponse;
 import zmuzik.slidingpuzzle2.flickr.Size;
-import zmuzik.slidingpuzzle2.mainscreen.FlickrGridAdapter;
 
 public class GameActivity extends Activity {
 
     final String TAG = this.getClass().getSimpleName();
 
+    @BindView(R.id.board)
     PuzzleBoardView board;
+    @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.shuffleBtn)
     Button shuffleBtn;
 
     int mScreenWidth;
@@ -55,47 +58,22 @@ public class GameActivity extends Activity {
 
     @Inject
     PreferencesHelper mPrefsHelper;
-
     @Inject
     FlickrApi mFlickrApi;
 
     private GameActivityComponent mComponent;
 
-    Target mTarget = new Target() {
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            adjustBoardDimensions(board, bitmap);
-            board.setBitmap(bitmap);
-            shuffleBtn.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
-            board.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-            progressBar.setVisibility(View.GONE);
-            Toast.makeText(App.get(), App.get().getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
-            finish();
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_game);
+        ButterKnife.bind(this);
         inject();
         Intent intent = getIntent();
         if (intent == null) finish();
-        boolean isHorizontal = getIntent().getExtras().getBoolean(Keys.IS_HORIZONTAL);
-        setScreenOrientation(isHorizontal);
+
+        setScreenOrientation(getIntent().getExtras().getBoolean(Keys.IS_HORIZONTAL));
         resolveScreenDimensions();
-        setContentView(R.layout.activity_game);
-        board = (PuzzleBoardView) findViewById(R.id.board);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        shuffleBtn = (Button) findViewById(R.id.shuffleBtn);
 
         resolvePictureUri(new Callback() {
             @Override
@@ -124,7 +102,6 @@ public class GameActivity extends Activity {
         mComponent.inject(this);
     }
 
-
     void resolvePictureUri(Callback callback) {
         progressBar.setVisibility(View.VISIBLE);
         board.setVisibility(View.GONE);
@@ -145,14 +122,6 @@ public class GameActivity extends Activity {
                 Toast.makeText(App.get(), App.get().getString(R.string.internet_unavailable), Toast.LENGTH_LONG).show();
                 finish();
             }
-        }
-    }
-
-    void setScreenOrientation(int bitmapWidth, int bitmapHeight) {
-        if (bitmapWidth > bitmapHeight) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
     }
 
@@ -249,4 +218,26 @@ public class GameActivity extends Activity {
 
         void onError();
     }
+
+    Target mTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            adjustBoardDimensions(board, bitmap);
+            board.setBitmap(bitmap);
+            shuffleBtn.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            board.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+            progressBar.setVisibility(View.GONE);
+            Toast.makeText(App.get(), App.get().getString(R.string.unable_to_load_flickr_picture), Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+    };
 }
