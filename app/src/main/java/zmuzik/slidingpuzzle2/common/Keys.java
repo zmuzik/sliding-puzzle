@@ -7,4 +7,5 @@ package zmuzik.slidingpuzzle2.common;
 public class Keys {
     public static final String PICTURE_URI = "PICTURE_URI";
     public static final String IS_HORIZONTAL = "IS_HORIZONTAL";
+    public static final String PHOTO = "PHOTO";
 }

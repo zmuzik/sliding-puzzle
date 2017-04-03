@@ -31,6 +31,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
     final String TAG = this.getClass().getSimpleName();
 
     List<OrientedPicture> mPictures;
+
     Context mContext;
 
     private int mColumns;
@@ -44,22 +45,10 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         mContext = ctx;
         mColumns = columns;
         mPictures = new ArrayList<>();
-        for (String uri : uris) {
-            mPictures.add(new OrientedPicture(uri));
-        }
-        if (mContext instanceof MainActivity) {
-            ((MainActivity) mContext).getComponent().inject(this);
-        }
-    }
-
-    public PicturesGridAdapter(Context ctx, int columns, List<Photo> flickrPhotos) {
-        mContext = ctx;
-        mColumns = columns;
-        mPictures = new ArrayList<>();
-        for (Photo flickrPhoto : flickrPhotos) {
-            OrientedPicture picture = new OrientedPicture(flickrPhoto.getThumbUrl());
-            picture.setIsHorizontal(flickrPhoto.getWidth_l() > flickrPhoto.getHeight_l());
-            mPictures.add(picture);
+        if (uris != null) {
+            for (String uri : uris) {
+                mPictures.add(new OrientedPicture(uri));
+            }
         }
         if (mContext instanceof MainActivity) {
             ((MainActivity) mContext).getComponent().inject(this);
@@ -178,7 +167,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         return position == getItemCount() - 1 && isMoreToDisplay();
     }
 
-    private class OrientedPicture {
+    class OrientedPicture {
         String uri;
         Boolean isHorizontal;
 

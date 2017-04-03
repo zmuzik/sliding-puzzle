@@ -126,7 +126,7 @@ class FlickrPicturesGridView extends BasePicturesGridView {
     }
 
     public void updatePhotos(List<Photo> photos) {
-        mAdapter = new PicturesGridAdapter(getContext(), getColumnsNumber(), photos);
+        mAdapter = new FlickrGridAdapter(getContext(), photos, getColumnsNumber());
         mRecyclerView.setAdapter(mAdapter);
     }
 }

@@ -24,13 +24,14 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
     public FlickrGridAdapter(Context ctx, List<Photo> photos, int columns) {
         super(ctx, null, columns);
         mPhotos = photos;
-//        mFilePaths = new ArrayList<>();
-//        for (Photo photo : photos) {
-//            mFilePaths.add(photo.getThumbUrl());
-//        }
+        mPictures = new ArrayList<>();
+        for (Photo photo : photos) {
+            mPictures.add(new OrientedPicture(photo.getThumbUrl()));
+        }
     }
 
-    @Override public void setOrientationIcon(ImageView orientationIcon, int position) {
+    @Override
+    public void setOrientationIcon(ImageView orientationIcon, int position) {
         Photo photo = mPhotos.get(position);
         orientationIcon.setVisibility(View.VISIBLE);
         boolean isHorizontal = photo.getWidth_l() > photo.getHeight_l();
@@ -41,12 +42,13 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
         return Conf.PAGE_SIZE;
     }
 
-    @Override public void runGame(int position) {
+    @Override
+    public void runGame(int position) {
         Photo photo = mPhotos.get(position);
         boolean isHorizontal = photo != null && photo.getWidth_l() > photo.getHeight_l();
         Intent intent = new Intent(mContext, GameActivity.class);
         String photoStr = new Gson().toJson(photo);
-        intent.putExtra(PHOTO, photoStr);
+        intent.putExtra(Keys.PHOTO, photoStr);
         intent.putExtra(Keys.IS_HORIZONTAL, isHorizontal);
         mContext.startActivity(intent);
     }
