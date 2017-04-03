@@ -21,6 +21,7 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.security.Key;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -135,7 +136,7 @@ public class GameActivity extends Activity {
         if (mFileUri != null) {
             callback.onFinished();
         } else {
-            String photoStr = getIntent().getExtras().getString(FlickrGridAdapter.PHOTO);
+            String photoStr = getIntent().getExtras().getString(Keys.PHOTO);
             Gson gson = new Gson();
             Photo photo = gson.fromJson(photoStr, Photo.class);
             if (Utils.isOnline(this)) {
