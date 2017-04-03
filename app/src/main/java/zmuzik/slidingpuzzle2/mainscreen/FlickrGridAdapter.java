@@ -42,13 +42,6 @@ public class FlickrGridAdapter extends PicturesGridAdapter {
 
     @Override
     public void runGame(int position) {
-        Photo photo = mPhotos.get(position);
-        boolean isHorizontal = photo != null && photo.getWidth_l() > photo.getHeight_l();
-        Intent intent = new Intent(mContext, GameActivity.class);
-        String photoStr = new Gson().toJson(photo);
-        intent.putExtra(Keys.PHOTO, photoStr);
-        intent.putExtra(Keys.IS_HORIZONTAL, isHorizontal);
-        mContext.startActivity(intent);
         mPresenter.runGame(mPhotos.get(position));
     }
 }
