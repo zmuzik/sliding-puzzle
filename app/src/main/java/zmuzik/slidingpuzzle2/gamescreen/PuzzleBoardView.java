@@ -87,7 +87,8 @@ public class PuzzleBoardView extends ViewGroup {
         int tileNumber = 1;
         for (int y = 0; y < mTilesY; y++) {
             for (int x = 0; x < mTilesX; x++) {
-                Bitmap tileBitmap = Bitmap.createBitmap(mCompletePictureBitmap, x * mTileWidth, y * mTileHeight,
+                Bitmap tileBitmap = Bitmap.createBitmap(mCompletePictureBitmap,
+                        x * mTileWidth, y * mTileHeight,
                         mTileWidth, mTileHeight);
                 mTiles[x][y] = new TileView(getContext(), x, y, tileBitmap, tileNumber);
                 mTiles[x][y].setDisplayNumbers(getDisplayNumbers());
@@ -211,53 +212,53 @@ public class PuzzleBoardView extends ViewGroup {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!mGameInProgress || event == null) return true;
-
         int eventX = (int) event.getX();
         int eventY = (int) event.getY();
-        int action = event.getAction();
 
-        if (action == MotionEvent.ACTION_DOWN) {
-            if (!mPuzzleComplete) {
-                mDownX = eventX;
-                mDownY = eventY;
-                mActiveTileX = mDownX / mTileWidth;
-                mActiveTileY = mDownY / mTileHeight;
-            }
-        }
-
-        if (action == MotionEvent.ACTION_MOVE) {
-            if (mActiveTileX == mBlackTileX) {
-                mMoveDeltaY = eventY - mDownY;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (!mPuzzleComplete) {
+                    mDownX = eventX;
+                    mDownY = eventY;
+                    mActiveTileX = mDownX / mTileWidth;
+                    mActiveTileY = mDownY / mTileHeight;
+                }
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                if (mActiveTileX == mBlackTileX) {
+                    mMoveDeltaY = eventY - mDownY;
+                    mMoveDeltaX = 0;
+                    if (mActiveTileY < mBlackTileY) {
+                        mMoveDeltaY = (mMoveDeltaY > mTileHeight) ? mTileHeight : mMoveDeltaY;
+                        mMoveDeltaY = (mMoveDeltaY < 0) ? 0 : mMoveDeltaY;
+                    } else if (mActiveTileY > mBlackTileY) {
+                        mMoveDeltaY = (mMoveDeltaY < -mTileHeight) ? -mTileHeight : mMoveDeltaY;
+                        mMoveDeltaY = (mMoveDeltaY > 0) ? 0 : mMoveDeltaY;
+                    }
+                } else if (mActiveTileY == mBlackTileY) {
+                    mMoveDeltaX = eventX - mDownX;
+                    mMoveDeltaY = 0;
+                    if (mActiveTileX < mBlackTileX) {
+                        mMoveDeltaX = (mMoveDeltaX > mTileWidth) ? mTileWidth : mMoveDeltaX;
+                        mMoveDeltaX = (mMoveDeltaX < 0) ? 0 : mMoveDeltaX;
+                    } else if (mActiveTileX > mBlackTileX) {
+                        mMoveDeltaX = (mMoveDeltaX < -mTileWidth) ? -mTileWidth : mMoveDeltaX;
+                        mMoveDeltaX = (mMoveDeltaX > 0) ? 0 : mMoveDeltaX;
+                    }
+                }
+                requestLayout();
+                return true;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                if (Math.abs(mMoveDeltaX) > mTileWidth / 2
+                        || Math.abs(mMoveDeltaY) > mTileHeight / 2) {
+                    playTile(mActiveTileX, mActiveTileY);
+                    mPuzzleComplete = isPuzzleComplete();
+                }
                 mMoveDeltaX = 0;
-                if (mActiveTileY < mBlackTileY) {
-                    mMoveDeltaY = (mMoveDeltaY > mTileHeight) ? mTileHeight : mMoveDeltaY;
-                    mMoveDeltaY = (mMoveDeltaY < 0) ? 0 : mMoveDeltaY;
-                } else if (mActiveTileY > mBlackTileY) {
-                    mMoveDeltaY = (mMoveDeltaY < -mTileHeight) ? -mTileHeight : mMoveDeltaY;
-                    mMoveDeltaY = (mMoveDeltaY > 0) ? 0 : mMoveDeltaY;
-                }
-            } else if (mActiveTileY == mBlackTileY) {
-                mMoveDeltaX = eventX - mDownX;
                 mMoveDeltaY = 0;
-                if (mActiveTileX < mBlackTileX) {
-                    mMoveDeltaX = (mMoveDeltaX > mTileWidth) ? mTileWidth : mMoveDeltaX;
-                    mMoveDeltaX = (mMoveDeltaX < 0) ? 0 : mMoveDeltaX;
-                } else if (mActiveTileX > mBlackTileX) {
-                    mMoveDeltaX = (mMoveDeltaX < -mTileWidth) ? -mTileWidth : mMoveDeltaX;
-                    mMoveDeltaX = (mMoveDeltaX > 0) ? 0 : mMoveDeltaX;
-                }
-            }
-            requestLayout();
-        }
-
-        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-            if (Math.abs(mMoveDeltaX) > mTileWidth / 2 || Math.abs(mMoveDeltaY) > mTileHeight / 2) {
-                playTile(mActiveTileX, mActiveTileY);
-                mPuzzleComplete = isPuzzleComplete();
-            }
-            mMoveDeltaX = 0;
-            mMoveDeltaY = 0;
-            requestLayout();
+                requestLayout();
+                return true;
         }
         return true;
     }
