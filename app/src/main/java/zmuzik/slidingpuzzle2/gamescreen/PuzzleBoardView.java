@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import java.util.Random;
 
@@ -124,9 +123,9 @@ public class PuzzleBoardView extends ViewGroup {
                     int x = i * mTileWidth;
                     int y = j * mTileHeight;
                     if (isHorizPlayable(i, j)) {
-                        x = +mMoveDeltaX;
+                        x += mMoveDeltaX;
                     } else if (isVertPlayable(i, j)) {
-                        y = +mMoveDeltaY;
+                        y += mMoveDeltaY;
                     }
                     tile.layout(x, y, x + mTileWidth, y + mTileHeight);
                 }
@@ -251,7 +250,7 @@ public class PuzzleBoardView extends ViewGroup {
                     mMoveDeltaX = (mMoveDeltaX > 0) ? 0 : mMoveDeltaX;
                 }
             }
-            invalidate();
+            requestLayout();
         }
 
         if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
@@ -261,7 +260,7 @@ public class PuzzleBoardView extends ViewGroup {
             }
             mMoveDeltaX = 0;
             mMoveDeltaY = 0;
-            invalidate();
+            requestLayout();
         }
         return true;
     }
