@@ -76,20 +76,12 @@ public class TileView extends ImageView {
         }
     }
 
-    public Bitmap getBitmap() {
-        return mBitmap;
-    }
-
     public int getOrigX() {
         return mOrigX;
     }
 
     public int getOrigY() {
         return mOrigY;
-    }
-
-    public int getTileNumber() {
-        return mTileNumber;
     }
 
 }

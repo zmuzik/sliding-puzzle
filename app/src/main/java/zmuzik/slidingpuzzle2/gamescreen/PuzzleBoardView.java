@@ -3,7 +3,6 @@ package zmuzik.slidingpuzzle2.gamescreen;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +83,6 @@ public class PuzzleBoardView extends ViewGroup {
     }
 
     void initTiles() {
-        Log.d(TAG, "initializing tiles");
         mTiles = new TileView[mTilesX][mTilesY];
         int tileNumber = 1;
         for (int y = 0; y < mTilesY; y++) {
@@ -149,7 +147,6 @@ public class PuzzleBoardView extends ViewGroup {
                 }
             }
         }
-        Log.d(TAG, "puzzle complete");
         mToaster.show(R.string.congrats);
         return true;
     }
