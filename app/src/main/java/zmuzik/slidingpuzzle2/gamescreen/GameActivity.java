@@ -21,6 +21,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.common.Keys;
@@ -123,8 +124,8 @@ public class GameActivity extends Activity implements GameScreenView {
     }
 
     public void shuffle(View v) {
-        if (mBoard != null) mBoard.shuffle();
         mShuffleBtn.setVisibility(View.GONE);
+        if (mBoard != null) mBoard.shuffle();
     }
 
     void adjustBoardDimensions(PuzzleBoardView board, Bitmap bitmap) {
