@@ -71,7 +71,7 @@ public class GameActivity extends Activity implements GameScreenView {
         resolveScreenDimensions();
 
         mProgressBar.setVisibility(View.VISIBLE);
-        mBoard.setVisibility(View.GONE);
+        //mBoard.setVisibility(View.GONE);
         mPresenter.requestPictureUri(intent);
 
     }

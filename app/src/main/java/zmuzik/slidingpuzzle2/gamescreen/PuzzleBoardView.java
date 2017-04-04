@@ -2,15 +2,12 @@ package zmuzik.slidingpuzzle2.gamescreen;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import java.util.Random;
 
@@ -20,21 +17,16 @@ import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.common.Toaster;
 
-public class PuzzleBoardView extends View {
+public class PuzzleBoardView extends ViewGroup {
 
     final String TAG = this.getClass().getSimpleName();
 
     int mTilesX;
     int mTilesY;
-    Tile[][] mTiles;
-    Context mContext;
-
-    TextPaint mTextPaint;
-    Rect mBounds;
+    TileView[][] mTiles;
 
     Bitmap mCompletePictureBitmap;
 
-    private Paint mPaint;
     private int mTileWidth;
     private int mTileHeight;
 
@@ -53,32 +45,14 @@ public class PuzzleBoardView extends View {
 
     public PuzzleBoardView(Context context) {
         super(context);
-        init(context);
     }
 
     public PuzzleBoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
     }
 
     public PuzzleBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
-    }
-
-    public void init(Context context) {
-        mContext = context;
-        mPaint = new Paint();
-        mPaint.setStrokeWidth(0);
-        mPaint.setFilterBitmap(false);
-
-        mTextPaint = new TextPaint();
-        mTextPaint.setColor(0xffffffff);
-        mTextPaint.setShadowLayer(10, 0, 0, 0xff000000);
-        mTextPaint.setStyle(Paint.Style.FILL);
-        mTextPaint.setStrokeWidth(3);
-        mTextPaint.setAntiAlias(true);
-        mBounds = new Rect();
     }
 
     @Override
@@ -102,24 +76,25 @@ public class PuzzleBoardView extends View {
 
         mTileWidth = width / mTilesX;
         mTileHeight = height / mTilesY;
-
-        mTextPaint.setTextSize(Math.max(mTileHeight, mTileWidth) / 4);
     }
 
     public void setBitmap(Bitmap bitmap) {
         mCompletePictureBitmap = bitmap;
+
         initTiles();
     }
 
     void initTiles() {
         Log.d(TAG, "initializing tiles");
-        mTiles = new Tile[mTilesX][mTilesY];
+        mTiles = new TileView[mTilesX][mTilesY];
         int tileNumber = 1;
         for (int y = 0; y < mTilesY; y++) {
             for (int x = 0; x < mTilesX; x++) {
                 Bitmap tileBitmap = Bitmap.createBitmap(mCompletePictureBitmap, x * mTileWidth, y * mTileHeight,
                         mTileWidth, mTileHeight);
-                mTiles[x][y] = new Tile(x, y, tileBitmap, tileNumber);
+                mTiles[x][y] = new TileView(getContext(), x, y, tileBitmap, tileNumber);
+                mTiles[x][y].setDisplayNumbers(getDisplayNumbers());
+                addView(mTiles[x][y]);
                 tileNumber++;
             }
         }
@@ -129,42 +104,33 @@ public class PuzzleBoardView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        if (mTiles == null) {
-            return;
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            final View child = getChildAt(i);
+            measureChild(child, widthMeasureSpec, heightMeasureSpec);
         }
-
-        int tileNumber;
-        for (int i = 0; i < mTilesX; i++) {
-            for (int j = 0; j < mTilesY; j++) {
-                Tile t = mTiles[i][j];
-                tileNumber = t.getTileNumber();
-                if (mPuzzleComplete || i != mBlackTileX || j != mBlackTileY) {
-                    // anything but the black tile
-                    Bitmap bitmap = t.getBitmap();
-                    if (isHorizPlayable(i, j)) {
-                        canvas.drawBitmap(bitmap, i * mTileWidth + mMoveDeltaX, j * mTileHeight, mPaint);
-                        drawNumberOnTile(canvas, tileNumber, i, j, mMoveDeltaX, 0);
-                    } else if (isVertPlayable(i, j)) {
-                        canvas.drawBitmap(bitmap, i * mTileWidth, j * mTileHeight + mMoveDeltaY, mPaint);
-                        drawNumberOnTile(canvas, tileNumber, i, j, 0, mMoveDeltaY);
-                    } else {
-                        // rest of the tiles
-                        canvas.drawBitmap(bitmap, i * mTileWidth, j * mTileHeight, mPaint);
-                        drawNumberOnTile(canvas, tileNumber, i, j, 0, 0);
-                    }
-                }
-            }
-        }
+        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
     }
 
-    void drawNumberOnTile(Canvas canvas, int number, int tileX, int tileY, int addX, int addY) {
-        if (!mPuzzleComplete && getDisplayNumbers()) {
-            String numStr = "" + number;
-            mTextPaint.getTextBounds(numStr, 0, numStr.length(), mBounds);
-            int xCoord = tileX * mTileWidth + addX + (mTileWidth / 2 - mBounds.width() / 2);
-            int yCoord = tileY * mTileHeight + addY + (mTileHeight / 2 + mBounds.height() / 2);
-            canvas.drawText(numStr, xCoord, yCoord, mTextPaint);
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        if (mTiles == null) return;
+        for (int i = 0; i < mTilesX; i++) {
+            for (int j = 0; j < mTilesY; j++) {
+                TileView tile = mTiles[i][j];
+                if (mPuzzleComplete || i != mBlackTileX || j != mBlackTileY) {
+                    int x = i * mTileWidth;
+                    int y = j * mTileHeight;
+                    if (isHorizPlayable(i, j)) {
+                        x = +mMoveDeltaX;
+                    } else if (isVertPlayable(i, j)) {
+                        y = +mMoveDeltaY;
+                    }
+                    tile.layout(x, y, x + mTileWidth, y + mTileHeight);
+                }
+            }
         }
     }
 
@@ -178,7 +144,7 @@ public class PuzzleBoardView extends View {
     private boolean isPuzzleComplete() {
         for (int i = 0; i < mTilesX; i++) {
             for (int j = 0; j < mTilesY; j++) {
-                Tile t = mTiles[i][j];
+                TileView t = mTiles[i][j];
                 if (t.getOrigX() != i || t.getOrigY() != j) {
                     return false;
                 }
@@ -190,13 +156,13 @@ public class PuzzleBoardView extends View {
     }
 
     public boolean isHorizPlayable(int x, int y) {
-        return y == mBlackTileY && y == mActiveTileY
-                && ((mActiveTileX <= x && x < mBlackTileX) || (mBlackTileX < x && x <= mActiveTileX));
+        return y == mBlackTileY && y == mActiveTileY &&
+                ((mActiveTileX <= x && x < mBlackTileX) || (mBlackTileX < x && x <= mActiveTileX));
     }
 
     public boolean isVertPlayable(int x, int y) {
-        return x == mBlackTileX && x == mActiveTileX
-                && ((mActiveTileY <= y && y < mBlackTileY) || (mBlackTileY < y && y <= mActiveTileY));
+        return x == mBlackTileX && x == mActiveTileX &&
+                ((mActiveTileY <= y && y < mBlackTileY) || (mBlackTileY < y && y <= mActiveTileY));
     }
 
     public void shuffle() {
@@ -219,7 +185,7 @@ public class PuzzleBoardView extends View {
     }
 
     public void playTile(int x, int y) {
-        Tile temp = mTiles[mBlackTileX][mBlackTileY];
+        TileView temp = mTiles[mBlackTileX][mBlackTileY];
         if (x == mBlackTileX) {
             if (y < mBlackTileY) {
                 for (int i = mBlackTileY - 1; i >= y; i--) {
