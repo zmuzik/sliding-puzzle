@@ -287,14 +287,42 @@ public class PuzzleBoardView extends ViewGroup {
                 return true;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                TileView tile = mTiles[mActiveTileX][mActiveTileY];
+                SpringAnimation anim = null;
                 if (Math.abs(mMoveDeltaX) > mTileWidth / 2
                         || Math.abs(mMoveDeltaY) > mTileHeight / 2) {
+                    // drag is big enough to "play"
+                    int endX = mBlackTileX * mTileWidth;
+                    int endY = mBlackTileY * mTileHeight;
+                    boolean moveX = isHorizPlayable(mActiveTileX, mActiveTileY);
+                    boolean moveY = isVertPlayable(mActiveTileX, mActiveTileY);
+
                     playTile(mActiveTileX, mActiveTileY);
                     mPuzzleComplete = isPuzzleComplete();
+
+                    if (moveX) {
+                        anim = new SpringAnimation(tile, SpringAnimation.X, endX);
+                    } else if (moveY) {
+                        anim = new SpringAnimation(tile, SpringAnimation.Y, endY);
+                    }
+
+                } else {
+                    // drag not big enough, return the tile to its original position
+                    if (isHorizPlayable(mActiveTileX, mActiveTileY)) {
+                        int endX = mActiveTileX * mTileWidth;
+                        anim = new SpringAnimation(tile, SpringAnimation.X, endX);
+                    } else if (isVertPlayable(mActiveTileX, mActiveTileY)) {
+                        int endY = mActiveTileY * mTileHeight;
+                        anim = new SpringAnimation(tile, SpringAnimation.Y, endY);
+                    }
                 }
+                // finish the drag and play the animations
                 mMoveDeltaX = 0;
                 mMoveDeltaY = 0;
                 requestLayout();
+                if (anim != null) {
+                    anim.start();
+                }
                 return true;
         }
         return true;
