@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         applicationId "zmuzik.slidingpuzzle2"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode getVersionCode()
         versionName "2.8"
@@ -78,7 +78,7 @@ dependencies {
     compile "com.android.support:support-v4:${supportLibVersion}"
     compile "com.android.support:appcompat-v7:${supportLibVersion}"
     compile "com.android.support:recyclerview-v7:${supportLibVersion}"
-//    compile "com.android.support:support-dynamic-animation:${supportLibVersion}"
+    compile "com.android.support:support-dynamic-animation:${supportLibVersion}"
     compile "com.android.support:design:${supportLibVersion}"
     compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"

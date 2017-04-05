@@ -2,13 +2,13 @@ package zmuzik.slidingpuzzle2.gamescreen;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Handler;
+import android.support.animation.DynamicAnimation;
+import android.support.animation.SpringAnimation;
+import android.support.animation.SpringForce;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationSet;
-import android.view.animation.TranslateAnimation;
 
 import java.util.Random;
 
@@ -21,6 +21,8 @@ import zmuzik.slidingpuzzle2.common.Toaster;
 public class PuzzleBoardView extends ViewGroup {
 
     final String TAG = this.getClass().getSimpleName();
+    final float SHUFFLE_STIFFNESS = SpringForce.STIFFNESS_LOW;
+    final float SHUFFLE_DAMPING_RATIO = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY;
 
     int mTilesX;
     int mTilesY;
@@ -181,28 +183,39 @@ public class PuzzleBoardView extends ViewGroup {
             }
         }
 
-        long animDuration = 500L;
-        AnimationSet animSet = new AnimationSet(true);
+        SpringAnimation animX = null;
+        SpringAnimation animY = null;
         for (int x = 0; x < mTilesX; x++) {
             for (int y = 0; y < mTilesY; y++) {
                 if (x == mBlackTileX && y == mBlackTileY) continue;
                 TileView tile = mTiles[x][y];
-                int startX = (tile.getOrigX() - x) * mTileWidth;
-                int startY = (tile.getOrigY() - y) * mTileHeight;
-                TranslateAnimation anim = new TranslateAnimation(startX, 0, startY, 0);
-                anim.setDuration(animDuration);
-                animSet.addAnimation(anim);
-                tile.setAnimation(anim);
+                int endX = x * mTileWidth;
+                int endY = y * mTileHeight;
+                animX = new SpringAnimation(tile, SpringAnimation.X, endX);
+                animY = new SpringAnimation(tile, SpringAnimation.Y, endY);
+                animX.getSpring()
+                        .setStiffness(SHUFFLE_STIFFNESS)
+                        .setDampingRatio(SHUFFLE_DAMPING_RATIO);
+                animY.getSpring()
+                        .setStiffness(SHUFFLE_STIFFNESS)
+                        .setDampingRatio(SHUFFLE_DAMPING_RATIO);
+                animX.start();
+                animY.start();
             }
         }
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                mGameInProgress = true;
-                requestLayout();
-            }
-        }, animSet.getDuration());
-        animSet.setDuration(animDuration);
-        animSet.start();
+        if (animY == null) {
+            mGameInProgress = true;
+            requestLayout();
+        } else {
+            animY.addEndListener(new DynamicAnimation.OnAnimationEndListener() {
+                @Override
+                public void onAnimationEnd(DynamicAnimation animation, boolean canceled,
+                                           float value, float velocity) {
+                    mGameInProgress = true;
+                    requestLayout();
+                }
+            });
+        }
     }
 
     public void playTile(int x, int y) {
