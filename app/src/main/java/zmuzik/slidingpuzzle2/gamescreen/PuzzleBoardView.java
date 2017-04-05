@@ -323,9 +323,22 @@ public class PuzzleBoardView extends ViewGroup {
                 tile.setVisibility(GONE);
                 requestLayout();
                 if (anim != null) {
+                    anim.addUpdateListener(new DynamicAnimation.OnAnimationUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(DynamicAnimation animation,
+                                                      float value, float velocity) {
+                            if (tile.getVisibility() == GONE && velocity != 0f) {
+                                tile.setVisibility(VISIBLE);
+                            }
+                        }
+                    });
+                    anim.getSpring()
+                            .setStiffness(SpringForce.STIFFNESS_MEDIUM)
+                            .setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY);
                     anim.start();
+                } else {
+                    tile.setVisibility(VISIBLE);
                 }
-                tile.setVisibility(VISIBLE);
                 return true;
         }
         return true;
