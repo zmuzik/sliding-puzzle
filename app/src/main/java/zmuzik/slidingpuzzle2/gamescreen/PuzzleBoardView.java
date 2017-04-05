@@ -2,11 +2,11 @@ package zmuzik.slidingpuzzle2.gamescreen;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 
@@ -181,37 +181,27 @@ public class PuzzleBoardView extends ViewGroup {
             }
         }
 
-        AnimationSet set = new AnimationSet(true);
-
+        AnimationSet animSet = new AnimationSet(true);
         for (int x = 0; x < mTilesX; x++) {
             for (int y = 0; y < mTilesY; y++) {
-                //if (x == mBlackTileX && y == mBlackTileY) continue;
+                if (x == mBlackTileX && y == mBlackTileY) continue;
                 TileView tile = mTiles[x][y];
                 int startX = (tile.getOrigX() - x) * mTileWidth;
                 int startY = (tile.getOrigY() - y) * mTileHeight;
                 TranslateAnimation anim = new TranslateAnimation(startX, 0, startY, 0);
                 anim.setDuration(1000L);
-                set.addAnimation(anim);
+                animSet.addAnimation(anim);
                 tile.setAnimation(anim);
             }
         }
-        set.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-//                requestLayout();
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
                 mGameInProgress = true;
+                requestLayout();
             }
-        });
-        set.setDuration(1000L);
-        set.start();
+        }, animSet.getDuration());
+        animSet.setDuration(1000L);
+        animSet.start();
     }
 
     public void playTile(int x, int y) {
