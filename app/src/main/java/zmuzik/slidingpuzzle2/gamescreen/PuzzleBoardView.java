@@ -181,6 +181,7 @@ public class PuzzleBoardView extends ViewGroup {
             }
         }
 
+        long animDuration = 500L;
         AnimationSet animSet = new AnimationSet(true);
         for (int x = 0; x < mTilesX; x++) {
             for (int y = 0; y < mTilesY; y++) {
@@ -189,7 +190,7 @@ public class PuzzleBoardView extends ViewGroup {
                 int startX = (tile.getOrigX() - x) * mTileWidth;
                 int startY = (tile.getOrigY() - y) * mTileHeight;
                 TranslateAnimation anim = new TranslateAnimation(startX, 0, startY, 0);
-                anim.setDuration(1000L);
+                anim.setDuration(animDuration);
                 animSet.addAnimation(anim);
                 tile.setAnimation(anim);
             }
@@ -200,7 +201,7 @@ public class PuzzleBoardView extends ViewGroup {
                 requestLayout();
             }
         }, animSet.getDuration());
-        animSet.setDuration(1000L);
+        animSet.setDuration(animDuration);
         animSet.start();
     }
 
