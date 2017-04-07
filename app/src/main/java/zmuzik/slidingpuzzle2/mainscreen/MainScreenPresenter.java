@@ -130,6 +130,7 @@ public class MainScreenPresenter {
             requestReadExternalPermission();
         } else if (!isCameraPicturesUpdating) {
             isCameraPicturesUpdating = true;
+            mView.setWaitingForCameraPictures();
             new UpdateCameraFilesTask(this).execute();
         }
     }
@@ -193,6 +194,7 @@ public class MainScreenPresenter {
             mToaster.show(R.string.keyword_not_supplied);
             return;
         }
+        mView.setWaitingForFlickrPictures();
         new GetFlickrPicsPageTask(keywords, this, mFlickrApi).execute();
     }
 

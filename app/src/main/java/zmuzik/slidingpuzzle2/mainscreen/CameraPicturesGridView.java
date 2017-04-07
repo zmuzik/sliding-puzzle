@@ -47,6 +47,11 @@ public class CameraPicturesGridView extends BasePicturesGridView {
         mProgressBar.setVisibility(VISIBLE);
     }
 
+    public void setWaitingForPictures() {
+        mPermissionsCombo.setVisibility(mPresenter.isReadExternalGranted() ? GONE : VISIBLE);
+        mProgressBar.setVisibility(VISIBLE);
+    }
+
     @Override
     public void update(List<String> pictures) {
         super.update(pictures);

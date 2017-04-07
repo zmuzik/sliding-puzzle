@@ -11,7 +11,11 @@ import zmuzik.slidingpuzzle2.flickr.Photo;
 public interface MainScreenView {
     void updateSavedPictures(List<String> strings);
 
+    void setWaitingForCameraPictures();
+
     void updateCameraPictures(List<String> strings);
+
+    void setWaitingForFlickrPictures();
 
     void updateFlickrPictures(List<Photo> strings);
 

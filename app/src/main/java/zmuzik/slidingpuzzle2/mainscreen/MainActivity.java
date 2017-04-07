@@ -174,9 +174,23 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     }
 
     @Override
+    public void setWaitingForCameraPictures() {
+        if (mCameraPicturesView != null && mCameraPicturesView.get() != null) {
+            mCameraPicturesView.get().setWaitingForPictures();
+        }
+    }
+
+    @Override
     public void updateCameraPictures(List<String> pictures) {
         if (mCameraPicturesView != null && mCameraPicturesView.get() != null) {
             mCameraPicturesView.get().update(pictures);
+        }
+    }
+
+    @Override
+    public void setWaitingForFlickrPictures() {
+        if (mFlickrPicturesView != null && mFlickrPicturesView.get() != null) {
+            mFlickrPicturesView.get().setWaitingForPictures();
         }
     }
 

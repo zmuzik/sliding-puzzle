@@ -101,13 +101,16 @@ class FlickrPicturesGridView extends BasePicturesGridView {
     }
 
     private void search(String keywords) {
-        mProgressBar.setVisibility(VISIBLE);
         mPresenter.requestFlickrSearch(keywords);
     }
 
     @Override
     public void requestUpdate() {
         mPresenter.requestUpdateFlickrPictures();
+    }
+
+    public void setWaitingForPictures() {
+        mProgressBar.setVisibility(VISIBLE);
     }
 
     public void updatePhotos(List<Photo> photos) {
