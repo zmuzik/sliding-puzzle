@@ -295,14 +295,14 @@ public class PuzzleBoardView extends ViewGroup {
                         || Math.abs(mMoveDeltaY) > mTileHeight / 2);
                 boolean moveX = mActiveTileY == mBlackTileY;
                 boolean moveY = mActiveTileX == mBlackTileX;
-                mMoveDeltaX = 0;
-                mMoveDeltaY = 0;
 
                 if (makeTheMove) {
                     playTile(mActiveTileX, mActiveTileY);
                     mPuzzleComplete = isPuzzleComplete();
                 }
                 requestLayout();
+                mMoveDeltaX = 0;
+                mMoveDeltaY = 0;
 
                 for (final TileView tile : tilesToMove) {
                     SpringAnimation anim = null;
