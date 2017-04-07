@@ -20,6 +20,8 @@ public class TileView extends ImageView {
     private Bitmap mBitmap;
     private int mOrigX;
     private int mOrigY;
+    private int mWidth;
+    private int mHeight;
     private int mTileNumber;
     private String mNumString;
     private boolean mDisplayNumbers;
@@ -34,21 +36,23 @@ public class TileView extends ImageView {
     public TileView(Context context, int x, int y, Bitmap bitmap, int tileNumber) {
         super(context);
         setImageBitmap(bitmap);
+        mBitmap = bitmap;
+        mWidth = mBitmap.getWidth();
+        mHeight = mBitmap.getHeight();
         mOrigX = x;
         mOrigY = y;
-        mBitmap = bitmap;
         mTileNumber = tileNumber;
         mBounds = new Rect();
         mNumString = "" + mTileNumber;
 
         mTextPaint = new TextPaint();
-        mTextPaint.getTextBounds(mNumString, 0, mNumString.length(), mBounds);
-        mTextPaint = new TextPaint();
+        mTextPaint.setTextSize(Math.max(mWidth, mHeight) / 4);
         mTextPaint.setColor(getResources().getColor(R.color.white));
         mTextPaint.setShadowLayer(10, 0, 0, getResources().getColor(R.color.black));
         mTextPaint.setStyle(Paint.Style.FILL);
         mTextPaint.setStrokeWidth(3);
         mTextPaint.setAntiAlias(true);
+        mTextPaint.getTextBounds(mNumString, 0, mNumString.length(), mBounds);
 
         setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -71,7 +75,6 @@ public class TileView extends ImageView {
         if (mDisplayNumbers) {
             int xCoord = getWidth() / 2 - mBounds.width() / 2;
             int yCoord = getHeight() / 2 + mBounds.height() / 2;
-            mTextPaint.setTextSize(Math.max(getWidth(), getHeight()) / 4);
             canvas.drawText(mNumString, xCoord, yCoord, mTextPaint);
         }
     }
