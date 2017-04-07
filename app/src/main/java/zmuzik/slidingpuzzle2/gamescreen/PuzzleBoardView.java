@@ -314,7 +314,7 @@ public class PuzzleBoardView extends ViewGroup {
                         anim = new SpringAnimation(tile, SpringAnimation.Y, endY);
                     }
                     anim.getSpring()
-                            .setStiffness(SpringForce.STIFFNESS_MEDIUM)
+                            .setStiffness(SpringForce.STIFFNESS_HIGH)
                             .setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY);
                     anim.start();
                 }
