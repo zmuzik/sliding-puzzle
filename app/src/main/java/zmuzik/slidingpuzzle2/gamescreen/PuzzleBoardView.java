@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.inject.Inject;
@@ -287,60 +289,81 @@ public class PuzzleBoardView extends ViewGroup {
                 return true;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                final TileView tile = mTiles[mActiveTileX][mActiveTileY];
-                SpringAnimation anim = null;
-                if (Math.abs(mMoveDeltaX) > mTileWidth / 2
-                        || Math.abs(mMoveDeltaY) > mTileHeight / 2) {
-                    // drag is big enough to "play"
-                    int endX = mBlackTileX * mTileWidth;
-                    int endY = mBlackTileY * mTileHeight;
-                    boolean moveX = isHorizPlayable(mActiveTileX, mActiveTileY);
-                    boolean moveY = isVertPlayable(mActiveTileX, mActiveTileY);
+                final List<TileView> tilesToMove =
+                        getTilesForAnimation(mActiveTileX, mActiveTileY, mBlackTileX, mBlackTileY);
+                boolean makeTheMove = (Math.abs(mMoveDeltaX) > mTileWidth / 2
+                        || Math.abs(mMoveDeltaY) > mTileHeight / 2);
+                boolean moveX = mActiveTileY == mBlackTileY;
+                boolean moveY = mActiveTileX == mBlackTileX;
 
+                if (makeTheMove) {
                     playTile(mActiveTileX, mActiveTileY);
                     mPuzzleComplete = isPuzzleComplete();
+                }
 
+                for (final TileView tile : tilesToMove) {
+                    SpringAnimation anim = null;
                     if (moveX) {
+                        int endX = getTileX(tile) * mTileWidth;
                         anim = new SpringAnimation(tile, SpringAnimation.X, endX);
                     } else if (moveY) {
+                        int endY = getTileY(tile) * mTileHeight;
                         anim = new SpringAnimation(tile, SpringAnimation.Y, endY);
                     }
-
-                } else {
-                    // drag not big enough, return the tile to its original position
-                    if (isHorizPlayable(mActiveTileX, mActiveTileY)) {
-                        int endX = mActiveTileX * mTileWidth;
-                        anim = new SpringAnimation(tile, SpringAnimation.X, endX);
-                    } else if (isVertPlayable(mActiveTileX, mActiveTileY)) {
-                        int endY = mActiveTileY * mTileHeight;
-                        anim = new SpringAnimation(tile, SpringAnimation.Y, endY);
-                    }
-                }
-                // finish the drag and play the animations
-                mMoveDeltaX = 0;
-                mMoveDeltaY = 0;
-                // prevent tile first appearing in the target position before the animation starts
-                tile.setVisibility(GONE);
-                requestLayout();
-                if (anim != null) {
-                    anim.addUpdateListener(new DynamicAnimation.OnAnimationUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(DynamicAnimation animation,
-                                                      float value, float velocity) {
-                            if (tile.getVisibility() == GONE && velocity != 0f) {
-                                tile.setVisibility(VISIBLE);
-                            }
-                        }
-                    });
                     anim.getSpring()
                             .setStiffness(SpringForce.STIFFNESS_MEDIUM)
                             .setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY);
                     anim.start();
-                } else {
-                    tile.setVisibility(VISIBLE);
                 }
+                mMoveDeltaX = 0;
+                mMoveDeltaY = 0;
+//                requestLayout();
                 return true;
         }
         return true;
+    }
+
+    int getTileX(TileView tile) {
+        for (int y = 0; y < mTilesY; y++) {
+            for (int x = 0; x < mTilesX; x++) {
+                if (mTiles[x][y] == tile) return x;
+            }
+        }
+        return -1;
+    }
+
+    int getTileY(TileView tile) {
+        for (int y = 0; y < mTilesY; y++) {
+            for (int x = 0; x < mTilesX; x++) {
+                if (mTiles[x][y] == tile) return y;
+            }
+        }
+        return -1;
+    }
+
+    List<TileView> getTilesForAnimation(int activeX, int activeY, int blackX, int blackY) {
+        ArrayList<TileView> result = new ArrayList<>();
+        if (activeX == blackX) {
+            if (activeY < blackY) {
+                for (int i = activeY; i < blackY; i++) {
+                    result.add(mTiles[activeX][i]);
+                }
+            } else if (blackY < activeY) {
+                for (int i = blackY + 1; i <= activeY; i++) {
+                    result.add(mTiles[activeX][i]);
+                }
+            }
+        } else if (activeY == blackY) {
+            if (activeX < blackX) {
+                for (int i = activeX; i < blackX; i++) {
+                    result.add(mTiles[i][activeY]);
+                }
+            } else if (blackX < activeX) {
+                for (int i = blackX + 1; i <= activeX; i++) {
+                    result.add(mTiles[i][activeY]);
+                }
+            }
+        }
+        return result;
     }
 }
