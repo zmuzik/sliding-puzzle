@@ -44,6 +44,7 @@ public class CameraPicturesGridView extends BasePicturesGridView {
     @Override
     public void requestUpdate() {
         mPresenter.requestUpdateCameraPictures();
+        mProgressBar.setVisibility(VISIBLE);
     }
 
     @Override

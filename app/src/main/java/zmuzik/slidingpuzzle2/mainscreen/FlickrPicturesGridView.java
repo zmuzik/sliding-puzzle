@@ -101,6 +101,7 @@ class FlickrPicturesGridView extends BasePicturesGridView {
     }
 
     private void search(String keywords) {
+        mProgressBar.setVisibility(VISIBLE);
         mPresenter.requestFlickrSearch(keywords);
     }
 
@@ -110,6 +111,7 @@ class FlickrPicturesGridView extends BasePicturesGridView {
     }
 
     public void updatePhotos(List<Photo> photos) {
+        mProgressBar.setVisibility(GONE);
         mAdapter = new FlickrGridAdapter(getContext(), photos, getColumnsNumber());
         mRecyclerView.setAdapter(mAdapter);
     }

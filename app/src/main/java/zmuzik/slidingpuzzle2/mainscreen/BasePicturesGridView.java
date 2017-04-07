@@ -106,6 +106,7 @@ public class BasePicturesGridView extends RelativeLayout {
 
     // this should be called by the presenter (via proxy/activity) to update the pictures
     public void update(List<String> uris) {
+        mProgressBar.setVisibility(GONE);
         mAdapter = new PicturesGridAdapter(getContext(), uris, getColumnsNumber());
         mRecyclerView.setAdapter(mAdapter);
     }
