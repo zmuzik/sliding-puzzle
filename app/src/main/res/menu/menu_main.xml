@@ -11,7 +11,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/action_toggle_display_numbers"
-        android:icon="@drawable/ic_number_1_32dp"
+        android:icon="@drawable/ic_tile_with_number"
         android:orderInCategory="20"
         android:title=""
         app:showAsAction="always" />
