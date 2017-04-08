@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     String mGridSizeSelectedTo;
 
     MainActivityComponent mComponent;
+    MenuItem toggleNumbersMenuItem;
     WeakReference<SavedPicturesGridView> mSavedPicturesView;
     WeakReference<CameraPicturesGridView> mCameraPicturesView;
     WeakReference<FlickrPicturesGridView> mFlickrPicturesView;
@@ -116,7 +117,15 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        toggleNumbersMenuItem = menu.findItem(R.id.action_toggle_display_numbers);
+        setTileNumbersIcon(mPresenter.isShowTileNumbers());
         return true;
+    }
+
+    void setTileNumbersIcon(boolean showNumbers) {
+        toggleNumbersMenuItem.setIcon(showNumbers
+                ? R.drawable.ic_tile_with_number
+                : R.drawable.ic_tile_without_number);
     }
 
     @Override
@@ -134,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
 
     private void toggleShowNumbers() {
         boolean onOff = mPresenter.toggleShowNumbers();
+        setTileNumbersIcon(onOff);
         mToaster.show(onOff ? R.string.display_tile_numbers_on : R.string.display_tile_numbers_off);
     }
 

@@ -88,6 +88,10 @@ public class MainScreenPresenter {
         return onOff;
     }
 
+    boolean isShowTileNumbers() {
+        return mPrefsHelper.getDisplayTileNumbers();
+    }
+
     String getGridDimensions() {
         return mPrefsHelper.getGridDimShort() + "x" + mPrefsHelper.getGridDimLong();
     }
