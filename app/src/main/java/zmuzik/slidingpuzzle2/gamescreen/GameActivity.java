@@ -21,15 +21,15 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import zmuzik.slidingpuzzle2.App;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.common.Keys;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
+import zmuzik.slidingpuzzle2.common.ShakeDetector;
 import zmuzik.slidingpuzzle2.common.Toaster;
 import zmuzik.slidingpuzzle2.flickr.FlickrApi;
 
-public class GameActivity extends Activity implements GameScreenView {
+public class GameActivity extends Activity implements GameScreenView, ShakeDetector.OnShakeListener {
 
     final String TAG = this.getClass().getSimpleName();
 
@@ -53,6 +53,8 @@ public class GameActivity extends Activity implements GameScreenView {
     FlickrApi mFlickrApi;
     @Inject
     GameScreenPresenter mPresenter;
+    @Inject
+    ShakeDetector mShakeDetector;
 
     private GameActivityComponent mComponent;
 
@@ -75,6 +77,29 @@ public class GameActivity extends Activity implements GameScreenView {
         //mBoard.setVisibility(View.GONE);
         mPresenter.requestPictureUri(intent);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mShakeDetector != null) {
+            mShakeDetector.register();
+            mShakeDetector.setOnShakeListener(this);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mShakeDetector != null) {
+            mShakeDetector.unRegister();
+        }
+    }
+
+    @Override
+    public void onShake() {
+        shuffle(null);
+        mShakeDetector.unRegister();
     }
 
     public void finishWithMessage(int stringId) {

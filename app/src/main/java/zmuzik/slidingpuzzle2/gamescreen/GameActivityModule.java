@@ -5,6 +5,7 @@ import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
+import zmuzik.slidingpuzzle2.common.ShakeDetector;
 import zmuzik.slidingpuzzle2.common.di.ActivityContext;
 import zmuzik.slidingpuzzle2.common.di.ActivityScope;
 
@@ -42,6 +43,12 @@ public class GameActivityModule {
     @ActivityScope
     GameScreenView provideView() {
         return mActivity;
+    }
+
+    @Provides
+    @ActivityScope
+    ShakeDetector provideShakeDetector() {
+        return new ShakeDetector(mActivity);
     }
 
 }

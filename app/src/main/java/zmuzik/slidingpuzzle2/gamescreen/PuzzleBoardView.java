@@ -206,18 +206,21 @@ public class PuzzleBoardView extends ViewGroup {
             }
         }
         if (animY == null) {
-            mGameInProgress = true;
-            requestLayout();
+            startGame();
         } else {
             animY.addEndListener(new DynamicAnimation.OnAnimationEndListener() {
                 @Override
                 public void onAnimationEnd(DynamicAnimation animation, boolean canceled,
                                            float value, float velocity) {
-                    mGameInProgress = true;
-                    requestLayout();
+                    startGame();
                 }
             });
         }
+    }
+
+    void startGame() {
+        mGameInProgress = true;
+        requestLayout();
     }
 
     public void playTile(int x, int y) {
