@@ -151,8 +151,13 @@ public class GameActivity extends Activity implements GameScreenView, ShakeDetec
         return (mScreenWidth > mScreenHeight) ? mScreenWidth : mScreenHeight;
     }
 
-    public void shuffle(View v) {
+    @Override
+    public void hideShuffleIcon() {
         mShuffleBtn.setVisibility(View.GONE);
+    }
+
+    public void shuffle(View v) {
+        hideShuffleIcon();
         if (mBoard != null) mBoard.maybeShuffle();
     }
 

@@ -11,4 +11,6 @@ public interface GameScreenView {
     void loadPicture(String pictureUri);
 
     int getMaxScreenDim();
+
+    void hideShuffleIcon();
 }

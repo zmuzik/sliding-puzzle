@@ -25,8 +25,6 @@ import zmuzik.slidingpuzzle2.mainscreen.GetFlickrPicsPageTask;
 )
 public interface AppComponent {
 
-    void inject(PuzzleBoardView view);
-
     void inject(PreferencesHelper helper);
 
     void inject(GetFlickrPicsPageTask task);

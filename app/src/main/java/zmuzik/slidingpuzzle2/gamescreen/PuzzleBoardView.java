@@ -16,7 +16,6 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
-import butterknife.OnClick;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.common.Toaster;
@@ -42,13 +41,16 @@ public class PuzzleBoardView extends ViewGroup {
     private int mBlackTileX, mBlackTileY;
     private boolean mPuzzleComplete;
     private boolean mShouldAcceptTouchEvents;
-    private boolean mIsGameStarted;
+    private boolean mIsGameInProgress;
+    private boolean mIsShuffleInProgress;
     private Boolean mDisplayNumbers;
 
     @Inject
     public PreferencesHelper mPrefsHelper;
     @Inject
     public Toaster mToaster;
+    @Inject
+    public GameScreenView mView;
 
     public PuzzleBoardView(Context context) {
         super(context);
@@ -172,12 +174,14 @@ public class PuzzleBoardView extends ViewGroup {
     }
 
     public void maybeShuffle() {
-        if (!mIsGameStarted) {
+        if (!mIsGameInProgress) {
             shuffle();
         }
     }
 
     public void shuffle() {
+        mIsShuffleInProgress = true;
+        mView.hideShuffleIcon();
         requestLayout();
         Random random = new Random();
         int position;
@@ -228,14 +232,15 @@ public class PuzzleBoardView extends ViewGroup {
     }
 
     void startGame() {
-        if (!mIsGameStarted) {
+        if (!mIsGameInProgress) {
             mShouldAcceptTouchEvents = true;
             requestLayout();
+            mIsShuffleInProgress = false;
         }
     }
 
     public void playTile(int x, int y, boolean isShuffleMove) {
-        if (!isShuffleMove) mIsGameStarted = true;
+        if (!isShuffleMove) mIsGameInProgress = true;
         TileView temp = mTiles[mBlackTileX][mBlackTileY];
         if (x == mBlackTileX) {
             if (y < mBlackTileY) {
@@ -265,7 +270,12 @@ public class PuzzleBoardView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!mShouldAcceptTouchEvents || event == null) return true;
+        if (!mShouldAcceptTouchEvents) {
+            if (!mIsShuffleInProgress) {
+                shuffle();
+            }
+            return true;
+        }
         int eventX = (int) event.getX();
         int eventY = (int) event.getY();
 
