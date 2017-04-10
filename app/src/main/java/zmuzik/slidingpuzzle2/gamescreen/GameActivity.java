@@ -67,8 +67,6 @@ public class GameActivity extends Activity implements GameScreenView, ShakeDetec
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake_anim);
-        mShuffleBtn.startAnimation(shake);
         if (intent == null) {
             mToaster.show(R.string.picture_not_supplied);
             finish();
@@ -90,6 +88,13 @@ public class GameActivity extends Activity implements GameScreenView, ShakeDetec
             mShakeDetector.register();
             mShakeDetector.setOnShakeListener(this);
         }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake_anim);
+        mShuffleBtn.startAnimation(shake);
     }
 
     @Override

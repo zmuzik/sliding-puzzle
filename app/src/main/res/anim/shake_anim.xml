@@ -4,7 +4,7 @@
         android:duration="40"
         android:fromXDelta="0"
         android:fromYDelta="0"
-        android:repeatCount="12"
+        android:repeatCount="6"
         android:repeatMode="reverse"
         android:toXDelta="20"
         android:toYDelta="-10"/>
