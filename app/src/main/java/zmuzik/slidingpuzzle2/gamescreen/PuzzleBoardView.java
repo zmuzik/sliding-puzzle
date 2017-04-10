@@ -16,6 +16,7 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
+import butterknife.OnClick;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.common.PreferencesHelper;
 import zmuzik.slidingpuzzle2.common.Toaster;

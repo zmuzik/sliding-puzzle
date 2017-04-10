@@ -9,7 +9,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.squareup.picasso.MemoryPolicy;
@@ -38,7 +40,7 @@ public class GameActivity extends Activity implements GameScreenView, ShakeDetec
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
     @BindView(R.id.shuffleBtn)
-    Button mShuffleBtn;
+    ImageView mShuffleBtn;
 
     int mScreenWidth;
     int mScreenHeight;
@@ -65,6 +67,8 @@ public class GameActivity extends Activity implements GameScreenView, ShakeDetec
         setContentView(R.layout.activity_game);
         ButterKnife.bind(this);
         Intent intent = getIntent();
+        Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake_anim);
+        mShuffleBtn.startAnimation(shake);
         if (intent == null) {
             mToaster.show(R.string.picture_not_supplied);
             finish();
