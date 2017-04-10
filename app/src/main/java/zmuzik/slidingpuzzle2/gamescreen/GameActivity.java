@@ -91,13 +91,6 @@ public class GameActivity extends Activity implements GameScreenView, ShakeDetec
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake_anim);
-        mShuffleBtn.startAnimation(shake);
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         if (mShakeDetector != null) {
@@ -199,9 +192,11 @@ public class GameActivity extends Activity implements GameScreenView, ShakeDetec
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             adjustBoardDimensions(mBoard, bitmap);
             mBoard.setBitmap(bitmap);
-            mShuffleBtn.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
             mBoard.setVisibility(View.VISIBLE);
+            Animation shake = AnimationUtils.loadAnimation(GameActivity.this, R.anim.shake_anim);
+            mShuffleBtn.setVisibility(View.VISIBLE);
+            mShuffleBtn.startAnimation(shake);
         }
 
         @Override
