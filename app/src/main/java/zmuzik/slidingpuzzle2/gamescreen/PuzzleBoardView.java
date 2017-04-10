@@ -40,7 +40,8 @@ public class PuzzleBoardView extends ViewGroup {
     private int mActiveTileX, mActiveTileY;
     private int mBlackTileX, mBlackTileY;
     private boolean mPuzzleComplete;
-    private boolean mGameInProgress;
+    private boolean mShouldAcceptTouchEvents;
+    private boolean mIsGameStarted;
     private Boolean mDisplayNumbers;
 
     @Inject
@@ -169,7 +170,14 @@ public class PuzzleBoardView extends ViewGroup {
                 ((mActiveTileY <= y && y < mBlackTileY) || (mBlackTileY < y && y <= mActiveTileY));
     }
 
+    public void maybeShuffle() {
+        if (!mIsGameStarted) {
+            shuffle();
+        }
+    }
+
     public void shuffle() {
+        requestLayout();
         Random random = new Random();
         int position;
         int steps = mTilesX * mTilesY * 4;
@@ -177,11 +185,11 @@ public class PuzzleBoardView extends ViewGroup {
             if ((step % 2) == 1) {
                 position = random.nextInt(mTilesX - 1);
                 if (position >= mBlackTileX) position++;
-                playTile(position, mBlackTileY);
+                playTile(position, mBlackTileY, true);
             } else {
                 position = random.nextInt(mTilesY - 1);
                 if (position >= mBlackTileY) position++;
-                playTile(mBlackTileX, position);
+                playTile(mBlackTileX, position, true);
             }
         }
 
@@ -219,11 +227,14 @@ public class PuzzleBoardView extends ViewGroup {
     }
 
     void startGame() {
-        mGameInProgress = true;
-        requestLayout();
+        if (!mIsGameStarted) {
+            mShouldAcceptTouchEvents = true;
+            requestLayout();
+        }
     }
 
-    public void playTile(int x, int y) {
+    public void playTile(int x, int y, boolean isShuffleMove) {
+        if (!isShuffleMove) mIsGameStarted = true;
         TileView temp = mTiles[mBlackTileX][mBlackTileY];
         if (x == mBlackTileX) {
             if (y < mBlackTileY) {
@@ -253,7 +264,7 @@ public class PuzzleBoardView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!mGameInProgress || event == null) return true;
+        if (!mShouldAcceptTouchEvents || event == null) return true;
         int eventX = (int) event.getX();
         int eventY = (int) event.getY();
 
@@ -300,7 +311,7 @@ public class PuzzleBoardView extends ViewGroup {
                 boolean moveY = mActiveTileX == mBlackTileX;
 
                 if (makeTheMove) {
-                    playTile(mActiveTileX, mActiveTileY);
+                    playTile(mActiveTileX, mActiveTileY, false);
                     mPuzzleComplete = isPuzzleComplete();
                 }
                 requestLayout();

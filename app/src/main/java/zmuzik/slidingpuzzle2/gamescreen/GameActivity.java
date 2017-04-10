@@ -99,7 +99,6 @@ public class GameActivity extends Activity implements GameScreenView, ShakeDetec
     @Override
     public void onShake() {
         shuffle(null);
-        mShakeDetector.unRegister();
     }
 
     public void finishWithMessage(int stringId) {
@@ -150,7 +149,7 @@ public class GameActivity extends Activity implements GameScreenView, ShakeDetec
 
     public void shuffle(View v) {
         mShuffleBtn.setVisibility(View.GONE);
-        if (mBoard != null) mBoard.shuffle();
+        if (mBoard != null) mBoard.maybeShuffle();
     }
 
     void adjustBoardDimensions(PuzzleBoardView board, Bitmap bitmap) {
