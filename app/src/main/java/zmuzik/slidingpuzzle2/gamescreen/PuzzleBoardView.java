@@ -159,7 +159,6 @@ public class PuzzleBoardView extends ViewGroup {
                 }
             }
         }
-        mToaster.show(R.string.congrats);
         return true;
     }
 
@@ -324,6 +323,9 @@ public class PuzzleBoardView extends ViewGroup {
                 if (makeTheMove) {
                     playTile(mActiveTileX, mActiveTileY, false);
                     mPuzzleComplete = isPuzzleComplete();
+                    if (mPuzzleComplete) {
+                        onGameFinished();
+                    }
                 }
                 requestLayout();
                 mMoveDeltaX = 0;
@@ -346,6 +348,16 @@ public class PuzzleBoardView extends ViewGroup {
                 return true;
         }
         return true;
+    }
+
+    private void onGameFinished() {
+        mToaster.show(R.string.congrats);
+        for (int y = 0; y < mTilesY; y++) {
+            for (int x = 0; x < mTilesX; x++) {
+                mTiles[x][y].setDisplayNumbers(false);
+                mTiles[x][y].invalidate();
+            }
+        }
     }
 
     int getTileX(TileView tile) {
