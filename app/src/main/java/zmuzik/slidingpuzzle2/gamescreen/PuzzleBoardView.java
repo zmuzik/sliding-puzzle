@@ -39,10 +39,8 @@ public class PuzzleBoardView extends ViewGroup {
     private int mMoveDeltaX, mMoveDeltaY;
     private int mActiveTileX, mActiveTileY;
     private int mBlackTileX, mBlackTileY;
-    private boolean mPuzzleComplete;
-    private boolean mShouldAcceptTouchEvents;
-    private boolean mIsGameInProgress;
-    private boolean mIsShuffleInProgress;
+    private State mState = State.LOADING;
+
     private Boolean mDisplayNumbers;
 
     @Inject
@@ -51,6 +49,8 @@ public class PuzzleBoardView extends ViewGroup {
     public Toaster mToaster;
     @Inject
     public GameScreenView mView;
+    @Inject
+    public GameScreenPresenter mPresenter;
 
     public PuzzleBoardView(Context context) {
         super(context);
@@ -62,6 +62,15 @@ public class PuzzleBoardView extends ViewGroup {
 
     public PuzzleBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    enum State {
+        LOADING,  // before pic is loaded and board initialized
+        LOADED,   // board loaded but not shuffled yet
+        SHUFFLING,// shuffling in progress (animating), don't accept any touch events
+        SHUFFLED, // ready to play
+        PLAYING,  // game in progress
+        FINISHED  // game completed, don't accept touch events
     }
 
     @Override
@@ -89,7 +98,6 @@ public class PuzzleBoardView extends ViewGroup {
 
     public void setBitmap(Bitmap bitmap) {
         mCompletePictureBitmap = bitmap;
-
         initTiles();
     }
 
@@ -110,6 +118,7 @@ public class PuzzleBoardView extends ViewGroup {
         // sets the black tile to the last tile of the grid
         mBlackTileX = mTilesX - 1;
         mBlackTileY = mTilesY - 1;
+        mState = State.LOADED;
     }
 
     @Override
@@ -129,7 +138,7 @@ public class PuzzleBoardView extends ViewGroup {
         for (int i = 0; i < mTilesX; i++) {
             for (int j = 0; j < mTilesY; j++) {
                 TileView tile = mTiles[i][j];
-                if (mPuzzleComplete || i != mBlackTileX || j != mBlackTileY) {
+                if (mState == State.FINISHED || i != mBlackTileX || j != mBlackTileY) {
                     int x = i * mTileWidth;
                     int y = j * mTileHeight;
                     if (isHorizPlayable(i, j)) {
@@ -173,13 +182,13 @@ public class PuzzleBoardView extends ViewGroup {
     }
 
     public void maybeShuffle() {
-        if (!mIsGameInProgress) {
+        if (mState == State.LOADED || mState == State.SHUFFLED) {
             shuffle();
         }
     }
 
     public void shuffle() {
-        mIsShuffleInProgress = true;
+        mState = State.SHUFFLING;
         mView.hideShuffleIcon();
         requestLayout();
         Random random = new Random();
@@ -218,28 +227,23 @@ public class PuzzleBoardView extends ViewGroup {
             }
         }
         if (animY == null) {
-            startGame();
+            mState = State.SHUFFLED;
+            requestLayout();
         } else {
             animY.addEndListener(new DynamicAnimation.OnAnimationEndListener() {
                 @Override
                 public void onAnimationEnd(DynamicAnimation animation, boolean canceled,
                                            float value, float velocity) {
-                    startGame();
+                    mState = State.SHUFFLED;
+                    requestLayout();
                 }
             });
         }
     }
 
-    void startGame() {
-        if (!mIsGameInProgress) {
-            mShouldAcceptTouchEvents = true;
-            requestLayout();
-            mIsShuffleInProgress = false;
-        }
-    }
 
     public void playTile(int x, int y, boolean isShuffleMove) {
-        if (!isShuffleMove) mIsGameInProgress = true;
+        if (!isShuffleMove) mState = State.PLAYING;
         TileView temp = mTiles[mBlackTileX][mBlackTileY];
         if (x == mBlackTileX) {
             if (y < mBlackTileY) {
@@ -269,18 +273,24 @@ public class PuzzleBoardView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!mShouldAcceptTouchEvents) {
-            if (!mIsShuffleInProgress) {
-                shuffle();
-            }
+        // ignore touch events in some states
+        if (mState == State.LOADING
+                || mState == State.SHUFFLING
+                || mState == State.FINISHED) {
             return true;
         }
+
+        if (mState == State.LOADED) {
+            shuffle();
+            return true;
+        }
+
         int eventX = (int) event.getX();
         int eventY = (int) event.getY();
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (!mPuzzleComplete) {
+                if (mState == State.SHUFFLED || mState == State.PLAYING) {
                     mDownX = eventX;
                     mDownY = eventY;
                     mActiveTileX = mDownX / mTileWidth;
@@ -322,8 +332,7 @@ public class PuzzleBoardView extends ViewGroup {
 
                 if (makeTheMove) {
                     playTile(mActiveTileX, mActiveTileY, false);
-                    mPuzzleComplete = isPuzzleComplete();
-                    if (mPuzzleComplete) {
+                    if (isPuzzleComplete()) {
                         onGameFinished();
                     }
                 }
@@ -351,6 +360,7 @@ public class PuzzleBoardView extends ViewGroup {
     }
 
     private void onGameFinished() {
+        mState = State.FINISHED;
         mToaster.show(R.string.congrats);
         for (int y = 0; y < mTilesY; y++) {
             for (int x = 0; x < mTilesX; x++) {
