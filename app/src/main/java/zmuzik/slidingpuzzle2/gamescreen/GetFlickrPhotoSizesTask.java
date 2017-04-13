@@ -43,7 +43,12 @@ class GetFlickrPhotoSizesTask extends AsyncTask<Void, Void, Void> {
             Crashlytics.logException(e);
             mPresenter.finishWithMessage(R.string.unable_to_load_flickr_picture);
         }
-        mResult = mPhoto.getFullPicUrl(mMaxScreenDim, mSizes);
+        if (mSizes == null) {
+            mResult = null;
+            mPresenter.finishWithMessage(R.string.unable_to_load_flickr_picture);
+        } else {
+            mResult = mPhoto.getFullPicUrl(mMaxScreenDim, mSizes);
+        }
         return null;
     }
 
