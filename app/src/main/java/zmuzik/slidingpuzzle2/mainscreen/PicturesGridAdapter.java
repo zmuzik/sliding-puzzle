@@ -25,7 +25,6 @@ import zmuzik.slidingpuzzle2.Conf;
 import zmuzik.slidingpuzzle2.R;
 import zmuzik.slidingpuzzle2.Utils;
 import zmuzik.slidingpuzzle2.common.view.SquareImageView;
-import zmuzik.slidingpuzzle2.flickr.Photo;
 
 public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapter.ViewHolder> {
 
@@ -102,12 +101,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
                     }
                 });
 
-        holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                runGame(position);
-            }
-        });
+        holder.image.setOnClickListener(v -> runGame(position));
     }
 
 
@@ -121,12 +115,7 @@ public class PicturesGridAdapter extends RecyclerView.Adapter<PicturesGridAdapte
         holder.progressBar.setVisibility(View.GONE);
         holder.orientationIcon.setVisibility(View.GONE);
         holder.nextTv.setVisibility(View.VISIBLE);
-        holder.nextTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showNextPage();
-            }
-        });
+        holder.nextTv.setOnClickListener(v -> showNextPage());
     }
 
     private void showNextPage() {

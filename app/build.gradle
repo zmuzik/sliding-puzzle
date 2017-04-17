@@ -53,6 +53,11 @@ android {
         archivesBaseName = "zmuzik-slidingpuzzle2-v$versionName"
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     signingConfigs {
         release {
             storeFile file("../../secrets/zmuzik.keystore")
