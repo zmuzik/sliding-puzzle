@@ -23,7 +23,7 @@ public class PreferencesHelper {
     }
 
     public void setGridDimShort(int timestamp) {
-        mSharedPreferences.edit().putInt(GRID_DIM_SHORT, timestamp).commit();
+        mSharedPreferences.edit().putInt(GRID_DIM_SHORT, timestamp).apply();
     }
 
     public int getGridDimShort() {
@@ -31,7 +31,7 @@ public class PreferencesHelper {
     }
 
     public void setGridDimLong(int timestamp) {
-        mSharedPreferences.edit().putInt(GRID_DIM_LONG, timestamp).commit();
+        mSharedPreferences.edit().putInt(GRID_DIM_LONG, timestamp).apply();
     }
 
     public int getGridDimLong() {
@@ -47,7 +47,7 @@ public class PreferencesHelper {
     }
 
     public void setShouldAskReadStoragePerm(boolean yesNo) {
-        mSharedPreferences.edit().putBoolean(SHOULD_ASK_READ_STORAGE_PERM, yesNo).commit();
+        mSharedPreferences.edit().putBoolean(SHOULD_ASK_READ_STORAGE_PERM, yesNo).apply();
     }
 
     public boolean shouldAskReadStoragePerm() {
