@@ -46,7 +46,7 @@ class UpdateCameraFilesTask(presenter: MainScreenPresenter) :
     override fun onPostExecute(aVoid: Void?) {
         super.onPostExecute(aVoid)
         if (presenter!!.get() != null) {
-            presenter!!.get()!!.updateCameraPictures(filesList)
+            presenter!!.get()!!.updateCameraPictures(filesList!!)
         }
     }
 
