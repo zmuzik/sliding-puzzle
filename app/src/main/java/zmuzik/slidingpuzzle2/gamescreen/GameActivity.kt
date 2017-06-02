@@ -8,15 +8,11 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
-
+import butterknife.ButterKnife
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-
-import javax.inject.Inject
-
-import butterknife.ButterKnife
 import kotlinx.android.synthetic.main.activity_game.*
 import zmuzik.slidingpuzzle2.App
 import zmuzik.slidingpuzzle2.R
@@ -25,6 +21,7 @@ import zmuzik.slidingpuzzle2.common.PreferencesHelper
 import zmuzik.slidingpuzzle2.common.ShakeDetector
 import zmuzik.slidingpuzzle2.common.Toaster
 import zmuzik.slidingpuzzle2.flickr.FlickrApi
+import javax.inject.Inject
 
 class GameActivity : Activity(), GameScreenView, ShakeDetector.OnShakeListener {
 
@@ -36,7 +33,7 @@ class GameActivity : Activity(), GameScreenView, ShakeDetector.OnShakeListener {
     internal var boardHeight: Int = 0
 
     @Inject
-    lateinit var prefsHelper: PreferencesHelper
+    lateinit var prefs: PreferencesHelper
     @Inject
     lateinit var toaster: Toaster
     @Inject
@@ -53,34 +50,27 @@ class GameActivity : Activity(), GameScreenView, ShakeDetector.OnShakeListener {
         inject()
         setContentView(R.layout.activity_game)
         ButterKnife.bind(this)
-        val intent = intent
         if (intent == null) {
             toaster.show(R.string.picture_not_supplied)
             finish()
         }
 
-        setScreenOrientation(getIntent().extras.getBoolean(Keys.IS_HORIZONTAL))
+        setScreenOrientation(intent.extras.getBoolean(Keys.IS_HORIZONTAL))
         resolveScreenDimensions()
 
         progressBar.visibility = View.VISIBLE
-        //mBoard.setVisibility(View.GONE);
-        presenter.requestPictureUri(intent!!)
-
+        intent?.let { presenter.requestPictureUri(it) }
     }
 
     override fun onResume() {
         super.onResume()
-        if (shakeDetector != null) {
-            shakeDetector.register()
-            shakeDetector.setOnShakeListener(this)
-        }
+        shakeDetector.register()
+        shakeDetector.setOnShakeListener(this)
     }
 
     override fun onPause() {
         super.onPause()
-        if (shakeDetector != null) {
-            shakeDetector.unRegister()
-        }
+        shakeDetector.unRegister()
     }
 
     override fun onShake() {
@@ -147,16 +137,11 @@ class GameActivity : Activity(), GameScreenView, ShakeDetector.OnShakeListener {
             boardHeight = screenHeight
             boardWidth = (screenHeight * origPictureSideRatio).toInt()
         }
-        val widthMultiple = if (boardWidth > boardHeight)
-            prefsHelper.gridDimLong
-        else
-            prefsHelper.gridDimShort
-        val heightMultiple = if (boardWidth > boardHeight)
-            prefsHelper.gridDimShort
-        else
-            prefsHelper.gridDimLong
-        boardWidth = boardWidth - boardWidth % widthMultiple
-        boardHeight = boardHeight - boardHeight % heightMultiple
+        val widthMultiple = if (boardWidth > boardHeight) prefs.gridDimLong else prefs.gridDimShort
+        val heightMultiple = if (boardWidth > boardHeight) prefs.gridDimShort else prefs.gridDimLong
+
+        boardWidth -= boardWidth % widthMultiple
+        boardHeight -= boardHeight % heightMultiple
 
         board.setDimensions(boardWidth, boardHeight)
     }

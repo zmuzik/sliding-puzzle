@@ -19,9 +19,11 @@ class PuzzleBoardView : ViewGroup {
     internal val SHUFFLE_STIFFNESS = SpringForce.STIFFNESS_LOW
     internal val SHUFFLE_DAMPING_RATIO = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY
 
+    val displayNumbers: Boolean by lazy { prefsHelper.displayTileNumbers }
+
     internal var tilesX: Int = 0
     internal var tilesY: Int = 0
-    internal var tiles: Array<Array<TileView?>>? = null
+    lateinit var tiles: Array<Array<TileView>>
 
     var completePictureBitmap: Bitmap? = null
 
@@ -38,8 +40,6 @@ class PuzzleBoardView : ViewGroup {
     private var blackTileY: Int = 0
     private var state = State.LOADING
 
-    private var displayNumbers: Boolean? = null
-
     @Inject
     lateinit var prefsHelper: PreferencesHelper
     @Inject
@@ -49,15 +49,13 @@ class PuzzleBoardView : ViewGroup {
     @Inject
     lateinit var presenter: GameScreenPresenter
 
-    constructor(context: Context) : super(context) {}
+    constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) :
-            super(context, attrs) {
-    }
+            super(context, attrs)
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) :
-            super(context, attrs, defStyleAttr) {
-    }
+            super(context, attrs, defStyleAttr)
 
     internal enum class State {
         LOADING, // before pic is loaded and board initialized
@@ -70,9 +68,7 @@ class PuzzleBoardView : ViewGroup {
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        if (context is GameActivity) {
-            (context as GameActivity).component.inject(this)
-        }
+        if (context is GameActivity) (context as GameActivity).component.inject(this)
     }
 
     fun setDimensions(width: Int, height: Int) {
@@ -96,21 +92,20 @@ class PuzzleBoardView : ViewGroup {
     }
 
     inline fun <reified INNER> array2d(
-            sizeOuter: Int, sizeInner: Int, noinline innerInit: (Int)->INNER): Array<Array<INNER>>
+            sizeOuter: Int, sizeInner: Int, noinline innerInit: (Int) -> INNER): Array<Array<INNER>>
             = Array(sizeOuter) { Array<INNER>(sizeInner, innerInit) }
 
     internal fun initTiles() {
-        //tiles = Array<Array<TileView>>(tilesX) { arrayOfNulls<TileView>(tilesY) }
-        tiles = array2d<TileView?>(tilesX, tilesY) { null }
+        tiles = array2d<TileView>(tilesX, tilesY) { TileView(context) }
         var tileNumber = 1
         for (y in 0..tilesY - 1) {
             for (x in 0..tilesX - 1) {
                 val tileBitmap = Bitmap.createBitmap(completePictureBitmap,
                         x * tileWidth, y * tileHeight,
                         tileWidth, tileHeight)
-                tiles!![x][y] = TileView(context, x, y, tileBitmap, tileNumber)
-                tiles!![x][y]!!.setDisplayNumbers(displayNumbers())
-                addView(tiles!![x][y])
+                tiles[x][y] = TileView(context, x, y, tileBitmap, tileNumber)
+                tiles[x][y].setDisplayNumbers(displayNumbers)
+                addView(tiles[x][y])
                 tileNumber++
             }
         }
@@ -122,19 +117,16 @@ class PuzzleBoardView : ViewGroup {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val count = childCount
-        for (i in 0..count - 1) {
-            val child = getChildAt(i)
-            measureChild(child, widthMeasureSpec, heightMeasureSpec)
-        }
+        (0..childCount - 1)
+                .map { getChildAt(it) }
+                .forEach { measureChild(it, widthMeasureSpec, heightMeasureSpec) }
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        if (tiles == null) return
+        if (state == State.LOADING) return
         for (i in 0..tilesX - 1) {
             for (j in 0..tilesY - 1) {
-                val tile = tiles!![i][j]
                 if (state == State.FINISHED || i != blackTileX || j != blackTileY) {
                     var x = i * tileWidth
                     var y = j * tileHeight
@@ -143,24 +135,16 @@ class PuzzleBoardView : ViewGroup {
                     } else if (isVertPlayable(i, j)) {
                         y += moveDeltaY
                     }
-                    tile!!.layout(x, y, x + tileWidth, y + tileHeight)
+                    tiles[i][j].layout(x, y, x + tileWidth, y + tileHeight)
                 }
             }
         }
     }
 
-    private fun displayNumbers(): Boolean {
-        if (displayNumbers == null) {
-            displayNumbers = prefsHelper.displayTileNumbers
-        }
-        return displayNumbers!!
-    }
-
     private fun isPuzzleComplete(): Boolean {
         for (i in 0..tilesX - 1) {
             for (j in 0..tilesY - 1) {
-                val t = tiles!![i][j]
-                if (t!!.origX != i || t!!.origY != j) {
+                if (tiles[i][j].origX != i || tiles[i][j].origY != j) {
                     return false
                 }
             }
@@ -170,12 +154,12 @@ class PuzzleBoardView : ViewGroup {
 
     fun isHorizPlayable(x: Int, y: Int): Boolean {
         return y == blackTileY && y == activeTileY &&
-                (activeTileX <= x && x < blackTileX || blackTileX < x && x <= activeTileX)
+                (x in activeTileX..(blackTileX - 1) || x in (blackTileX + 1)..activeTileX)
     }
 
     fun isVertPlayable(x: Int, y: Int): Boolean {
         return x == blackTileX && x == activeTileX &&
-                (activeTileY <= y && y < blackTileY || blackTileY < y && y <= activeTileY)
+                (y in activeTileY..(blackTileY - 1) || y in (blackTileY + 1)..activeTileY)
     }
 
     fun maybeShuffle() {
@@ -186,7 +170,7 @@ class PuzzleBoardView : ViewGroup {
 
     fun shuffle() {
         state = State.SHUFFLING
-        view!!.hideShuffleIcon()
+        view.hideShuffleIcon()
         requestLayout()
         val random = Random()
         var position: Int
@@ -208,7 +192,7 @@ class PuzzleBoardView : ViewGroup {
         for (x in 0..tilesX - 1) {
             for (y in 0..tilesY - 1) {
                 if (x == blackTileX && y == blackTileY) continue
-                val tile = tiles!![x][y]
+                val tile = tiles[x][y]
                 val endX = x * tileWidth
                 val endY = y * tileHeight
                 animX = SpringAnimation(tile, SpringAnimation.X, endX.toFloat())
@@ -232,47 +216,44 @@ class PuzzleBoardView : ViewGroup {
         }
     }
 
-
     fun playTile(x: Int, y: Int, isShuffleMove: Boolean) {
         if (!isShuffleMove) state = State.PLAYING
-        val temp = tiles!![blackTileX][blackTileY]
+        val temp = tiles[blackTileX][blackTileY]
         if (x == blackTileX) {
             if (y < blackTileY) {
                 for (i in blackTileY - 1 downTo y) {
-                    tiles!![blackTileX][i + 1] = tiles!![blackTileX][i]
+                    tiles[blackTileX][i + 1] = tiles[blackTileX][i]
                 }
             } else if (y > blackTileY) {
                 for (i in blackTileY + 1..y) {
-                    tiles!![blackTileX][i - 1] = tiles!![blackTileX][i]
+                    tiles[blackTileX][i - 1] = tiles[blackTileX][i]
                 }
             }
         } else if (y == blackTileY) {
             if (x < blackTileX) {
                 for (i in blackTileX - 1 downTo x) {
-                    tiles!![i + 1][blackTileY] = tiles!![i][blackTileY]
+                    tiles[i + 1][blackTileY] = tiles[i][blackTileY]
                 }
             } else if (x > blackTileX) {
                 for (i in blackTileX + 1..x) {
-                    tiles!![i - 1][blackTileY] = tiles!![i][blackTileY]
+                    tiles[i - 1][blackTileY] = tiles[i][blackTileY]
                 }
             }
         }
-        tiles!![x][y] = temp
+        tiles[x][y] = temp
         blackTileX = x
         blackTileY = y
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        // ignore touch events in some states
-        if (state == State.LOADING
-                || state == State.SHUFFLING
-                || state == State.FINISHED) {
-            return true
-        }
-
-        if (state == State.LOADED) {
-            shuffle()
-            return true
+        when (state) {
+            State.LOADING, State.SHUFFLING, State.FINISHED -> return true
+            State.LOADED -> {
+                shuffle()
+                return true
+            }
+            else -> {
+            }
         }
 
         val eventX = event.x.toInt()
@@ -350,11 +331,11 @@ class PuzzleBoardView : ViewGroup {
 
     private fun onGameFinished() {
         state = State.FINISHED
-        toaster!!.show(R.string.congrats)
+        toaster.show(R.string.congrats)
         for (y in 0..tilesY - 1) {
             for (x in 0..tilesX - 1) {
-                tiles!![x][y]!!.setDisplayNumbers(false)
-                tiles!![x][y]!!.invalidate()
+                tiles[x][y].setDisplayNumbers(false)
+                tiles[x][y].invalidate()
             }
         }
     }
@@ -362,7 +343,7 @@ class PuzzleBoardView : ViewGroup {
     internal fun getTileX(tile: TileView): Int {
         for (y in 0..tilesY - 1) {
             for (x in 0..tilesX - 1) {
-                if (tiles!![x][y] == tile) return x
+                if (tiles[x][y] == tile) return x
             }
         }
         return -1
@@ -371,7 +352,7 @@ class PuzzleBoardView : ViewGroup {
     internal fun getTileY(tile: TileView): Int {
         for (y in 0..tilesY - 1) {
             for (x in 0..tilesX - 1) {
-                if (tiles!![x][y] == tile) return y
+                if (tiles[x][y] == tile) return y
             }
         }
         return -1
@@ -381,23 +362,15 @@ class PuzzleBoardView : ViewGroup {
         val result = ArrayList<TileView>()
         if (activeX == blackX) {
             if (activeY < blackY) {
-                for (i in activeY..blackY - 1) {
-                    result.add(tiles!![activeX][i]!!)
-                }
+                (activeY..blackY - 1).mapTo(result) { tiles[activeX][it] }
             } else if (blackY < activeY) {
-                for (i in blackY + 1..activeY) {
-                    result.add(tiles!![activeX][i]!!)
-                }
+                (blackY + 1..activeY).mapTo(result) { tiles[activeX][it] }
             }
         } else if (activeY == blackY) {
             if (activeX < blackX) {
-                for (i in activeX..blackX - 1) {
-                    result.add(tiles!![i][activeY]!!)
-                }
+                (activeX..blackX - 1).mapTo(result) { tiles[it][activeY] }
             } else if (blackX < activeX) {
-                for (i in blackX + 1..activeX) {
-                    result.add(tiles!![i][activeY]!!)
-                }
+                (blackX + 1..activeX).mapTo(result) { tiles[it][activeY] }
             }
         }
         return result
