@@ -14,22 +14,22 @@ import javax.inject.Inject
  */
 
 class Toaster @Inject
-constructor(internal var mApplication: Application) {
+constructor(internal var application: Application) {
 
     private val mainThreadHandler = Handler(Looper.getMainLooper())
     private val DEFAULT_TOAST_LENGTH = Toast.LENGTH_SHORT
 
-    fun show(stringId: Int) = show(mApplication.getString(stringId))
+    fun show(stringId: Int) = show(application.getString(stringId))
 
-    fun show(stringId: Int, length: Int) = show(mApplication.getString(stringId), length)
+    fun show(stringId: Int, length: Int) = show(application.getString(stringId), length)
 
     fun show(message: String) = show(message, Toast.LENGTH_SHORT)
 
     fun show(message: String, length: Int) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            Toast.makeText(mApplication, message, length).show()
+            Toast.makeText(application, message, length).show()
         } else {
-            mainThreadHandler.post { Toast.makeText(mApplication, message, length).show() }
+            mainThreadHandler.post { Toast.makeText(application, message, length).show() }
         }
     }
 }
