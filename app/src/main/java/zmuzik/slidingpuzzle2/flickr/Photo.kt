@@ -1,7 +1,7 @@
 package zmuzik.slidingpuzzle2.flickr
 
 class Photo {
-    var id: String? = null
+    var id: String = ""
     var secret: String? = null
     var server: String? = null
     var farm: Int = 0

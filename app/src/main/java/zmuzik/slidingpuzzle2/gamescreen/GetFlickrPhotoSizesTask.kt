@@ -8,6 +8,7 @@ import zmuzik.slidingpuzzle2.R
 import zmuzik.slidingpuzzle2.flickr.FlickrApi
 import zmuzik.slidingpuzzle2.flickr.Photo
 import zmuzik.slidingpuzzle2.flickr.Size
+import java.lang.ref.WeakReference
 
 /**
  * Created by Zbynek Muzik on 2017-04-03.
@@ -17,32 +18,29 @@ internal class GetFlickrPhotoSizesTask(private val photo: Photo,
                                        private val api: FlickrApi) :
         AsyncTask<Void, Void, Void>() {
 
-    private val maxScreenDim: Int = presenter.getMaxScreenDim()
-    private var result: String? = null
-    private var sizes: List<Size>? = null
+    val presenterWr = WeakReference(presenter)
+    val maxScreenDim: Int = presenter.getMaxScreenDim()
+    var sizes: List<Size>? = null
+    var result: String? = null
 
     override fun doInBackground(vararg params: Void): Void? {
-        val photoId = photo.id
         try {
-            val call = api.getSizes(photoId!!)
-            sizes = call.execute().body().sizes!!.size
+            val call = api.getSizes(photo.id)
+            sizes = call.execute().body().sizes?.size
         } catch (e: Exception) {
-            result = null
             Crashlytics.logException(e)
-            presenter.finishWithMessage(R.string.unable_to_load_flickr_picture)
         }
 
-        if (sizes == null) {
-            result = null
-            presenter.finishWithMessage(R.string.unable_to_load_flickr_picture)
-        } else {
-            result = photo.getFullPicUrl(maxScreenDim, sizes!!)
-        }
+        sizes?.let { result = photo.getFullPicUrl(maxScreenDim, it) }
         return null
     }
 
     override fun onPostExecute(aVoid: Void?) {
         super.onPostExecute(aVoid)
-        presenter.loadPictureUri(result!!)
+        result?.let {
+            presenterWr.get()?.loadPictureUri(it)
+            return
+        }
+        presenterWr.get()?.finishWithMessage(R.string.unable_to_load_flickr_picture)
     }
 }

@@ -47,8 +47,7 @@ constructor() {
             loadPictureUri(uri)
         } else {
             val photoStr = intent.extras.getString(Keys.PHOTO)
-            val gson = Gson()
-            val photo = gson.fromJson(photoStr, Photo::class.java)
+            val photo = Gson().fromJson(photoStr, Photo::class.java)
             if (isOnline(mContext)) {
                 GetFlickrPhotoSizesTask(photo, this, mFlickrApi).execute()
             } else {
