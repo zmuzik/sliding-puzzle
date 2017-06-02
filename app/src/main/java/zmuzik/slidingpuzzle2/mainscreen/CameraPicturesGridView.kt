@@ -2,7 +2,6 @@ package zmuzik.slidingpuzzle2.mainscreen
 
 import android.content.Context
 import android.view.View
-import butterknife.OnClick
 import kotlinx.android.synthetic.main.pictures_grid.view.*
 import zmuzik.slidingpuzzle2.R
 

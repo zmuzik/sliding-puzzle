@@ -8,8 +8,6 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.TextView
-import butterknife.OnClick
 import kotlinx.android.synthetic.main.pictures_grid.view.*
 import zmuzik.slidingpuzzle2.R
 import zmuzik.slidingpuzzle2.flickr.Photo
@@ -26,50 +24,43 @@ internal class FlickrPicturesGridView(context: Context) : BasePicturesGridView(c
         fab.visibility = View.VISIBLE
     }
 
-    @OnClick(R.id.fab)
     override fun onFabClicked(fab: View) {
         val layout = LayoutInflater.from(context).inflate(R.layout.flickr_search_dialog, null)
-        val keywordsEt = layout.findViewById(R.id.keywordEt) as EditText
-
+        val keywordEt = layout.findViewById(R.id.keywordEt) as EditText
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.flickr_search)
         builder.setView(layout)
         builder.setPositiveButton(R.string.search) { dialog, which ->
-            if (keywordsEt != null && keywordsEt.text != null) {
-                search(keywordsEt.text.toString())
-            }
+            keywordEt.text?.let { search(it.toString()) }
+            dialog?.dismiss()
         }
-        builder.setNegativeButton(android.R.string.cancel) { dialog, which -> dialog?.dismiss() }
+        builder.setNegativeButton(android.R.string.cancel) { dialog, which ->
+            dialog?.dismiss()
+        }
         val dialog = builder.create()
-        keywordsEt.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+
+        keywordEt.setOnEditorActionListener({ v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                if (keywordsEt != null && keywordsEt.text != null) {
-                    search(keywordsEt.text.toString())
-                }
+                keywordEt.text?.let { search(it.toString()) }
                 dialog.dismiss()
-                return@OnEditorActionListener true
+                true
+            } else {
+                false
             }
-            false
         })
 
-        keywordsEt.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN) {
-                when (keyCode) {
-                    KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
-                        if (keywordsEt != null && keywordsEt.text != null) {
-                            search(keywordsEt.text.toString())
-                        }
-                        dialog.dismiss()
-                        return@OnKeyListener true
-                    }
-                    else -> {
-                    }
-                }
+        keywordEt.setOnKeyListener({ v, keyCode, event ->
+            if ((event.action == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
+                keywordEt.text?.let { search(it.toString()) }
+                dialog.dismiss()
+                true
+            } else {
+                false
             }
-            false
         })
 
-        dialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.show()
     }
 

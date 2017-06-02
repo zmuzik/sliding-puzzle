@@ -32,9 +32,7 @@ open class BasePicturesGridView(context: Context) : RelativeLayout(context) {
     open fun init() {
         LayoutInflater.from(context).inflate(R.layout.pictures_grid, this)
         ButterKnife.bind(this, this)
-        if (context is MainActivity) {
-            (context as MainActivity).component.inject(this)
-        }
+        if (context is MainActivity) (context as MainActivity).component.inject(this)
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = GridLayoutManager(context, getColumnsNumber())
         fab.setOnClickListener { onFabClicked(it) }
@@ -49,16 +47,10 @@ open class BasePicturesGridView(context: Context) : RelativeLayout(context) {
     fun isHorizontal() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     fun getColumnsNumber(): Int {
-        if (isTablet(context)) {
-            return if (isHorizontal())
-                Conf.GRID_COLUMNS_LANDSCAPE_TABLET
-            else
-                Conf.GRID_COLUMNS_PORTRAIT_TABLET
+        return if (isTablet(context)) {
+            if (isHorizontal()) Conf.GRID_COLS_LANDSCAPE_TABLET else Conf.GRID_COLS_PORTRAIT_TABLET
         } else {
-            return if (isHorizontal())
-                Conf.GRID_COLUMNS_LANDSCAPE_HANDHELD
-            else
-                Conf.GRID_COLUMNS_PORTRAIT_HANDHELD
+            if (isHorizontal()) Conf.GRID_COLS_LANDSCAPE_PHONE else Conf.GRID_COLS_PORTRAIT_PHONE
         }
     }
 
@@ -67,11 +59,9 @@ open class BasePicturesGridView(context: Context) : RelativeLayout(context) {
         fab.visibility = View.VISIBLE
     }
 
-    open fun onFabClicked(fab: View) {
-    }
+    open fun onFabClicked(fab: View) {}
 
-    open fun onRequestPermissionsButtonClicked(fab: View) {
-    }
+    open fun onRequestPermissionsButtonClicked(fab: View) {}
 
     open fun requestUpdate() {
         // this should call the presenter to request pictures
