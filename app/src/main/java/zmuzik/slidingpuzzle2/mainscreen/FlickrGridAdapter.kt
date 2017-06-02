@@ -4,22 +4,18 @@ import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import zmuzik.slidingpuzzle2.flickr.Photo
-import java.util.*
 
 class FlickrGridAdapter(ctx: Context, var photos: List<Photo>, columns: Int) :
-        PicturesGridAdapter(ctx, null, columns) {
+        PicturesGridAdapter(ctx, mutableListOf<String>(), columns) {
 
     init {
-        pictures = ArrayList<OrientedPicture>()
-        for (photo in photos) {
-            pictures!!.add(OrientedPicture(photo.thumbUrl))
-        }
+        pictures = photos.map { OrientedPicture(it.thumbUrl) }
     }
 
     override fun setOrientationIcon(orientationIcon: ImageView, position: Int) {
         val photo = photos[position]
-        orientationIcon.visibility = View.VISIBLE
         val isHorizontal = photo.width_l > photo.height_l
+        orientationIcon.visibility = View.VISIBLE
         orientationIcon.rotation = if (isHorizontal) 270f else 0f
     }
 

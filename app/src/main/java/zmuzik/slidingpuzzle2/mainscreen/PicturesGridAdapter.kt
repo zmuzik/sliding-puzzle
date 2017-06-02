@@ -14,15 +14,14 @@ import kotlinx.android.synthetic.main.item_pictures_grid.view.*
 import zmuzik.slidingpuzzle2.Conf
 import zmuzik.slidingpuzzle2.R
 import zmuzik.slidingpuzzle2.isBitmapHorizontal
-import java.util.*
 import javax.inject.Inject
 
-open class PicturesGridAdapter(val context: Context, val uris: List<String>?, val columns: Int) :
+open class PicturesGridAdapter(val context: Context, val uris: List<String>, val columns: Int) :
         RecyclerView.Adapter<PicturesGridAdapter.ViewHolder>() {
 
     val TAG = this.javaClass.simpleName
 
-    var pictures: MutableList<OrientedPicture>? = null
+    open var pictures = uris.map { OrientedPicture(it) }
     var dim: Int = 0
     var page = 1
 
@@ -32,20 +31,11 @@ open class PicturesGridAdapter(val context: Context, val uris: List<String>?, va
     lateinit var application: Application
 
     init {
-        pictures = ArrayList<OrientedPicture>()
-        if (uris != null) {
-            for (uri in uris) {
-                pictures!!.add(OrientedPicture(uri))
-            }
-        }
-        if (context is MainActivity) {
-            context.component.inject(this)
-        }
+        if (context is MainActivity) context.component.inject(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PicturesGridAdapter.ViewHolder {
-        val v = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_pictures_grid, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_pictures_grid, parent, false)
         dim = parent.width / columns
         return ViewHolder(v)
     }
@@ -59,8 +49,8 @@ open class PicturesGridAdapter(val context: Context, val uris: List<String>?, va
     }
 
     open fun runGame(position: Int) {
-        val picture = pictures!![position]
-        presenter!!.runGame(picture.uri, picture.isHorizontal())
+        val picture = pictures[position]
+        presenter.runGame(picture.uri, picture.isHorizontal)
     }
 
     private fun showNextPage() {
@@ -74,55 +64,32 @@ open class PicturesGridAdapter(val context: Context, val uris: List<String>?, va
     }
 
     open fun setOrientationIcon(orientationIcon: ImageView, position: Int) {
+        val picture = pictures[position]
         orientationIcon.visibility = View.VISIBLE
-        val picture = pictures!![position]
-
-        orientationIcon.rotation = if (picture.isHorizontal()) 270f else 0f
+        orientationIcon.rotation = if (picture.isHorizontal) 270f else 0f
     }
 
     internal open val pageSize: Int
         get() = Conf.PAGE_SIZE
 
     private val displayedPicsCount: Int
-        get() {
-            if (pictures == null) return 0
-            return if (pictures!!.size < pageSize * page) pictures!!.size else pageSize * page
-        }
+        get() = if (pictures.size < pageSize * page) pictures.size else pageSize * page
 
     private val isMoreToDisplay: Boolean
-        get() {
-            if (pictures == null) return false
-            return pictures!!.size > pageSize * page
-        }
+        get() = pictures.size > pageSize * page
 
-    override fun getItemCount(): Int {
-        if (pictures == null) return 0
-        return if (isMoreToDisplay) displayedPicsCount + 1 else displayedPicsCount
-    }
+    override fun getItemCount() = if (isMoreToDisplay) displayedPicsCount + 1 else displayedPicsCount
 
-    private fun isFooterItem(position: Int): Boolean {
-        return position == itemCount - 1 && isMoreToDisplay
-    }
+    private fun isFooterItem(position: Int) = position == itemCount - 1 && isMoreToDisplay
 
     inner class OrientedPicture(var uri: String) {
-        var isHorizontal: Boolean? = null
-
-        fun setIsHorizontal(isHorizontal: Boolean) {
-            this.isHorizontal = isHorizontal
-        }
-
-        fun isHorizontal(): Boolean {
-            if (isHorizontal == null) {
-                isHorizontal = isBitmapHorizontal(application, uri)
-            }
-            return isHorizontal!!
-        }
+        val isHorizontal: Boolean by lazy { isBitmapHorizontal(application, uri) }
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bindRegularItem(position: Int) {
-            val uriString = pictures!![position].uri
+            val uriString = pictures[position].uri
             itemView.nextTv.visibility = View.GONE
             itemView.progressBar.visibility = View.VISIBLE
             Picasso.with(context).cancelRequest(itemView.image)
