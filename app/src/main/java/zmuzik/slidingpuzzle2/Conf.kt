@@ -11,7 +11,7 @@ object Conf {
 
     @JvmField val PAGE_SIZE = 12
 
-    @JvmField val FLICKR_REQUEST_IMAGES = 48
+    const val FLICKR_REQUEST_IMAGES = 48
 
     @JvmField val GRID_COLUMNS_PORTRAIT_HANDHELD = 2
     @JvmField val GRID_COLUMNS_LANDSCAPE_HANDHELD = 3

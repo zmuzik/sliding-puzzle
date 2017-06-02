@@ -34,7 +34,7 @@ class GetFlickrPicsPageTask(val mQuery: String, presenter: MainScreenPresenter, 
         }
 
         if (resp != null && resp!!.photos != null) {
-            mFlickrPhotos = resp!!.photos.photo
+            mFlickrPhotos = resp!!.photos!!.photo
         }
         return null
     }

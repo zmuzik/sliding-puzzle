@@ -24,8 +24,8 @@ internal class GetFlickrPhotoSizesTask(private val photo: Photo,
     override fun doInBackground(vararg params: Void): Void? {
         val photoId = photo.id
         try {
-            val call = api.getSizes(photoId)
-            sizes = call.execute().body().sizes.size
+            val call = api.getSizes(photoId!!)
+            sizes = call.execute().body().sizes!!.size
         } catch (e: Exception) {
             result = null
             Crashlytics.logException(e)
@@ -36,7 +36,7 @@ internal class GetFlickrPhotoSizesTask(private val photo: Photo,
             result = null
             presenter.finishWithMessage(R.string.unable_to_load_flickr_picture)
         } else {
-            result = photo.getFullPicUrl(maxScreenDim, sizes)
+            result = photo.getFullPicUrl(maxScreenDim, sizes!!)
         }
         return null
     }
