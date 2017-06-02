@@ -19,17 +19,11 @@ constructor(internal var mApplication: Application) {
     private val mainThreadHandler = Handler(Looper.getMainLooper())
     private val DEFAULT_TOAST_LENGTH = Toast.LENGTH_SHORT
 
-    fun show(stringId: Int) {
-        show(mApplication.getString(stringId))
-    }
+    fun show(stringId: Int) = show(mApplication.getString(stringId))
 
-    fun show(stringId: Int, length: Int) {
-        show(mApplication.getString(stringId), length)
-    }
+    fun show(stringId: Int, length: Int) = show(mApplication.getString(stringId), length)
 
-    fun show(message: String) {
-        show(message, Toast.LENGTH_SHORT)
-    }
+    fun show(message: String) = show(message, Toast.LENGTH_SHORT)
 
     fun show(message: String, length: Int) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
