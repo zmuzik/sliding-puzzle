@@ -5,7 +5,7 @@ package zmuzik.slidingpuzzle2.common
  */
 
 object Keys {
-    @JvmField val PICTURE_URI = "PICTURE_URI"
-    @JvmField val IS_HORIZONTAL = "IS_HORIZONTAL"
-    @JvmField val PHOTO = "PHOTO"
+    const val PICTURE_URI = "PICTURE_URI"
+    const val IS_HORIZONTAL = "IS_HORIZONTAL"
+    const val PHOTO = "PHOTO"
 }
