@@ -25,9 +25,7 @@ class Photo {
     //    o	original image, either a jpg, gif or png, depending on source format
 
     val thumbUrl: String
-        get() {
-            return "http://farm$farm.staticflickr.com/$server/${id}_${secret}_q.jpg"
-        }
+        get() = "http://farm$farm.staticflickr.com/$server/${id}_${secret}_q.jpg"
 
     fun getFullPicUrl(maxScreenDim: Int, sizes: List<Size>): String {
         var result = thumbUrl
