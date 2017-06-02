@@ -4,17 +4,11 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.ImageView
 
-class SquareImageView : ImageView {
+class SquareImageView
+@JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+        ImageView(context, attrs, defStyleAttr) {
 
-    constructor(context: Context) : super(context) {
-        scaleType = ImageView.ScaleType.CENTER_CROP
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        scaleType = ImageView.ScaleType.CENTER_CROP
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    init{
         scaleType = ImageView.ScaleType.CENTER_CROP
     }
 
@@ -24,4 +18,3 @@ class SquareImageView : ImageView {
         setMeasuredDimension(dim, dim)
     }
 }
-
