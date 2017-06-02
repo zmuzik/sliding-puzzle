@@ -11,7 +11,7 @@ import butterknife.ButterKnife
 import kotlinx.android.synthetic.main.pictures_grid.view.*
 import zmuzik.slidingpuzzle2.Conf
 import zmuzik.slidingpuzzle2.R
-import zmuzik.slidingpuzzle2.Utils
+import zmuzik.slidingpuzzle2.isTablet
 import javax.inject.Inject
 
 /**
@@ -49,7 +49,7 @@ open class BasePicturesGridView(context: Context) : RelativeLayout(context) {
     fun isHorizontal() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     fun getColumnsNumber(): Int {
-        if (Utils.isTablet(context)) {
+        if (isTablet(context)) {
             return if (isHorizontal())
                 Conf.GRID_COLUMNS_LANDSCAPE_TABLET
             else

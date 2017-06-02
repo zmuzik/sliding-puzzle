@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_pictures_grid.view.*
 import zmuzik.slidingpuzzle2.Conf
 import zmuzik.slidingpuzzle2.R
-import zmuzik.slidingpuzzle2.Utils
+import zmuzik.slidingpuzzle2.isBitmapHorizontal
 import java.util.*
 import javax.inject.Inject
 
@@ -113,7 +113,7 @@ open class PicturesGridAdapter(val context: Context, val uris: List<String>?, va
 
         fun isHorizontal(): Boolean {
             if (isHorizontal == null) {
-                isHorizontal = Utils.isBitmapHorizontal(application, uri)
+                isHorizontal = isBitmapHorizontal(application, uri)
             }
             return isHorizontal!!
         }

@@ -2,7 +2,8 @@ package zmuzik.slidingpuzzle2.mainscreen
 
 import android.os.AsyncTask
 import android.os.Environment
-import zmuzik.slidingpuzzle2.Utils
+import zmuzik.slidingpuzzle2.FILE_PREFIX
+import zmuzik.slidingpuzzle2.isPicture
 import java.io.File
 import java.lang.ref.WeakReference
 import java.util.*
@@ -36,8 +37,8 @@ class UpdateCameraFilesTask(presenter: MainScreenPresenter) :
                 .forEach {
                     if (it.isDirectory) {
                         scanDirectoryForPictures(it, filePaths)
-                    } else if (Utils.isPicture(it)) {
-                        filePaths.add(FileContainer(Utils.FILE_PREFIX + it.absolutePath,
+                    } else if (isPicture(it)) {
+                        filePaths.add(FileContainer(FILE_PREFIX + it.absolutePath,
                                 it.lastModified()))
                     }
                 }

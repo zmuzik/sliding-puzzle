@@ -9,8 +9,8 @@ import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import com.google.gson.Gson
+import zmuzik.slidingpuzzle2.ASSET_PREFIX
 import zmuzik.slidingpuzzle2.R
-import zmuzik.slidingpuzzle2.Utils
 import zmuzik.slidingpuzzle2.common.Keys
 import zmuzik.slidingpuzzle2.common.PreferencesHelper
 import zmuzik.slidingpuzzle2.common.Toaster
@@ -19,6 +19,7 @@ import zmuzik.slidingpuzzle2.common.di.ActivityScope
 import zmuzik.slidingpuzzle2.flickr.FlickrApi
 import zmuzik.slidingpuzzle2.flickr.Photo
 import zmuzik.slidingpuzzle2.gamescreen.GameActivity
+import zmuzik.slidingpuzzle2.isOnline
 import java.util.*
 import javax.inject.Inject
 
@@ -35,18 +36,18 @@ constructor() {
     val REQUEST_PERMISSION_READ_STORAGE = 101
 
     private val SAVED_PICTURES = arrayOf(
-            Utils.ASSET_PREFIX + "game_pic_00.jpg",
-            Utils.ASSET_PREFIX + "game_pic_01.jpg",
-            Utils.ASSET_PREFIX + "game_pic_07.jpg",
-            Utils.ASSET_PREFIX + "game_pic_02.jpg",
-            Utils.ASSET_PREFIX + "game_pic_03.jpg",
-            Utils.ASSET_PREFIX + "game_pic_04.jpg",
-            Utils.ASSET_PREFIX + "game_pic_05.jpg",
-            Utils.ASSET_PREFIX + "game_pic_06.jpg",
-            Utils.ASSET_PREFIX + "game_pic_08.jpg",
-            Utils.ASSET_PREFIX + "game_pic_09.jpg",
-            Utils.ASSET_PREFIX + "game_pic_10.jpg",
-            Utils.ASSET_PREFIX + "game_pic_11.jpg")
+            ASSET_PREFIX + "game_pic_00.jpg",
+            ASSET_PREFIX + "game_pic_01.jpg",
+            ASSET_PREFIX + "game_pic_07.jpg",
+            ASSET_PREFIX + "game_pic_02.jpg",
+            ASSET_PREFIX + "game_pic_03.jpg",
+            ASSET_PREFIX + "game_pic_04.jpg",
+            ASSET_PREFIX + "game_pic_05.jpg",
+            ASSET_PREFIX + "game_pic_06.jpg",
+            ASSET_PREFIX + "game_pic_08.jpg",
+            ASSET_PREFIX + "game_pic_09.jpg",
+            ASSET_PREFIX + "game_pic_10.jpg",
+            ASSET_PREFIX + "game_pic_11.jpg")
 
     @Inject
     @ActivityContext
@@ -174,7 +175,7 @@ constructor() {
     //***FlickrPicturesGridView***
 
     fun requestFlickrSearch(keywords: String?) {
-        if (!Utils.isOnline(context)) {
+        if (!isOnline(context)) {
             toaster.show(R.string.internet_unavailable)
             return
         }

@@ -8,7 +8,6 @@ import com.google.gson.Gson
 import javax.inject.Inject
 
 import zmuzik.slidingpuzzle2.R
-import zmuzik.slidingpuzzle2.Utils
 import zmuzik.slidingpuzzle2.common.Keys
 import zmuzik.slidingpuzzle2.common.PreferencesHelper
 import zmuzik.slidingpuzzle2.common.Toaster
@@ -16,6 +15,7 @@ import zmuzik.slidingpuzzle2.common.di.ActivityContext
 import zmuzik.slidingpuzzle2.common.di.ActivityScope
 import zmuzik.slidingpuzzle2.flickr.FlickrApi
 import zmuzik.slidingpuzzle2.flickr.Photo
+import zmuzik.slidingpuzzle2.isOnline
 
 /**
  * Created by Zbynek Muzik on 2017-04-03.
@@ -49,7 +49,7 @@ constructor() {
             val photoStr = intent.extras.getString(Keys.PHOTO)
             val gson = Gson()
             val photo = gson.fromJson(photoStr, Photo::class.java)
-            if (Utils.isOnline(mContext)) {
+            if (isOnline(mContext)) {
                 GetFlickrPhotoSizesTask(photo, this, mFlickrApi).execute()
             } else {
                 mView.finishWithMessage(R.string.internet_unavailable)
