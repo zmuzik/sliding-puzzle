@@ -23,7 +23,7 @@ constructor(internal var application: Application) {
 
     fun show(stringId: Int, length: Int) = show(application.getString(stringId), length)
 
-    fun show(message: String) = show(message, Toast.LENGTH_SHORT)
+    fun show(message: String) = show(message, DEFAULT_TOAST_LENGTH)
 
     fun show(message: String, length: Int) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
