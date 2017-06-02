@@ -15,15 +15,15 @@ import java.util.*
 class UpdateCameraFilesTask(presenter: MainScreenPresenter) :
         AsyncTask<Void, Void, Void>() {
 
-    var filesList: ArrayList<String>? = null
-    var presenter: WeakReference<MainScreenPresenter>? = WeakReference(presenter)
+    val presenterWr = WeakReference<MainScreenPresenter>(presenter)
+    lateinit var filesList: ArrayList<String>
 
     override fun doInBackground(vararg params: Void): Void? {
         val foundFiles = ArrayList<FileContainer>()
         val cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
         scanDirectoryForPictures(cameraDir, foundFiles)
         //sort - most recent pictures first
-        foundFiles.sortBy { it.lastModified }
+        foundFiles.sortByDescending { it.lastModified }
         filesList = foundFiles.mapTo(ArrayList<String>()) { it.filePath }
         return null
     }
@@ -32,24 +32,19 @@ class UpdateCameraFilesTask(presenter: MainScreenPresenter) :
         if (root == null) return
         val list = root.listFiles() ?: return
 
-        list
-                .filterNot { it.isHidden }
-                .forEach {
-                    if (it.isDirectory) {
-                        scanDirectoryForPictures(it, filePaths)
-                    } else if (isPicture(it)) {
-                        filePaths.add(FileContainer(FILE_PREFIX + it.absolutePath,
-                                it.lastModified()))
-                    }
-                }
+        list.filterNot { it.isHidden }.forEach {
+            if (it.isDirectory) {
+                scanDirectoryForPictures(it, filePaths)
+            } else if (isPicture(it)) {
+                filePaths.add(FileContainer(FILE_PREFIX + it.absolutePath, it.lastModified()))
+            }
+        }
     }
 
     override fun onPostExecute(aVoid: Void?) {
         super.onPostExecute(aVoid)
-        if (presenter!!.get() != null) {
-            presenter!!.get()!!.updateCameraPictures(filesList!!)
-        }
+        presenterWr.get()?.updateCameraPictures(filesList)
     }
 
-    inner class FileContainer constructor(var filePath: String, var lastModified: Long)
+    inner class FileContainer constructor(val filePath: String, val lastModified: Long)
 }
