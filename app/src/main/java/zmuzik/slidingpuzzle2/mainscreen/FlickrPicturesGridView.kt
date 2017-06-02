@@ -16,7 +16,7 @@ import zmuzik.slidingpuzzle2.flickr.Photo
  * Created by Zbynek Muzik on 2017-03-31.
  */
 
-internal class FlickrPicturesGridView(context: Context) : BasePicturesGridView(context) {
+class FlickrPicturesGridView(context: Context) : BasePicturesGridView(context) {
 
     override fun init() {
         super.init()

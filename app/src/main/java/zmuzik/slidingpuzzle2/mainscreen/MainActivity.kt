@@ -18,7 +18,6 @@ import zmuzik.slidingpuzzle2.R
 import zmuzik.slidingpuzzle2.common.Toaster
 import zmuzik.slidingpuzzle2.common.di.ActivityScope
 import zmuzik.slidingpuzzle2.flickr.Photo
-import java.lang.ref.WeakReference
 import java.util.*
 import javax.inject.Inject
 
@@ -30,9 +29,9 @@ class MainActivity : AppCompatActivity(), MainScreenView {
     lateinit var component: MainActivityComponent
     lateinit var toggleNumbersMenuItem: MenuItem
 
-    internal var savedPicturesView: WeakReference<SavedPicturesGridView>? = null
-    internal var cameraPicturesView: WeakReference<CameraPicturesGridView>? = null
-    internal var flickrPicturesView: WeakReference<FlickrPicturesGridView>? = null
+    val savedPicTab by lazy { viewPager.getChildAt(0) as SavedPicturesGridView }
+    val cameraPicTab by lazy { viewPager.getChildAt(1) as CameraPicturesGridView }
+    val flickrPicTab by lazy { viewPager.getChildAt(2) as FlickrPicturesGridView }
 
     @Inject
     lateinit var presenter: MainScreenPresenter
@@ -89,10 +88,11 @@ class MainActivity : AppCompatActivity(), MainScreenView {
     }
 
     internal fun setTileNumbersIcon(showNumbers: Boolean) {
-        toggleNumbersMenuItem.setIcon(if (showNumbers)
-            R.drawable.ic_tile_with_number
-        else
-            R.drawable.ic_tile_without_number)
+        toggleNumbersMenuItem.setIcon(
+                if (showNumbers)
+                    R.drawable.ic_tile_with_number
+                else
+                    R.drawable.ic_tile_without_number)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity(), MainScreenView {
     }
 
     private fun toggleShowNumbers() {
-        val onOff = presenter!!.toggleShowNumbers()
+        val onOff = presenter.toggleShowNumbers()
         setTileNumbersIcon(onOff)
         toaster.show(if (onOff) R.string.display_tile_numbers_on else R.string.display_tile_numbers_off)
     }
@@ -133,79 +133,41 @@ class MainActivity : AppCompatActivity(), MainScreenView {
     private val gridDimsPosition: Int
         get() {
             val currentDims = presenter.getGridDimensions()
-            for (i in Conf.GRID_SIZES.indices) {
-                if (currentDims == Conf.GRID_SIZES[i]) return i
-            }
-            return 0
+            return Conf.GRID_SIZES.indices.firstOrNull { currentDims == Conf.GRID_SIZES[it] } ?: 0
         }
 
-    override fun updateSavedPictures(pictures: List<String>) {
-        if (savedPicturesView != null && savedPicturesView!!.get() != null) {
-            savedPicturesView!!.get()?.update(pictures)
-        }
-    }
+    override fun updateSavedPictures(pictures: List<String>) = savedPicTab.update(pictures)
 
-    override fun setWaitingForCameraPictures() {
-        if (cameraPicturesView != null && cameraPicturesView!!.get() != null) {
-            cameraPicturesView!!.get()?.setWaitingForPictures()
-        }
-    }
+    override fun setWaitingForCameraPictures() = cameraPicTab.setWaitingForPictures()
 
-    override fun updateCameraPictures(pictures: List<String>) {
-        if (cameraPicturesView != null && cameraPicturesView!!.get() != null) {
-            cameraPicturesView!!.get()?.update(pictures)
-        }
-    }
+    override fun updateCameraPictures(pictures: List<String>) = cameraPicTab.update(pictures)
 
-    override fun setWaitingForFlickrPictures() {
-        if (flickrPicturesView != null && flickrPicturesView!!.get() != null) {
-            flickrPicturesView!!.get()?.setWaitingForPictures()
-        }
-    }
+    override fun setWaitingForFlickrPictures() = flickrPicTab.setWaitingForPictures()
 
-    override fun updateFlickrPictures(photos: List<Photo>) {
-        if (flickrPicturesView != null && flickrPicturesView!!.get() != null) {
-            flickrPicturesView!!.get()?.updatePhotos(photos)
-        }
-    }
+    override fun updateFlickrPictures(photos: List<Photo>) = flickrPicTab.updatePhotos(photos)
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) {
-        presenter!!.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        presenter.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private inner class ViewPagerAdapter : PagerAdapter() {
-        override fun instantiateItem(collection: ViewGroup, position: Int): Any {
-            var gridView: BasePicturesGridView? = null
-            when (position) {
-                0 -> {
-                    gridView = SavedPicturesGridView(this@MainActivity)
-                    savedPicturesView = WeakReference<SavedPicturesGridView>(gridView as SavedPicturesGridView?)
-                }
-                1 -> {
-                    gridView = CameraPicturesGridView(this@MainActivity)
-                    cameraPicturesView = WeakReference<CameraPicturesGridView>(gridView as CameraPicturesGridView?)
-                }
-                2 -> {
-                    gridView = FlickrPicturesGridView(this@MainActivity)
-                    flickrPicturesView = WeakReference<FlickrPicturesGridView>(gridView as FlickrPicturesGridView?)
-                }
+
+        override fun instantiateItem(views: ViewGroup, position: Int): Any {
+            val gridView: BasePicturesGridView = when (position) {
+                0 -> SavedPicturesGridView(this@MainActivity)
+                1 -> CameraPicturesGridView(this@MainActivity)
+                else -> FlickrPicturesGridView(this@MainActivity)
             }
-            gridView!!.requestUpdate()
-            collection.addView(gridView)
+            gridView.requestUpdate()
+            views.addView(gridView)
             return gridView
         }
 
-        override fun destroyItem(collection: ViewGroup, position: Int, view: Any) {
-            collection.removeView(view as View)
-        }
+        override fun destroyItem(views: ViewGroup, pos: Int, view: Any) = views.removeView(view as View)
 
-        override fun getCount(): Int {
-            return 3
-        }
+        override fun getCount() = 3
 
-        override fun isViewFromObject(view: View, `object`: Any): Boolean {
-            return view === `object`
-        }
+        override fun isViewFromObject(view: View, obj: Any) = view === obj
     }
 }

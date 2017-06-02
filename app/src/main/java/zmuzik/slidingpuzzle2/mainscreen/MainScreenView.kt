@@ -7,14 +7,14 @@ import zmuzik.slidingpuzzle2.flickr.Photo
  */
 
 interface MainScreenView {
-    fun updateSavedPictures(strings: List<String>)
+    fun updateSavedPictures(pictures: List<String>)
 
     fun setWaitingForCameraPictures()
 
-    fun updateCameraPictures(strings: List<String>)
+    fun updateCameraPictures(pictures: List<String>)
 
     fun setWaitingForFlickrPictures()
 
-    fun updateFlickrPictures(strings: List<Photo>)
+    fun updateFlickrPictures(photos: List<Photo>)
 
 }
