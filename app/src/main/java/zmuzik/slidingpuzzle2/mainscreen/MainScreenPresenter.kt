@@ -115,7 +115,7 @@ constructor() {
     //***CameraPicturesGridView***
 
     internal fun requestUpdateCameraPictures() {
-        if (!isReadExternalGranted && prefsHelper.shouldAskReadStoragePerm()) {
+        if (!isReadExternalGranted && prefsHelper.shouldAskReadStoragePerm) {
             requestReadExternalPermission()
         } else if (!isCameraPicturesUpdating) {
             isCameraPicturesUpdating = true
@@ -149,7 +149,7 @@ constructor() {
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                    grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSION_READ_STORAGE) {
-            prefsHelper.setShouldAskReadStoragePerm(false)
+            prefsHelper.shouldAskReadStoragePerm = false
             if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 requestUpdateCameraPictures()
             }
