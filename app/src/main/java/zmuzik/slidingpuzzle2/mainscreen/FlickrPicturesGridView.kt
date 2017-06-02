@@ -39,6 +39,9 @@ class FlickrPicturesGridView(context: Context) : BasePicturesGridView(context) {
         }
         val dialog = builder.create()
 
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
+
         keywordEt.setOnEditorActionListener({ v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 keywordEt.text?.let { search(it.toString()) }
@@ -59,9 +62,6 @@ class FlickrPicturesGridView(context: Context) : BasePicturesGridView(context) {
                 false
             }
         })
-
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.show()
     }
 
     private fun search(keywords: String) {

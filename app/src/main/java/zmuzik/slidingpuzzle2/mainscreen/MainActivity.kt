@@ -29,9 +29,9 @@ class MainActivity : AppCompatActivity(), MainScreenView {
     lateinit var component: MainActivityComponent
     lateinit var toggleNumbersMenuItem: MenuItem
 
-    val savedPicTab by lazy { viewPager.getChildAt(0) as SavedPicturesGridView }
-    val cameraPicTab by lazy { viewPager.getChildAt(1) as CameraPicturesGridView }
-    val flickrPicTab by lazy { viewPager.getChildAt(2) as FlickrPicturesGridView }
+    lateinit var savedPicTab: SavedPicturesGridView
+    lateinit var cameraPicTab: CameraPicturesGridView
+    lateinit var flickrPicTab: FlickrPicturesGridView
 
     @Inject
     lateinit var presenter: MainScreenPresenter
@@ -136,15 +136,25 @@ class MainActivity : AppCompatActivity(), MainScreenView {
             return Conf.GRID_SIZES.indices.firstOrNull { currentDims == Conf.GRID_SIZES[it] } ?: 0
         }
 
-    override fun updateSavedPictures(pictures: List<String>) = savedPicTab.update(pictures)
+    override fun updateSavedPictures(pictures: List<String>) {
+        savedPicTab.update(pictures)
+    }
 
-    override fun setWaitingForCameraPictures() = cameraPicTab.setWaitingForPictures()
+    override fun setWaitingForCameraPictures() {
+        cameraPicTab.setWaitingForPictures()
+    }
 
-    override fun updateCameraPictures(pictures: List<String>) = cameraPicTab.update(pictures)
+    override fun updateCameraPictures(pictures: List<String>) {
+        cameraPicTab.update(pictures)
+    }
 
-    override fun setWaitingForFlickrPictures() = flickrPicTab.setWaitingForPictures()
+    override fun setWaitingForFlickrPictures() {
+        flickrPicTab.setWaitingForPictures()
+    }
 
-    override fun updateFlickrPictures(photos: List<Photo>) = flickrPicTab.updatePhotos(photos)
+    override fun updateFlickrPictures(photos: List<Photo>) {
+        flickrPicTab.updatePhotos(photos)
+    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) {
@@ -155,9 +165,18 @@ class MainActivity : AppCompatActivity(), MainScreenView {
 
         override fun instantiateItem(views: ViewGroup, position: Int): Any {
             val gridView: BasePicturesGridView = when (position) {
-                0 -> SavedPicturesGridView(this@MainActivity)
-                1 -> CameraPicturesGridView(this@MainActivity)
-                else -> FlickrPicturesGridView(this@MainActivity)
+                0 -> {
+                    savedPicTab = SavedPicturesGridView(this@MainActivity)
+                    savedPicTab
+                }
+                1 -> {
+                    cameraPicTab = CameraPicturesGridView(this@MainActivity)
+                    cameraPicTab
+                }
+                else -> {
+                    flickrPicTab = FlickrPicturesGridView(this@MainActivity)
+                    flickrPicTab
+                }
             }
             gridView.requestUpdate()
             views.addView(gridView)

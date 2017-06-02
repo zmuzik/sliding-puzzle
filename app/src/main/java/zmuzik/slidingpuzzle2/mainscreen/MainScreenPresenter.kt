@@ -22,6 +22,7 @@ import zmuzik.slidingpuzzle2.gamescreen.GameActivity
 import zmuzik.slidingpuzzle2.isOnline
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 /**
  * Created by Zbynek Muzik on 2017-03-30.
@@ -62,7 +63,7 @@ constructor() {
     lateinit var view: MainScreenView
 
     private var isCameraPicturesUpdating: Boolean = false
-    private var flickerPictures: List<Photo>? = null
+    private var flickerPictures: List<Photo> = ArrayList()
 
     internal fun onResume() {
         requestUpdateCameraPictures()
@@ -71,15 +72,13 @@ constructor() {
     internal fun onPause() {}
 
     internal fun toggleShowNumbers(): Boolean {
-        var onOff = prefsHelper.displayTileNumbers
-        onOff = !onOff
-        prefsHelper.displayTileNumbers = onOff
-        return onOff
+        prefsHelper.displayTileNumbers = !prefsHelper.displayTileNumbers
+        return prefsHelper.displayTileNumbers
     }
 
     fun isShowTileNumbers() = prefsHelper.displayTileNumbers
 
-    fun getGridDimensions() = prefsHelper.gridDimShort.toString() + "x" + prefsHelper.gridDimLong
+    fun getGridDimensions() = "" + prefsHelper.gridDimShort + "x" + prefsHelper.gridDimLong
 
     internal fun setGridDimensions(gridDimShort: Int, gridDimLong: Int) {
         prefsHelper.gridDimShort = gridDimShort
@@ -150,7 +149,7 @@ constructor() {
                                    grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSION_READ_STORAGE) {
             prefsHelper.shouldAskReadStoragePerm = false
-            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 requestUpdateCameraPictures()
             }
         }
@@ -189,17 +188,11 @@ constructor() {
     }
 
     internal fun requestUpdateFlickrPictures() {
-        if (flickerPictures != null) {
-            updateFlickrPictures(flickerPictures)
-        }
+        updateFlickrPictures(flickerPictures)
     }
 
-    internal fun updateFlickrPictures(photos: List<Photo>?) {
-        if (photos == null) {
-            toaster.show(R.string.err_querying_flickr)
-        } else {
-            flickerPictures = photos
-            view.updateFlickrPictures(flickerPictures!!)
-        }
+    internal fun updateFlickrPictures(photos: List<Photo>) {
+        flickerPictures = photos
+        view.updateFlickrPictures(flickerPictures)
     }
 }

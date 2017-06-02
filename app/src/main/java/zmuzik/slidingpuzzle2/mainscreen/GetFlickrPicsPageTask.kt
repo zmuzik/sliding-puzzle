@@ -14,14 +14,14 @@ import java.lang.ref.WeakReference
 class GetFlickrPicsPageTask(val mQuery: String, presenter: MainScreenPresenter, val api: FlickrApi) :
         AsyncTask<Void, Void, Void>() {
 
-    var flickrPhotos: List<Photo>? = null
+    lateinit var flickrPhotos: List<Photo>
     val presenterWr = WeakReference(presenter)
 
     override fun doInBackground(vararg params: Void): Void? {
         try {
             val call = api.getPhotos(mQuery)
             val resp = call.execute().body()
-            flickrPhotos = resp?.photos?.photo
+            flickrPhotos = resp?.photos?.photo ?: ArrayList()
         } catch (e: Exception) {
             Crashlytics.logException(e)
         }
