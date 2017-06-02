@@ -22,13 +22,5 @@ class App : Application() {
         Fabric.with(this, Crashlytics())
     }
 
-    fun getComponent(context: Context): AppComponent {
-        return get(context).mAppComponent
-    }
-
-    companion object {
-        operator fun get(context: Context): App {
-            return context.applicationContext as App
-        }
-    }
+    fun getComponent(context: Context) = (context.applicationContext as App).mAppComponent
 }
