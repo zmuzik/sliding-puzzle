@@ -45,7 +45,7 @@ android {
     customProps.load(new FileInputStream("../secrets/zmuzik.slidingpuzzle2.properties"))
 
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
         applicationId "zmuzik.slidingpuzzle2"
