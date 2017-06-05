@@ -161,6 +161,8 @@ class MainActivity : AppCompatActivity(), MainScreenView {
         presenter.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    override fun isCameraTabActive() = viewPager.currentItem == 1
+
     private inner class ViewPagerAdapter : PagerAdapter() {
 
         override fun instantiateItem(views: ViewGroup, position: Int): Any {

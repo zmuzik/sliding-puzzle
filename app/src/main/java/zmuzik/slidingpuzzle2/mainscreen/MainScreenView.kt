@@ -17,4 +17,6 @@ interface MainScreenView {
 
     fun updateFlickrPictures(photos: List<Photo>)
 
+    fun isCameraTabActive(): Boolean
+
 }

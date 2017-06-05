@@ -66,7 +66,7 @@ constructor() {
     private var flickerPictures: List<Photo> = ArrayList()
 
     internal fun onResume() {
-        requestUpdateCameraPictures()
+        if (view.isCameraTabActive()) requestUpdateCameraPictures()
     }
 
     internal fun onPause() {}
