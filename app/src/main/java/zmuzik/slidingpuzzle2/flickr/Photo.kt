@@ -33,7 +33,7 @@ class Photo {
         val sortedSizes = sizes.sortedBy { it.maxDim }
         sortedSizes
                 .filter { it.maxDim in (prevSize + 1)..maxScreenDim }
-                .forEach { result = it.source!! }
+                .forEach { result = it.source }
         return result
     }
 }
