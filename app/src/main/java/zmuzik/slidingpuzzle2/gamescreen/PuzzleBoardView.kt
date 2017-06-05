@@ -319,9 +319,9 @@ class PuzzleBoardView : ViewGroup {
                         val endY = getTileY(tile) * tileHeight
                         anim = SpringAnimation(tile, SpringAnimation.Y, endY.toFloat())
                     }
-                    anim!!.spring
-                            .setStiffness(SpringForce.STIFFNESS_HIGH).dampingRatio = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY
-                    anim.start()
+                    anim?.spring?.setStiffness(SpringForce.STIFFNESS_HIGH)?.dampingRatio =
+                            SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY
+                    anim?.start()
                 }
                 return true
             }
