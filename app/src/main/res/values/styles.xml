@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
 
-    </style>
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar" />
 
-    <style name="AppTheme" parent="AppTheme.Base"/>
-
-    <style name="AppTheme.Fullscreen" parent="AppTheme.Base">
+    <style name="AppTheme" parent="AppTheme.Base">
+        <item name="android:colorAccent">@color/black</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:navigationBarColor">@color/black</item>
     </style>
-
 </resources>

@@ -31,5 +31,5 @@
 -keep class com.google.inject.** { *; }
 
 #model
--keep class zmuzik.slidingpuzzle2.flickr.** { *; }
+-keep class zmuzik.slidingpuzzle2.repo.flickr.** { *; }
 -keep class zmuzik.slidingpuzzle2.common.Keys

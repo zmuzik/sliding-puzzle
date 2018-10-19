@@ -20,6 +20,7 @@
     <string name="flickr_search">Flickr search</string>
     <string name="display_tile_numbers_on">Displaying tile numbers is on</string>
     <string name="display_tile_numbers_off">Displaying tile numbers is off</string>
-    <string name="missing_storage_permissions">The app is not allowed to read local storage.</string>
+    <string name="missing_storage_permissions">The app is not allowed to read from the local storage.</string>
     <string name="request_storage_permissions">Allow</string>
+    <string name="transition_image">image</string>
 </resources>

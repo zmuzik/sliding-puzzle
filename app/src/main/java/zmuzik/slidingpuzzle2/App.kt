@@ -1,26 +1,31 @@
 package zmuzik.slidingpuzzle2
 
 import android.app.Application
-import android.content.Context
-
-import com.crashlytics.android.Crashlytics
-
-import io.fabric.sdk.android.Fabric
-import zmuzik.slidingpuzzle2.common.di.AppComponent
-import zmuzik.slidingpuzzle2.common.di.AppModule
-import zmuzik.slidingpuzzle2.common.di.DaggerAppComponent
+import androidx.appcompat.app.AppCompatDelegate
+import com.squareup.leakcanary.LeakCanary
+import org.koin.android.ext.android.startKoin
+import org.koin.log.Logger
+import timber.log.Timber
 
 class App : Application() {
 
-    private val TAG = this.javaClass.simpleName
-
-    lateinit var mAppComponent: AppComponent
-
     override fun onCreate() {
         super.onCreate()
-        mAppComponent = DaggerAppComponent.builder().appModule(AppModule(this)).build()
-        Fabric.with(this, Crashlytics())
-    }
+        if (LeakCanary.isInAnalyzerProcess(this)) return
 
-    fun getComponent(context: Context) = (context.applicationContext as App).mAppComponent
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+
+        startKoin(this, listOf(appModule), logger = object : Logger {
+            override fun debug(msg: String) {}
+
+            override fun err(msg: String) {}
+
+            override fun info(msg: String) {}
+        })
+
+        if (BuildConfig.DEBUG) {
+            LeakCanary.install(this)
+            Timber.plant(Timber.DebugTree())
+        }
+    }
 }
