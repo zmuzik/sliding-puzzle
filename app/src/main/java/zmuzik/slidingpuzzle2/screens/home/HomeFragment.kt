@@ -142,11 +142,6 @@ class HomeFragment : Fragment(), HomeScreen {
         cameraTab?.permissionsComboView?.visibility = if (granted) View.GONE else View.VISIBLE
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (!isReadExternalGranted() && viewModel.prefs.shouldAskReadStoragePerm) requestReadExternalPermission()
-    }
-
     override fun onResume() {
         super.onResume()
         viewModel.requestAppPictures()
