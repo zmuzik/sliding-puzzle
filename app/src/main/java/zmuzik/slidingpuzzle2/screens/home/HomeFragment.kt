@@ -11,9 +11,11 @@ import android.util.DisplayMetrics
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -41,7 +43,7 @@ class HomeFragment : Fragment(), HomeScreen {
 
     val mainActivity get() = activity as? MainActivity
 
-    private var sharedView: WeakReference<View>? = null
+    private var sharedView: WeakReference<ImageView>? = null
 
     val viewModel: HomeScreenViewModel by viewModel()
     val prefs: Prefs by inject()
@@ -259,7 +261,7 @@ class HomeFragment : Fragment(), HomeScreen {
         }
     }
 
-    override fun runGame(itemView: View, tab: PictureTab, position: Int): Boolean {
+    override fun runGame(itemView: ImageView, tab: PictureTab, position: Int): Boolean {
         if (isOpeningGameInProgress) return false
         isOpeningGameInProgress = true
         sharedView = WeakReference(itemView)
@@ -269,7 +271,11 @@ class HomeFragment : Fragment(), HomeScreen {
 
     private fun onGamePicUriRetrieved(uri: String?) {
         safeLet(mainActivity, uri, sharedView?.get()) { lactivity, luri, lview ->
-            findNavController().navigate(R.id.gameFragment, bundleOf("PICTURE_URI" to luri))
+            val args = bundleOf(
+                    "PICTURE_URI" to luri,
+                    "THUMBNAIL_DIM" to lview.width,
+                    "THUMBNAIL_BITMAP" to lview.drawable.toBitmap())
+            findNavController().navigate(R.id.gameFragment, args)
             isOpeningGameInProgress = false
         }
     }

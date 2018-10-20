@@ -44,6 +44,11 @@ class GameFragment : Fragment(), GameScreen, ShakeDetector.OnShakeListener {
         super.onViewCreated(view, savedInstanceState)
         board.gameScreen = WeakReference(this)
         resolveScreenDimensions()
+        viewModel.thumbnailDim?.let {
+            thumbnail.layoutParams.width = it
+            thumbnail.layoutParams.height = it
+        }
+        thumbnail.setImageBitmap(viewModel.thumbnailBitmap)
         viewModel.pictureUri?.let { loadPicture(it) }
                 ?: kotlin.run { finishWithMessage(R.string.picture_not_supplied) }
     }
@@ -121,6 +126,7 @@ class GameFragment : Fragment(), GameScreen, ShakeDetector.OnShakeListener {
     private var imageTarget: Target = object : Target {
         override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
             adjustBoardDimensions(board, bitmap)
+            thumbnail.hide()
             progressBar.hide()
             board.init(bitmap, viewModel)
             viewModel.storedBoardState?.let { boardState ->

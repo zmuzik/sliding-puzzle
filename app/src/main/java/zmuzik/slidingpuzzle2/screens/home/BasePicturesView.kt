@@ -111,7 +111,7 @@ open class BasePicturesView @JvmOverloads constructor(context: Context, attrs: A
                             }
                         })
                 itemView.image.setOnClickListener {
-                    val willOpen = homeScreen.runGame(itemView, tab, position)
+                    val willOpen = homeScreen.runGame(itemView.image, tab, position)
                     itemView.itemProgressBar.showIf(willOpen)
                 }
             }

@@ -21,5 +21,11 @@
         <argument
             android:name="PICTURE_URI"
             app:argType="string" />
+        <argument
+            android:name="THUMBNAIL_DIM"
+            app:argType="integer" />
+        <argument
+            android:name="THUMBNAIL_BITMAP"
+            app:argType="reference" />
     </fragment>
 </navigation>
