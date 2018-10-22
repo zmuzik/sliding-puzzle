@@ -29,36 +29,23 @@ import zmuzik.slidingpuzzle2.Conf
 import zmuzik.slidingpuzzle2.R
 import zmuzik.slidingpuzzle2.common.*
 import zmuzik.slidingpuzzle2.repo.model.Picture
+import zmuzik.slidingpuzzle2.screens.BaseFragment
 import zmuzik.slidingpuzzle2.screens.MainActivity
 import java.lang.ref.WeakReference
 import java.util.*
 
 
-class HomeFragment : Fragment(), HomeScreen {
+class HomeFragment : BaseFragment(), HomeScreen {
 
     var searchMenuItem: MenuItem? = null
     var toggleNumbersMenuItem: MenuItem? = null
 
     var isOpeningGameInProgress = false
 
-    val mainActivity get() = activity as? MainActivity
-
     private var sharedView: WeakReference<ImageView>? = null
 
     val viewModel: HomeScreenViewModel by viewModel()
     val prefs: Prefs by inject()
-
-    val screenWidth: Int by lazy {
-        val displayMetrics = DisplayMetrics()
-        activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
-        displayMetrics.widthPixels
-    }
-
-    val screenHeight: Int by lazy {
-        val displayMetrics = DisplayMetrics()
-        activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
-        displayMetrics.heightPixels
-    }
 
     var cameraTab: CameraPicturesView? = null
         set(value) {
@@ -271,10 +258,12 @@ class HomeFragment : Fragment(), HomeScreen {
 
     private fun onGamePicUriRetrieved(uri: String?) {
         safeLet(mainActivity, uri, sharedView?.get()) { lactivity, luri, lview ->
+            mainActivity?.thumbBitmap = WeakReference(lview.drawable.toBitmap())
             val args = bundleOf(
                     "PICTURE_URI" to luri,
                     "THUMBNAIL_DIM" to lview.width,
-                    "THUMBNAIL_BITMAP" to lview.drawable.toBitmap())
+                    "THUMBNAIL_LEFT" to lview.getRelativeLeft(),
+                    "THUMBNAIL_TOP" to lview.getRelativeTop())
             findNavController().navigate(R.id.gameFragment, args)
             isOpeningGameInProgress = false
         }

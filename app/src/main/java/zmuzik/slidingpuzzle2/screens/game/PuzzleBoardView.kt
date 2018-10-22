@@ -10,7 +10,6 @@ import androidx.dynamicanimation.animation.SpringForce
 import org.koin.android.ext.android.get
 import zmuzik.slidingpuzzle2.screens.MainActivity
 import zmuzik.slidingpuzzle2.R
-import zmuzik.slidingpuzzle2.common.Keys
 import zmuzik.slidingpuzzle2.common.Prefs
 import zmuzik.slidingpuzzle2.common.toast
 import java.lang.ref.WeakReference
@@ -57,7 +56,8 @@ class PuzzleBoardView : ViewGroup {
 
     enum class State {
         LOADING, // before pic is loaded and board initialized
-        LOADED, // board loaded but not shuffled yet
+        LOADED, // pic loaded
+        READY_TO_SHUFFLE, // pic loaded and board (numbers) visible but not shuffled yet
         SHUFFLING, // shuffling in progress (animating), don't accept any touch events
         SHUFFLED, // ready to play
         PLAYING, // game in progress
@@ -97,7 +97,7 @@ class PuzzleBoardView : ViewGroup {
                         x * tileWidth, y * tileHeight,
                         tileWidth, tileHeight)
                 tiles[x][y] = TileView(context, x, y, tileBitmap, tileNumber)
-                tiles[x][y].setDisplayNumbers(prefsHelper.displayTileNumbers)
+                tiles[x][y].displayNumbers = prefsHelper.displayTileNumbers
                 addView(tiles[x][y])
                 tileNumber++
             }
@@ -105,7 +105,7 @@ class PuzzleBoardView : ViewGroup {
         // sets the black tile to the last tile of the grid
         blackTileX = tilesX - 1
         blackTileY = tilesY - 1
-        state = State.LOADED
+        state = State.READY_TO_SHUFFLE
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -156,7 +156,7 @@ class PuzzleBoardView : ViewGroup {
     }
 
     fun maybeShuffle() {
-        if (state == State.LOADED || state == State.SHUFFLED) {
+        if (state == State.LOADED || state == State.SHUFFLED || state == State.READY_TO_SHUFFLE) {
             shuffle()
         }
     }
@@ -241,8 +241,8 @@ class PuzzleBoardView : ViewGroup {
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (completePictureBitmap == null) return true
         when (state) {
-            State.LOADING, State.SHUFFLING, State.FINISHED -> return true
-            State.LOADED -> {
+            State.LOADING, State.LOADED, State.SHUFFLING, State.FINISHED -> return true
+            State.READY_TO_SHUFFLE -> {
                 shuffle()
                 return true
             }
@@ -332,7 +332,7 @@ class PuzzleBoardView : ViewGroup {
     private fun showAllTiles() {
         for (y in 0 until tilesY) {
             for (x in 0 until tilesX) {
-                tiles[x][y].setDisplayNumbers(false)
+                tiles[x][y].displayNumbers = false
                 tiles[x][y].invalidate()
             }
         }

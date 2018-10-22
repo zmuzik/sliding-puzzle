@@ -14,6 +14,16 @@ fun View.show(): Unit = this.setVisibility(View.VISIBLE)
 
 fun View.showIf(boolean: Boolean): Unit = this.setVisibility(if (boolean) View.VISIBLE else View.GONE)
 
+fun View.getRelativeLeft(): Int = if (this.parent === this.rootView)
+    this.left
+else
+    this.left + (this.parent as View).getRelativeLeft()
+
+fun View.getRelativeTop(): Int = if (this.parent === this.rootView)
+    this.top
+else
+    this.top + (this.parent as View).getRelativeTop()
+
 fun ViewGroup.inflate(layoutRes: Int): View = LayoutInflater.from(context).inflate(layoutRes, this, false)
 
 fun Context.toast(msg: String) {

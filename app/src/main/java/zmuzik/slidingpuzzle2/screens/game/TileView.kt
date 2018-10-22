@@ -21,7 +21,7 @@ class TileView : ImageView {
     var tileHeight: Int = 0
     var tileNumber: Int = 0
     lateinit var numString: String
-    private var displayNumbers: Boolean = false
+    var displayNumbers: Boolean = false
 
     lateinit var textPaint: TextPaint
     lateinit var bounds: Rect
@@ -51,10 +51,6 @@ class TileView : ImageView {
         layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT)
-    }
-
-    fun setDisplayNumbers(displayNumbers: Boolean) {
-        this.displayNumbers = displayNumbers
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

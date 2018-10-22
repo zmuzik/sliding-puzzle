@@ -25,6 +25,12 @@
             android:name="THUMBNAIL_DIM"
             app:argType="integer" />
         <argument
+            android:name="THUMBNAIL_LEFT"
+            app:argType="integer" />
+        <argument
+            android:name="THUMBNAIL_TOP"
+            app:argType="integer" />
+        <argument
             android:name="THUMBNAIL_BITMAP"
             app:argType="reference" />
     </fragment>
