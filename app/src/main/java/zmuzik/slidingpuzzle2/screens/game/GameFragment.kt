@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.view.animation.AnticipateOvershootInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
@@ -161,18 +160,15 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
     }
 
     fun animateThumbnailToBoard(bitmap: Bitmap) {
-        val smalledBitmapDim: Int = Math.min(bitmap.width, bitmap.height)
         val dest = ConstraintSet()
         dest.clone(gameScreenRoot)
         dest.clear(R.id.thumbnail)
         dest.centerHorizontally(R.id.thumbnail, 0)
         dest.centerVertically(R.id.thumbnail, 0)
-        dest.constrainWidth(R.id.thumbnail, smalledBitmapDim)
-        dest.constrainHeight(R.id.thumbnail, smalledBitmapDim)
-        val transition = AutoTransition().also {
-            it.duration = 300
-            it.interpolator = AnticipateOvershootInterpolator(1.6f)
-        }
+        dest.constrainWidth(R.id.thumbnail, bitmap.width)
+        dest.constrainHeight(R.id.thumbnail, bitmap.height)
+        thumbnail.setImageBitmap(bitmap)
+        val transition = AutoTransition().also { it.duration = 300 }
         transition.addListener(object : Transition.TransitionListener {
             override fun onTransitionResume(transition: Transition) {}
             override fun onTransitionPause(transition: Transition) {}

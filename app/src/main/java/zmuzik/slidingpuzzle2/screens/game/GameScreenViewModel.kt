@@ -3,10 +3,8 @@ package zmuzik.slidingpuzzle2.screens.game
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import zmuzik.slidingpuzzle2.common.Keys
-import zmuzik.slidingpuzzle2.common.Prefs
-import zmuzik.slidingpuzzle2.repo.Repo
 
-class GameScreenViewModel(val repo: Repo, val prefs: Prefs) : ViewModel() {
+class GameScreenViewModel : ViewModel() {
 
     var pictureUri: String? = null
     var thumbnailDim: Int = 0

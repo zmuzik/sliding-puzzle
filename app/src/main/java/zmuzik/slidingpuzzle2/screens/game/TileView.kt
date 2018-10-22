@@ -20,8 +20,8 @@ class TileView : ImageView {
     var tileWidth: Int = 0
     var tileHeight: Int = 0
     var tileNumber: Int = 0
-    lateinit var numString: String
     var displayNumbers: Boolean = false
+    lateinit var numString: String
 
     lateinit var textPaint: TextPaint
     lateinit var bounds: Rect

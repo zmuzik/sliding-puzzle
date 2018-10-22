@@ -35,5 +35,5 @@ val appModule: Module = module {
 
     viewModel { HomeScreenViewModel(get(), get()) }
 
-    viewModel { GameScreenViewModel(get(), get()) }
+    viewModel { GameScreenViewModel() }
 }
