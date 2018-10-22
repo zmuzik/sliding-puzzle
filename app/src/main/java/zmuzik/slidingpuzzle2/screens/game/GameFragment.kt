@@ -6,12 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AlphaAnimation
 import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.fragment.findNavController
 import androidx.transition.AutoTransition
-import androidx.transition.Transition
 import androidx.transition.TransitionManager
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -22,6 +23,7 @@ import zmuzik.slidingpuzzle2.R
 import zmuzik.slidingpuzzle2.common.*
 import zmuzik.slidingpuzzle2.screens.BaseFragment
 import java.lang.ref.WeakReference
+
 
 class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
 
@@ -160,29 +162,31 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
     }
 
     fun animateThumbnailToBoard(bitmap: Bitmap) {
-        val dest = ConstraintSet()
-        dest.clone(gameScreenRoot)
-        dest.clear(R.id.thumbnail)
-        dest.centerHorizontally(R.id.thumbnail, 0)
-        dest.centerVertically(R.id.thumbnail, 0)
-        dest.constrainWidth(R.id.thumbnail, bitmap.width)
-        dest.constrainHeight(R.id.thumbnail, bitmap.height)
+        val moveThumb = ConstraintSet()
+        moveThumb.clone(gameScreenRoot)
+        moveThumb.clear(R.id.thumbnail)
+        moveThumb.centerHorizontally(R.id.thumbnail, 0)
+        moveThumb.centerVertically(R.id.thumbnail, 0)
+        moveThumb.constrainWidth(R.id.thumbnail, bitmap.width)
+        moveThumb.constrainHeight(R.id.thumbnail, bitmap.height)
         thumbnail.setImageBitmap(bitmap)
-        val transition = AutoTransition().also { it.duration = 300 }
-        transition.addListener(object : Transition.TransitionListener {
-            override fun onTransitionResume(transition: Transition) {}
-            override fun onTransitionPause(transition: Transition) {}
-            override fun onTransitionCancel(transition: Transition) {}
-            override fun onTransitionStart(transition: Transition) {}
-            override fun onTransitionEnd(transition: Transition) {
-                thumbnail.hide()
-                board.show()
-                shuffleBtn.show()
-                shuffleBtn.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.shake_anim))
+        val moveThumbTransition = AutoTransition().also { it.duration = 300 }
+        moveThumbTransition.addListener(TransitionEndListener {
+            board.show()
+            shuffleBtn.show()
+            val fadeOut = AlphaAnimation(1f, 0f).also { anim ->
+                anim.interpolator = AccelerateInterpolator()
+                anim.duration = 400
+                anim.setAnimationListener(AnimationEndListener {
+                    thumbnail.hide()
+                    shuffleBtn.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.shake_anim))
+                    board.state = PuzzleBoardView.State.READY_TO_SHUFFLE
+                })
             }
+            thumbnail.animation = fadeOut
         })
-        TransitionManager.beginDelayedTransition(gameScreenRoot, transition)
-        dest.applyTo(gameScreenRoot)
+        TransitionManager.beginDelayedTransition(gameScreenRoot, moveThumbTransition)
+        moveThumb.applyTo(gameScreenRoot)
     }
 
     fun showBoardWithoutAnimation() {

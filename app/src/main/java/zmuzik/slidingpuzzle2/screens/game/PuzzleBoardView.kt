@@ -38,7 +38,7 @@ class PuzzleBoardView : ViewGroup {
     private var activeTileY: Int = 0
     private var blackTileX: Int = 0
     private var blackTileY: Int = 0
-    private var state = State.LOADING
+    var state = State.LOADING
 
     val activity by lazy { (context as MainActivity) }
 
