@@ -21,5 +21,5 @@ class GameScreenViewModel : ViewModel() {
     var storedPositions: ArrayList<Int>? = null
     var storedBlackX: Int? = null
     var storedBlackY: Int? = null
-    var storedBoardState: PuzzleBoardView.State? = null
+    var storedBoardState: GameState? = null
 }

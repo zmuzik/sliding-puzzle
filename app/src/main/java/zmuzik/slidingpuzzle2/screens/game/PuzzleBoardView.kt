@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import org.koin.android.ext.android.get
-import timber.log.Timber
 import zmuzik.slidingpuzzle2.R
 import zmuzik.slidingpuzzle2.common.Prefs
 import zmuzik.slidingpuzzle2.common.toast
@@ -39,7 +38,7 @@ class PuzzleBoardView : ViewGroup {
     private var activeTileY: Int = 0
     private var blackTileX: Int = 0
     private var blackTileY: Int = 0
-    var state = State.LOADING
+    var state = GameState.LOADING
 
     val activity by lazy { (context as MainActivity) }
 
@@ -54,16 +53,6 @@ class PuzzleBoardView : ViewGroup {
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) :
             super(context, attrs, defStyleAttr)
-
-    enum class State {
-        LOADING, // before pic is loaded and board initialized
-        LOADED, // pic loaded, doing some animations
-        READY_TO_SHUFFLE, // pic loaded and board (numbers) visible but not shuffled yet
-        SHUFFLING, // shuffling in progress (animating), don't accept any touch events
-        SHUFFLED, // ready to play
-        PLAYING, // game in progress
-        FINISHED  // game completed, don't accept touch events
-    }
 
     fun setDimensions(width: Int, height: Int) {
         val params = layoutParams
@@ -106,7 +95,7 @@ class PuzzleBoardView : ViewGroup {
         // sets the black tile to the last tile of the grid
         blackTileX = tilesX - 1
         blackTileY = tilesY - 1
-        state = State.LOADED
+        state = GameState.LOADED
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -118,10 +107,10 @@ class PuzzleBoardView : ViewGroup {
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        if (state == State.LOADING) return
+        if (state == GameState.LOADING) return
         for (i in 0 until tilesX) {
             for (j in 0 until tilesY) {
-                if (state == State.FINISHED || i != blackTileX || j != blackTileY) {
+                if (state == GameState.FINISHED || i != blackTileX || j != blackTileY) {
                     var x = i * tileWidth
                     var y = j * tileHeight
                     if (isHorizPlayable(i, j)) {
@@ -157,13 +146,13 @@ class PuzzleBoardView : ViewGroup {
     }
 
     fun maybeShuffle() {
-        if (state == State.READY_TO_SHUFFLE) {
+        if (state == GameState.READY_TO_SHUFFLE) {
             shuffle()
         }
     }
 
     fun shuffle() {
-        state = State.SHUFFLING
+        state = GameState.SHUFFLING
         gameScreen?.get()?.hideShuffleIcon()
         requestLayout()
         val random = Random()
@@ -200,18 +189,18 @@ class PuzzleBoardView : ViewGroup {
             }
         }
         if (animY == null) {
-            state = State.SHUFFLED
+            state = GameState.SHUFFLED
             requestLayout()
         } else {
             animY.addEndListener { animation, canceled, value, velocity ->
-                state = State.SHUFFLED
+                state = GameState.SHUFFLED
                 requestLayout()
             }
         }
     }
 
     fun playTile(x: Int, y: Int, isShuffleMove: Boolean) {
-        if (!isShuffleMove) state = State.PLAYING
+        if (!isShuffleMove) state = GameState.PLAYING
         val temp = tiles[blackTileX][blackTileY]
         if (x == blackTileX) {
             if (y < blackTileY) {
@@ -242,8 +231,8 @@ class PuzzleBoardView : ViewGroup {
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (completePictureBitmap == null) return true
         when (state) {
-            State.LOADING, State.LOADED, State.SHUFFLING, State.FINISHED -> return true
-            State.READY_TO_SHUFFLE -> {
+            GameState.LOADING, GameState.LOADED, GameState.SHUFFLING, GameState.FINISHED -> return true
+            GameState.READY_TO_SHUFFLE -> {
                 maybeShuffle()
                 return true
             }
@@ -256,7 +245,7 @@ class PuzzleBoardView : ViewGroup {
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                if (state == State.SHUFFLED || state == State.PLAYING) {
+                if (state == GameState.SHUFFLED || state == GameState.PLAYING) {
                     downX = eventX
                     downY = eventY
                     activeTileX = downX / tileWidth
@@ -325,7 +314,7 @@ class PuzzleBoardView : ViewGroup {
     }
 
     private fun onGameFinished() {
-        state = State.FINISHED
+        state = GameState.FINISHED
         context.toast(R.string.congrats)
         showAllTiles()
     }
@@ -409,7 +398,7 @@ class PuzzleBoardView : ViewGroup {
                 counter++
             }
         }
-        if (state == State.FINISHED) {
+        if (state == GameState.FINISHED) {
             showAllTiles()
         } else {
             invalidate()

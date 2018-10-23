@@ -140,9 +140,9 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
             progressBar.hide()
             board.init(bitmap, viewModel)
             viewModel.storedBoardState?.let { boardState ->
-                if (boardState == PuzzleBoardView.State.LOADING
-                        || boardState == PuzzleBoardView.State.LOADED
-                        || boardState == PuzzleBoardView.State.READY_TO_SHUFFLE) {
+                if (boardState == GameState.LOADING
+                        || boardState == GameState.LOADED
+                        || boardState == GameState.READY_TO_SHUFFLE) {
                     animateThumbnailToBoard(bitmap)
                 } else {
                     showBoardWithoutAnimation()
@@ -178,7 +178,7 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
                 anim.setAnimationListener(AnimationEndListener {
                     thumbnail.hide()
                     shuffleBtn.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.shake_anim))
-                    board.state = PuzzleBoardView.State.READY_TO_SHUFFLE
+                    board.state = GameState.READY_TO_SHUFFLE
                     Timber.d("BANG")
                 })
             }
