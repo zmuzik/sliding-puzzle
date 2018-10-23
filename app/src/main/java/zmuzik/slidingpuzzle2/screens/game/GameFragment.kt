@@ -179,7 +179,6 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
                     thumbnail.hide()
                     shuffleBtn.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.shake_anim))
                     board.state = GameState.READY_TO_SHUFFLE
-                    Timber.d("BANG")
                 })
             }
             thumbnail.animation = fadeOut
@@ -189,6 +188,7 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
     }
 
     fun showBoardWithoutAnimation() {
+        board.show()
         thumbnail.hide()
         shuffleBtn.hide()
     }
