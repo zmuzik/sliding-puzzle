@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity() {
     var thumbBitmap: WeakReference<Bitmap>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         setTheme(R.style.AppTheme)
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
