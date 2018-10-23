@@ -18,7 +18,6 @@ import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.screen_game.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 import zmuzik.slidingpuzzle2.R
 import zmuzik.slidingpuzzle2.common.*
 import zmuzik.slidingpuzzle2.screens.BaseFragment
@@ -47,12 +46,15 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
         board.gameScreen = WeakReference(this)
     }
 
+    private var resumed: Boolean = false
+
     override fun onResume() {
         super.onResume()
         shakeDetector.register()
         shakeDetector.setOnShakeListener(this)
         mainActivity?.showStatusBar(false)
         setupInitialThumbnailPos()
+        resumed = true
         thumbnail.postDelayed({
             // dirty hack to hopefully prevent skipping transition anim
             viewModel.pictureUri?.let { loadPicture(it) }
@@ -90,6 +92,7 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
         super.onPause()
         shakeDetector.unRegister()
         board.saveGameState(viewModel)
+        resumed = false
     }
 
     override fun onShake() {
@@ -170,6 +173,7 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
         thumbnail.setImageBitmap(bitmap)
         val moveThumbTransition = AutoTransition().also { it.duration = 300 }
         moveThumbTransition.addListener(TransitionEndListener {
+            if (!resumed) return@TransitionEndListener
             board.show()
             shuffleBtn.show()
             val fadeOut = AlphaAnimation(1f, 0f).also { anim ->
