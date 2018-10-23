@@ -11,7 +11,6 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.navigation.fragment.findNavController
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.squareup.picasso.Picasso
@@ -19,6 +18,7 @@ import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.screen_game.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import zmuzik.slidingpuzzle2.R
 import zmuzik.slidingpuzzle2.common.*
 import zmuzik.slidingpuzzle2.screens.BaseFragment
@@ -53,8 +53,11 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
         shakeDetector.setOnShakeListener(this)
         mainActivity?.showStatusBar(false)
         setupInitialThumbnailPos()
-        viewModel.pictureUri?.let { loadPicture(it) }
-                ?: kotlin.run { finishWithMessage(R.string.picture_not_supplied) }
+        thumbnail.postDelayed({
+            // dirty hack to hopefully prevent skipping transition anim
+            viewModel.pictureUri?.let { loadPicture(it) }
+                    ?: kotlin.run { goBackWithMessage(R.string.picture_not_supplied) }
+        }, 10L)
     }
 
     private fun setupInitialThumbnailPos() {
@@ -92,11 +95,6 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
     override fun onShake() {
         hideShuffleIcon()
         board?.maybeShuffle()
-    }
-
-    fun finishWithMessage(stringId: Int) {
-        activity?.toast(stringId)
-        //finish()
     }
 
     fun loadPicture(uri: String) {
@@ -155,7 +153,7 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
         }
 
         override fun onBitmapFailed(errorDrawable: Drawable?) {
-            findNavController().popBackStack()
+            goBackWithMessage(R.string.unable_to_load_flickr_picture)
         }
 
         override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
@@ -181,6 +179,7 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
                     thumbnail.hide()
                     shuffleBtn.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.shake_anim))
                     board.state = PuzzleBoardView.State.READY_TO_SHUFFLE
+                    Timber.d("BANG")
                 })
             }
             thumbnail.animation = fadeOut

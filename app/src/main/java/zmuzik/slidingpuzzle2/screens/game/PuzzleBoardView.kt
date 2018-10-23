@@ -8,10 +8,11 @@ import android.view.ViewGroup
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import org.koin.android.ext.android.get
-import zmuzik.slidingpuzzle2.screens.MainActivity
+import timber.log.Timber
 import zmuzik.slidingpuzzle2.R
 import zmuzik.slidingpuzzle2.common.Prefs
 import zmuzik.slidingpuzzle2.common.toast
+import zmuzik.slidingpuzzle2.screens.MainActivity
 import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
@@ -56,7 +57,7 @@ class PuzzleBoardView : ViewGroup {
 
     enum class State {
         LOADING, // before pic is loaded and board initialized
-        LOADED, // pic loaded
+        LOADED, // pic loaded, doing some animations
         READY_TO_SHUFFLE, // pic loaded and board (numbers) visible but not shuffled yet
         SHUFFLING, // shuffling in progress (animating), don't accept any touch events
         SHUFFLED, // ready to play
@@ -105,7 +106,7 @@ class PuzzleBoardView : ViewGroup {
         // sets the black tile to the last tile of the grid
         blackTileX = tilesX - 1
         blackTileY = tilesY - 1
-        state = State.READY_TO_SHUFFLE
+        state = State.LOADED
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -156,7 +157,7 @@ class PuzzleBoardView : ViewGroup {
     }
 
     fun maybeShuffle() {
-        if (state == State.LOADED || state == State.SHUFFLED || state == State.READY_TO_SHUFFLE) {
+        if (state == State.READY_TO_SHUFFLE) {
             shuffle()
         }
     }
@@ -243,7 +244,7 @@ class PuzzleBoardView : ViewGroup {
         when (state) {
             State.LOADING, State.LOADED, State.SHUFFLING, State.FINISHED -> return true
             State.READY_TO_SHUFFLE -> {
-                shuffle()
+                maybeShuffle()
                 return true
             }
             else -> {
@@ -395,18 +396,24 @@ class PuzzleBoardView : ViewGroup {
         tiles = array2d<TileView>(tilesX, tilesY) { TileView(context) }
         var counter = 0
         removeAllViews()
+        val displayNumbers = prefsHelper.displayTileNumbers
         for (x in 0 until tilesX) {
             for (y in 0 until tilesY) {
                 val tileNumber = restoredPositions[counter]
                 val origTile = getTileForTileNumber(oldTiles, tileNumber)
                 origTile?.let {
                     tiles[x][y] = it
+                    tiles[x][y].displayNumbers = displayNumbers
                     addView(tiles[x][y])
                 }
                 counter++
             }
         }
-        if (state == State.FINISHED) showAllTiles()
+        if (state == State.FINISHED) {
+            showAllTiles()
+        } else {
+            invalidate()
+        }
     }
 
     private fun getTileForTileNumber(oldTiles: Array<Array<TileView>>, tileNumber: Int): TileView? {

@@ -2,6 +2,8 @@ package zmuzik.slidingpuzzle2.screens
 
 import android.util.DisplayMetrics
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import zmuzik.slidingpuzzle2.common.toast
 
 abstract class BaseFragment: Fragment() {
 
@@ -17,5 +19,15 @@ abstract class BaseFragment: Fragment() {
         val displayMetrics = DisplayMetrics()
         activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
         displayMetrics.heightPixels
+    }
+
+    fun goBackWithMessage(message: String) {
+        activity?.toast(message)
+        findNavController().popBackStack()
+    }
+
+    fun goBackWithMessage(msgId: Int) {
+        activity?.toast(msgId)
+        findNavController().popBackStack()
     }
 }
