@@ -37,7 +37,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode getVersionCode()
-        versionName "2.11"
+        versionName "2.12"
         buildConfigField("String", "FLICKR_API_KEY", customProps.FLICKR_API_KEY)
         archivesBaseName = "zmuzik-slidingpuzzle2-v$versionName"
     }
