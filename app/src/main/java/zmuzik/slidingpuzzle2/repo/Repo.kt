@@ -2,6 +2,8 @@ package zmuzik.slidingpuzzle2.repo
 
 import android.os.Environment
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import zmuzik.slidingpuzzle2.Conf
 import zmuzik.slidingpuzzle2.common.FILE_PREFIX
@@ -28,9 +30,11 @@ class Repo(val flickrApi: FlickrApi) {
         appPicturesLd.value = Resource.Success(appPictures)
     }
 
-    fun updateCameraPictures() {
+    suspend fun updateCameraPictures() {
         cameraPicturesLd.value = Resource.Loading()
-        val foundFiles = retrieveCameraPictures()
+        val foundFiles = withContext(Dispatchers.Default) {
+            retrieveCameraPictures()
+        }
         cameraPictures.clear()
         cameraPictures.addAll(foundFiles.map { Picture.LocalPicture(it.filePath) })
         cameraPicturesLd.value = Resource.Success(cameraPictures)

@@ -38,7 +38,9 @@ class HomeScreenViewModel(val repo: Repo, val prefs: Prefs) : ViewModel() {
 
     fun requestAppPictures() = repo.updateAppPictures()
 
-    fun requestCameraPictures() = repo.updateCameraPictures()
+    fun requestCameraPictures() = viewModelScope.launch {
+        repo.updateCameraPictures()
+    }
 
     fun requestFlickrSearch(searchQuery: String) = viewModelScope.launch {
         repo.updateFlickrPictures(searchQuery)
