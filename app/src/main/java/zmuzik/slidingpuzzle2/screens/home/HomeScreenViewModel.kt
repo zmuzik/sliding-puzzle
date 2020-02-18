@@ -2,13 +2,14 @@ package zmuzik.slidingpuzzle2.screens.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.GlobalScope
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import zmuzik.slidingpuzzle2.common.PictureTab
 import zmuzik.slidingpuzzle2.common.Prefs
 import zmuzik.slidingpuzzle2.common.SingleLiveEvent
 import zmuzik.slidingpuzzle2.repo.Repo
+import kotlin.math.max
 
 class HomeScreenViewModel(val repo: Repo, val prefs: Prefs) : ViewModel() {
 
@@ -20,15 +21,15 @@ class HomeScreenViewModel(val repo: Repo, val prefs: Prefs) : ViewModel() {
         when (tab) {
             PictureTab.APP -> pictureUriToOpen.value = repo.appPictures[position].url
             PictureTab.CAMERA -> pictureUriToOpen.value = repo.cameraPictures[position].url
-            PictureTab.FLICKR -> GlobalScope.launch {
+            PictureTab.FLICKR -> viewModelScope.launch {
                 val photo = repo.flickrPictures[position]
-                val response = repo.getPhotoSizes(photo.id).await()
-                if (response.isSuccessful) {
-                    val picture = response.body()?.sizes?.size?.find { Math.max(it.height, it.width) >= maxDim }
-                            ?: response.body()?.sizes?.size?.last()
+                try {
+                    val response = repo.getFlickrPhotoSizes(photo.id)
+                    val picture = response.sizes?.size?.find { max(it.height, it.width) >= maxDim }
+                            ?: response.sizes?.size?.last()
                     pictureUriToOpen.postValue(picture?.source)
-                } else {
-                    Timber.e(response.message())
+                } catch (t: Throwable) {
+                    Timber.e(t)
                     pictureUriToOpen.postValue(null)
                 }
             }
@@ -39,7 +40,9 @@ class HomeScreenViewModel(val repo: Repo, val prefs: Prefs) : ViewModel() {
 
     fun requestCameraPictures() = repo.updateCameraPictures()
 
-    fun requestFlickrSearch(searchQuery: String) = repo.updateFlickrPictures(searchQuery)
+    fun requestFlickrSearch(searchQuery: String) = viewModelScope.launch {
+        repo.updateFlickrPictures(searchQuery)
+    }
 
     fun toggleShowNumbers(): Boolean {
         prefs.displayTileNumbers = !prefs.displayTileNumbers

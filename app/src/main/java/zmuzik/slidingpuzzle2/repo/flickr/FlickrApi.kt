@@ -20,13 +20,13 @@ interface FlickrApi {
             "&sort=interestingness-desc" +
             "&per_page=" + Conf.FLICKR_REQUEST_IMAGES +
             "&api_key=" + BuildConfig.FLICKR_API_KEY)
-    fun getPhotos(@Query("text") query: String): Deferred<Response<FlickrSearchResponse>>
+    suspend fun getPhotos(@Query("text") query: String): FlickrSearchResponse
 
     @GET("?method=flickr.photos.getSizes" +
             "&format=json" +
             "&nojsoncallback=1" +
             "&api_key=" + BuildConfig.FLICKR_API_KEY)
-    fun getPhotoSizes(@Query("photo_id") photoId: String): Deferred<Response<FlickrPhotoSizesResponse>>
+    suspend fun getPhotoSizes(@Query("photo_id") photoId: String): FlickrPhotoSizesResponse
 }
 
 data class FlickrPhoto(

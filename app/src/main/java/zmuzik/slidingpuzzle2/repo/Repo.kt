@@ -2,7 +2,6 @@ package zmuzik.slidingpuzzle2.repo
 
 import android.os.Environment
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.*
 import timber.log.Timber
 import zmuzik.slidingpuzzle2.Conf
 import zmuzik.slidingpuzzle2.common.FILE_PREFIX
@@ -12,12 +11,8 @@ import zmuzik.slidingpuzzle2.common.isPicture
 import zmuzik.slidingpuzzle2.repo.flickr.FlickrApi
 import zmuzik.slidingpuzzle2.repo.model.Picture
 import java.io.File
-import kotlin.coroutines.CoroutineContext
 
-class Repo(val flickrApi: FlickrApi) : CoroutineScope {
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
+class Repo(val flickrApi: FlickrApi) {
 
     val appPictures = mutableListOf<Picture.LocalPicture>()
     val cameraPictures = mutableListOf<Picture.LocalPicture>()
@@ -33,33 +28,36 @@ class Repo(val flickrApi: FlickrApi) : CoroutineScope {
         appPicturesLd.value = Resource.Success(appPictures)
     }
 
-    fun updateCameraPictures() = launch {
+    fun updateCameraPictures() {
         cameraPicturesLd.value = Resource.Loading()
-        val foundFiles = getCameraPictures().await()
+        val foundFiles = retrieveCameraPictures()
         cameraPictures.clear()
         cameraPictures.addAll(foundFiles.map { Picture.LocalPicture(it.filePath) })
         cameraPicturesLd.value = Resource.Success(cameraPictures)
     }
 
-    fun updateFlickrPictures(query: String) = launch {
+    suspend fun updateFlickrPictures(query: String) {
         flickrPicturesLd.value = Resource.Loading()
-        val response = flickrApi.getPhotos(query).await()
-        if (response.isSuccessful) {
-            val resultList = response.body()?.photos?.photo?: emptyList()
+        try {
+            val response = flickrApi.getPhotos(query)
+            val resultList = response.photos?.photo ?: emptyList()
             flickrPictures.clear()
             flickrPictures.addAll(resultList.map { Picture.FlickrPicture(it) })
             flickrPicturesLd.value = Resource.Success(flickrPictures)
-        } else {
-            Timber.e(response.message())
-            flickrPicturesLd.value = Resource.Failure(response.code())
+        } catch (t: Throwable) {
+            Timber.e(t)
+            flickrPicturesLd.value = Resource.Failure()
         }
     }
 
-    fun getCameraPictures(): Deferred<List<FileContainer>> = async {
+    suspend fun getFlickrPhotoSizes(photoId: String) = flickrApi.getPhotoSizes(photoId)
+
+    private fun retrieveCameraPictures(): List<FileContainer> {
         val foundFiles = mutableListOf<FileContainer>()
         val cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
         scanDirectoryForPictures(cameraDir, foundFiles)
         foundFiles.also { it.sortByDescending { it.lastModified } }
+        return foundFiles
     }
 
     private fun scanDirectoryForPictures(root: File?, filePaths: MutableList<FileContainer>) {
@@ -73,6 +71,4 @@ class Repo(val flickrApi: FlickrApi) : CoroutineScope {
             }
         }
     }
-
-    fun getPhotoSizes(photoId: String) = flickrApi.getPhotoSizes(photoId)
 }

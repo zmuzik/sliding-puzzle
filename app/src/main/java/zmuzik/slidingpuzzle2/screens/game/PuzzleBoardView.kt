@@ -83,7 +83,8 @@ class PuzzleBoardView : ViewGroup {
         var tileNumber = 1
         for (y in 0 until tilesY) {
             for (x in 0 until tilesX) {
-                val tileBitmap = Bitmap.createBitmap(completePictureBitmap,
+                val completeBitmap = completePictureBitmap ?: continue
+                val tileBitmap = Bitmap.createBitmap(completeBitmap,
                         x * tileWidth, y * tileHeight,
                         tileWidth, tileHeight)
                 tiles[x][y] = TileView(context, x, y, tileBitmap, tileNumber)
