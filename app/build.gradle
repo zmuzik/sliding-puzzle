@@ -29,13 +29,12 @@ android {
     Properties customProps = new Properties()
     customProps.load(new FileInputStream("../secrets/zmuzik.slidingpuzzle2.properties"))
 
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "zmuzik.slidingpuzzle2"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode getVersionCode()
         versionName "2.12"
         buildConfigField("String", "FLICKR_API_KEY", customProps.FLICKR_API_KEY)
