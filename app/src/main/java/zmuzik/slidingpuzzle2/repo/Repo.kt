@@ -32,7 +32,7 @@ class Repo(val flickrApi: FlickrApi) {
 
     suspend fun updateCameraPictures() {
         cameraPicturesLd.value = Resource.Loading()
-        val foundFiles = withContext(Dispatchers.Default) {
+        val foundFiles = withContext(Dispatchers.IO) {
             retrieveCameraPictures()
         }
         cameraPictures.clear()
