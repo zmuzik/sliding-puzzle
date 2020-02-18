@@ -138,16 +138,16 @@ class HomeFragment : BaseFragment(), HomeScreen {
         mainActivity?.showStatusBar(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.menu_main, menu)
+        inflater.inflate(R.menu.menu_main, menu)
         searchMenuItem = menu.findItem(R.id.action_search)
         searchMenuItem?.isVisible = false
         toggleNumbersMenuItem = menu.findItem(R.id.action_toggle_display_numbers)
         setTileNumbersIcon(prefs.displayTileNumbers)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem) = when (item?.itemId) {
         R.id.action_search -> performFlickrSearch()
         R.id.action_toggle_display_numbers -> toggleShowNumbers()
         R.id.action_change_grid_size -> openChangeGridSizeDialog()

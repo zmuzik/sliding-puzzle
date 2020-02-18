@@ -3,7 +3,6 @@ package zmuzik.slidingpuzzle2.repo
 import android.os.Environment
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
-import kotlinx.coroutines.android.Main
 import timber.log.Timber
 import zmuzik.slidingpuzzle2.Conf
 import zmuzik.slidingpuzzle2.common.FILE_PREFIX
