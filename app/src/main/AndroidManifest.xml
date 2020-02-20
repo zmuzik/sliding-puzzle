@@ -25,7 +25,8 @@
 
         <activity
             android:name=".screens.MainActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="fullSensor"
+            android:windowSoftInputMode="adjustPan" />
 
     </application>
 
