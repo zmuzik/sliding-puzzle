@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.DisplayMetrics
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -17,7 +16,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -30,7 +28,6 @@ import zmuzik.slidingpuzzle2.R
 import zmuzik.slidingpuzzle2.common.*
 import zmuzik.slidingpuzzle2.repo.model.Picture
 import zmuzik.slidingpuzzle2.screens.BaseFragment
-import zmuzik.slidingpuzzle2.screens.MainActivity
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -161,7 +158,7 @@ class HomeFragment : BaseFragment(), HomeScreen {
 
     private fun openChangeGridSizeDialog(): Boolean {
         val ctx = context ?: return true
-        val builder = AlertDialog.Builder(ctx)
+        val builder = AlertDialog.Builder(ctx, R.style.Theme_AppCompat_Dialog)
         builder.setTitle(resources.getString(R.string.select_grid_size))
         builder.setSingleChoiceItems(Conf.GRID_SIZES, gridDimsPosition()) { dialog, item ->
             val positionsStr = Conf.GRID_SIZES[item]

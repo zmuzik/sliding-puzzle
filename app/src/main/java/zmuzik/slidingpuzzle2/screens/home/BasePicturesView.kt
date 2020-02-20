@@ -7,21 +7,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_pictures_grid.view.*
-import zmuzik.slidingpuzzle2.Conf
-import zmuzik.slidingpuzzle2.screens.MainActivity
-import zmuzik.slidingpuzzle2.R
-import zmuzik.slidingpuzzle2.common.*
-import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.pictures_grid.view.*
 import timber.log.Timber
+import zmuzik.slidingpuzzle2.Conf
+import zmuzik.slidingpuzzle2.R
+import zmuzik.slidingpuzzle2.common.*
 import zmuzik.slidingpuzzle2.repo.model.Picture
+import zmuzik.slidingpuzzle2.screens.MainActivity
 
-open class BasePicturesView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ConstraintLayout(context, attrs, defStyleAttr) {
+open class BasePicturesView @JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+    : ConstraintLayout(context, attrs, defStyleAttr) {
 
     init {
         LayoutInflater.from(context).inflate(R.layout.pictures_grid, this, true)
@@ -52,12 +54,13 @@ open class BasePicturesView @JvmOverloads constructor(context: Context, attrs: A
 
     val isTablet get() = resources.getBoolean(R.bool.isTablet)
 
-    val columnsNumber: Int get() = when {
-        isTablet && isHorizontal -> Conf.GRID_COLS_TABLET_LANDSCAPE
-        isTablet && !isHorizontal -> Conf.GRID_COLS_TABLET_PORTRAIT
-        !isTablet && isHorizontal -> Conf.GRID_COLS_PHONE_LANDSCAPE
-        else -> Conf.GRID_COLS_PHONE_PORTRAIT
-    }
+    val columnsNumber: Int
+        get() = when {
+            isTablet && isHorizontal -> Conf.GRID_COLS_TABLET_LANDSCAPE
+            isTablet && !isHorizontal -> Conf.GRID_COLS_TABLET_PORTRAIT
+            !isTablet && isHorizontal -> Conf.GRID_COLS_PHONE_LANDSCAPE
+            else -> Conf.GRID_COLS_PHONE_PORTRAIT
+        }
 
     open fun getAdapter(uris: List<Picture>): PicturesGridAdapter = PicturesGridAdapter(uris, columnsNumber)
 
