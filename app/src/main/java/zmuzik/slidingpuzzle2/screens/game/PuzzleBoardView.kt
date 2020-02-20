@@ -16,16 +16,22 @@ import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 
-class PuzzleBoardView : ViewGroup {
+class PuzzleBoardView
+@JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+    : ViewGroup(context, attrs, defStyleAttr) {
 
-    private val SHUFFLE_STIFFNESS = SpringForce.STIFFNESS_LOW
-    private val SHUFFLE_DAMPING_RATIO = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY
+    var state = GameState.LOADING
+    var gameScreen: WeakReference<GameScreen>? = null
+
+    private var completePictureBitmap: Bitmap? = null
+
+    private val shuffleStiffness = SpringForce.STIFFNESS_LOW
+    private val shuffleDampingRatio = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY
 
     private var tilesX: Int = 0
     private var tilesY: Int = 0
-    private var tiles: Array<Array<TileView>> = array2d<TileView>(tilesX, tilesY) { TileView(context) }
+    private var tiles: Array<Array<TileView>> = array2d(tilesX, tilesY) { TileView(context) }
 
-    var completePictureBitmap: Bitmap? = null
 
     private var tileWidth: Int = 0
     private var tileHeight: Int = 0
@@ -38,21 +44,10 @@ class PuzzleBoardView : ViewGroup {
     private var activeTileY: Int = 0
     private var blackTileX: Int = 0
     private var blackTileY: Int = 0
-    var state = GameState.LOADING
 
-    val activity by lazy { (context as MainActivity) }
+    private val activity by lazy { (context as MainActivity) }
 
-    var gameScreen: WeakReference<GameScreen>? = null
-
-    val prefsHelper by lazy { activity.get<Prefs>() }
-
-    constructor(context: Context) : super(context)
-
-    constructor(context: Context, attrs: AttributeSet) :
-            super(context, attrs)
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) :
-            super(context, attrs, defStyleAttr)
+    private val prefsHelper by lazy { activity.get<Prefs>() }
 
     fun setDimensions(width: Int, height: Int) {
         val params = layoutParams
@@ -75,11 +70,14 @@ class PuzzleBoardView : ViewGroup {
         restoreGameState(viewModel)
     }
 
-    inline fun <reified INNER> array2d(
-            sizeOuter: Int, sizeInner: Int, noinline innerInit: (Int) -> INNER): Array<Array<INNER>> = Array(sizeOuter) { Array<INNER>(sizeInner, innerInit) }
+    private inline fun <reified T> array2d(
+            sizeOuter: Int,
+            sizeInner: Int,
+            noinline innerInit: (Int) -> T
+    ): Array<Array<T>> = Array(sizeOuter) { Array(sizeInner, innerInit) }
 
     private fun initTiles() {
-        tiles = array2d<TileView>(tilesX, tilesY) { TileView(context) }
+        tiles = array2d(tilesX, tilesY) { TileView(context) }
         var tileNumber = 1
         for (y in 0 until tilesY) {
             for (x in 0 until tilesX) {
@@ -136,14 +134,14 @@ class PuzzleBoardView : ViewGroup {
         return true
     }
 
-    fun isHorizPlayable(x: Int, y: Int): Boolean {
+    private fun isHorizPlayable(x: Int, y: Int): Boolean {
         return y == blackTileY && y == activeTileY &&
-                (x in activeTileX..(blackTileX - 1) || x in (blackTileX + 1)..activeTileX)
+                (x in activeTileX until blackTileX || x in (blackTileX + 1)..activeTileX)
     }
 
-    fun isVertPlayable(x: Int, y: Int): Boolean {
+    private fun isVertPlayable(x: Int, y: Int): Boolean {
         return x == blackTileX && x == activeTileX &&
-                (y in activeTileY..(blackTileY - 1) || y in (blackTileY + 1)..activeTileY)
+                (y in activeTileY until blackTileY || y in (blackTileY + 1)..activeTileY)
     }
 
     fun maybeShuffle() {
@@ -152,7 +150,7 @@ class PuzzleBoardView : ViewGroup {
         }
     }
 
-    fun shuffle() {
+    private fun shuffle() {
         state = GameState.SHUFFLING
         gameScreen?.get()?.hideShuffleIcon()
         requestLayout()
@@ -182,9 +180,9 @@ class PuzzleBoardView : ViewGroup {
                 animX = SpringAnimation(tile, SpringAnimation.X, endX.toFloat())
                 animY = SpringAnimation(tile, SpringAnimation.Y, endY.toFloat())
                 animX.spring
-                        .setStiffness(SHUFFLE_STIFFNESS).dampingRatio = SHUFFLE_DAMPING_RATIO
+                        .setStiffness(shuffleStiffness).dampingRatio = shuffleDampingRatio
                 animY.spring
-                        .setStiffness(SHUFFLE_STIFFNESS).dampingRatio = SHUFFLE_DAMPING_RATIO
+                        .setStiffness(shuffleStiffness).dampingRatio = shuffleDampingRatio
                 animX.start()
                 animY.start()
             }
@@ -200,7 +198,7 @@ class PuzzleBoardView : ViewGroup {
         }
     }
 
-    fun playTile(x: Int, y: Int, isShuffleMove: Boolean) {
+    private fun playTile(x: Int, y: Int, isShuffleMove: Boolean) {
         if (!isShuffleMove) state = GameState.PLAYING
         val temp = tiles[blackTileX][blackTileY]
         if (x == blackTileX) {
@@ -377,7 +375,7 @@ class PuzzleBoardView : ViewGroup {
         }
     }
 
-    fun restoreGameState(viewModel: GameScreenViewModel) {
+    private fun restoreGameState(viewModel: GameScreenViewModel) {
         val restoredPositions = viewModel.storedPositions ?: return
         state = viewModel.storedBoardState ?: return
         blackTileX = viewModel.storedBlackX ?: return

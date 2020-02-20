@@ -19,10 +19,9 @@ import zmuzik.slidingpuzzle2.Conf
 import zmuzik.slidingpuzzle2.R
 import zmuzik.slidingpuzzle2.common.*
 import zmuzik.slidingpuzzle2.repo.model.Picture
-import zmuzik.slidingpuzzle2.screens.MainActivity
 
-open class BasePicturesView @JvmOverloads
-constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+open class BasePicturesView
+@JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : ConstraintLayout(context, attrs, defStyleAttr) {
 
     init {
@@ -35,8 +34,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     open val tab = PictureTab.APP
 
     var adapter: PicturesGridAdapter? = null
-
-    val mainActivity get() = context as? MainActivity
 
     open fun onDataUpdate(resource: Resource<List<Picture>>?) = when (resource) {
         is Resource.Loading -> progressBar.show()

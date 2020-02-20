@@ -1,6 +1,6 @@
 package zmuzik.slidingpuzzle2
 
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.Module

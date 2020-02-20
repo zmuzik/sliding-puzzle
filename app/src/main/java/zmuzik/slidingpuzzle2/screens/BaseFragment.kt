@@ -21,11 +21,6 @@ abstract class BaseFragment: Fragment() {
         displayMetrics.heightPixels
     }
 
-    fun goBackWithMessage(message: String) {
-        activity?.toast(message)
-        findNavController().popBackStack()
-    }
-
     fun goBackWithMessage(msgId: Int) {
         activity?.toast(msgId)
         findNavController().popBackStack()

@@ -10,6 +10,7 @@ sealed class Picture(val thumbUrl: String) {
     open var url: String? = thumbUrl
 
     class LocalPicture(thumbUrl: String) : Picture(thumbUrl)
+
     class FlickrPicture(val flickrPhoto: FlickrPhoto) : Picture(flickrPhoto.thumbUrl) {
         override var url: String? = null
         val id: String get() = flickrPhoto.id

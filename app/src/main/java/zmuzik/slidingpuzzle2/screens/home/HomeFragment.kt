@@ -34,15 +34,17 @@ import java.util.*
 
 class HomeFragment : BaseFragment(), HomeScreen {
 
-    var searchMenuItem: MenuItem? = null
-    var toggleNumbersMenuItem: MenuItem? = null
+    val viewModel: HomeScreenViewModel by viewModel()
 
-    var isOpeningGameInProgress = false
+    var searchMenuItem: MenuItem? = null
+
+    private var toggleNumbersMenuItem: MenuItem? = null
+
+    private var isOpeningGameInProgress = false
 
     private var sharedView: WeakReference<ImageView>? = null
 
-    val viewModel: HomeScreenViewModel by viewModel()
-    val prefs: Prefs by inject()
+    private val prefs: Prefs by inject()
 
     var cameraTab: CameraPicturesView? = null
         set(value) {
@@ -50,7 +52,7 @@ class HomeFragment : BaseFragment(), HomeScreen {
             onReadExternalPermission(viewModel.readExternalGrantedLd.value)
         }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.screen_home, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -123,11 +125,6 @@ class HomeFragment : BaseFragment(), HomeScreen {
         viewModel.readExternalGrantedLd.value = isReadExternalGranted()
     }
 
-    fun onReadExternalPermission(granted: Boolean?) {
-        if (granted == null) return
-        cameraTab?.permissionsComboView?.visibility = if (granted) View.GONE else View.VISIBLE
-    }
-
     override fun onResume() {
         super.onResume()
         viewModel.requestAppPictures()
@@ -151,9 +148,38 @@ class HomeFragment : BaseFragment(), HomeScreen {
         else -> super.onOptionsItemSelected(item)
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == Keys.REQUEST_PERMISSION_READ_STORAGE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                viewModel.prefs.shouldAskReadStoragePerm = false
+                viewModel.readExternalGrantedLd.value = true
+                viewModel.requestCameraPictures()
+            }
+        }
+    }
+
+    override fun requestReadExternalPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), Keys.REQUEST_PERMISSION_READ_STORAGE)
+        }
+    }
+
+    override fun runGame(itemView: ImageView, tab: PictureTab, position: Int): Boolean {
+        if (isOpeningGameInProgress) return false
+        isOpeningGameInProgress = true
+        sharedView = WeakReference(itemView)
+        viewModel.runGame(tab, position, Math.max(screenHeight, screenWidth))
+        return true
+    }
+
     fun onDataUpdate(tab: BasePicturesView?, resource: Resource<List<Picture>>?) {
         if (tab == null || resource == null) return
         tab.onDataUpdate(resource)
+    }
+
+    private fun onReadExternalPermission(granted: Boolean?) {
+        if (granted == null) return
+        cameraTab?.permissionsComboView?.visibility = if (granted) View.GONE else View.VISIBLE
     }
 
     private fun openChangeGridSizeDialog(): Boolean {
@@ -173,12 +199,12 @@ class HomeFragment : BaseFragment(), HomeScreen {
         return true
     }
 
-    fun gridDimsPosition(): Int {
+    private fun gridDimsPosition(): Int {
         val currentDims = viewModel.getGridDimensions()
         return Conf.GRID_SIZES.indices.firstOrNull { currentDims == Conf.GRID_SIZES[it] } ?: 0
     }
 
-    fun getStatusBarHeight(): Int {
+    private fun getStatusBarHeight(): Int {
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
         return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
     }
@@ -199,10 +225,10 @@ class HomeFragment : BaseFragment(), HomeScreen {
         return true
     }
 
-    fun setTileNumbersIcon(showNumbers: Boolean) = toggleNumbersMenuItem?.setIcon(
+    private fun setTileNumbersIcon(showNumbers: Boolean) = toggleNumbersMenuItem?.setIcon(
             if (showNumbers) R.drawable.ic_tile_with_number else R.drawable.ic_tile_without_number)
 
-    fun showFlickerSearch() {
+    private fun showFlickerSearch() {
         searchBar.setText("")
         searchBar.show()
         searchBar.requestFocus()
@@ -210,7 +236,7 @@ class HomeFragment : BaseFragment(), HomeScreen {
         mainActivity?.imm?.showSoftInput(searchBar, InputMethodManager.SHOW_IMPLICIT)
     }
 
-    fun launchCameraApp() {
+    private fun launchCameraApp() {
         val imageCaptureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
             val mInfo = context?.packageManager?.resolveActivity(imageCaptureIntent, 0) ?: return
@@ -224,33 +250,9 @@ class HomeFragment : BaseFragment(), HomeScreen {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == Keys.REQUEST_PERMISSION_READ_STORAGE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                viewModel.prefs.shouldAskReadStoragePerm = false
-                viewModel.readExternalGrantedLd.value = true
-                viewModel.requestCameraPictures()
-            }
-        }
-    }
-
-    fun isReadExternalGranted(): Boolean {
+    private fun isReadExternalGranted(): Boolean {
         val ctx = context ?: return false
         return ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-    }
-
-    override fun requestReadExternalPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), Keys.REQUEST_PERMISSION_READ_STORAGE)
-        }
-    }
-
-    override fun runGame(itemView: ImageView, tab: PictureTab, position: Int): Boolean {
-        if (isOpeningGameInProgress) return false
-        isOpeningGameInProgress = true
-        sharedView = WeakReference(itemView)
-        viewModel.runGame(tab, position, Math.max(screenHeight, screenWidth))
-        return true
     }
 
     private fun onGamePicUriRetrieved(uri: String?) {

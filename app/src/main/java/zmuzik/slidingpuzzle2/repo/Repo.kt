@@ -14,7 +14,7 @@ import zmuzik.slidingpuzzle2.repo.flickr.FlickrApi
 import zmuzik.slidingpuzzle2.repo.model.Picture
 import java.io.File
 
-class Repo(val flickrApi: FlickrApi) {
+class Repo(private val flickrApi: FlickrApi) {
 
     val appPictures = mutableListOf<Picture.LocalPicture>()
     val cameraPictures = mutableListOf<Picture.LocalPicture>()

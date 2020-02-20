@@ -26,12 +26,13 @@ import java.lang.ref.WeakReference
 
 class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
 
+    val viewModel by viewModel<GameScreenViewModel>()
+
     private var boardWidth: Int = 0
     private var boardHeight: Int = 0
 
-    val prefs by inject<Prefs>()
-    val shakeDetector by inject<ShakeDetector>()
-    val viewModel by viewModel<GameScreenViewModel>()
+    private val prefs by inject<Prefs>()
+    private val shakeDetector by inject<ShakeDetector>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +101,7 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
         board?.maybeShuffle()
     }
 
-    fun loadPicture(uri: String) {
+    private fun loadPicture(uri: String) {
         Picasso.with(activity)
                 .load(uri)
                 .noFade()
