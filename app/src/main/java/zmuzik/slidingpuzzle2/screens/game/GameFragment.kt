@@ -34,20 +34,20 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
     private val prefs by inject<Prefs>()
     private val shakeDetector by inject<ShakeDetector>()
 
+    private var resumed: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { viewModel.initFromIntent(it) }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.screen_game, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         board.gameScreen = WeakReference(this)
     }
-
-    private var resumed: Boolean = false
 
     override fun onResume() {
         super.onResume()
@@ -63,37 +63,16 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
         }, 10L)
     }
 
-    private fun setupInitialThumbnailPos() {
-        if (viewModel.storedBoardState != null) {
-            thumbnail.hide()
-            return
-        }
-
-        // initial position
-        mainActivity?.thumbBitmap?.get()?.let { thumbnail.setImageBitmap(it) }
-        (thumbnail.layoutParams as? ConstraintLayout.LayoutParams)?.let {
-            it.width = viewModel.thumbnailDim
-            it.height = viewModel.thumbnailDim
-        }
-
-        with(horizGuideline) {
-            val lp = this.layoutParams as ConstraintLayout.LayoutParams
-            lp.guideBegin = viewModel.thumbnailTop
-            this.layoutParams = lp
-        }
-
-        with(vertGuideline) {
-            val lp = this.layoutParams as ConstraintLayout.LayoutParams
-            lp.guideBegin = viewModel.thumbnailLeft
-            this.layoutParams = lp
-        }
-    }
-
     override fun onPause() {
         super.onPause()
         shakeDetector.unRegister()
         board.saveGameState(viewModel)
         resumed = false
+    }
+
+    override fun onStop() {
+        Picasso.with(activity).cancelRequest(imageTarget)
+        super.onStop()
     }
 
     override fun onShake() {
@@ -112,55 +91,6 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
 
     override fun hideShuffleIcon() {
         shuffleBtn.hide()
-    }
-
-    private fun adjustBoardDimensions(board: PuzzleBoardView, bitmap: Bitmap) {
-        val screenSideRatio = screenWidth.toFloat() / screenHeight
-        val origPictureSideRatio = bitmap.width.toFloat() / bitmap.height
-        if (origPictureSideRatio > screenSideRatio) {
-            boardWidth = screenWidth
-            boardHeight = (screenWidth / origPictureSideRatio).toInt()
-        } else {
-            boardHeight = screenHeight
-            boardWidth = (screenHeight * origPictureSideRatio).toInt()
-        }
-        val widthMultiple = if (boardWidth > boardHeight) prefs.gridDimLong else prefs.gridDimShort
-        val heightMultiple = if (boardWidth > boardHeight) prefs.gridDimShort else prefs.gridDimLong
-
-        boardWidth -= boardWidth % widthMultiple
-        boardHeight -= boardHeight % heightMultiple
-
-        board.setDimensions(boardWidth, boardHeight)
-    }
-
-    override fun onStop() {
-        Picasso.with(activity).cancelRequest(imageTarget)
-        super.onStop()
-    }
-
-    private var imageTarget: Target = object : Target {
-        override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-            adjustBoardDimensions(board, bitmap)
-            progressBar.hide()
-            board.init(bitmap, viewModel)
-            viewModel.storedBoardState?.let { boardState ->
-                if (boardState == GameState.LOADING
-                        || boardState == GameState.LOADED
-                        || boardState == GameState.READY_TO_SHUFFLE) {
-                    animateThumbnailToBoard(bitmap)
-                } else {
-                    showBoardWithoutAnimation()
-                }
-            } ?: kotlin.run {
-                animateThumbnailToBoard(bitmap)
-            }
-        }
-
-        override fun onBitmapFailed(errorDrawable: Drawable?) {
-            goBackWithMessage(R.string.unable_to_load_flickr_picture)
-        }
-
-        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
     }
 
     fun animateThumbnailToBoard(bitmap: Bitmap) {
@@ -196,5 +126,75 @@ class GameFragment : BaseFragment(), GameScreen, ShakeDetector.OnShakeListener {
         board.show()
         thumbnail.hide()
         shuffleBtn.hide()
+    }
+
+    private fun setupInitialThumbnailPos() {
+        if (viewModel.storedBoardState != null) {
+            thumbnail.hide()
+            return
+        }
+
+        // initial position
+        mainActivity?.thumbBitmap?.get()?.let { thumbnail.setImageBitmap(it) }
+        (thumbnail.layoutParams as? ConstraintLayout.LayoutParams)?.let {
+            it.width = viewModel.thumbnailDim
+            it.height = viewModel.thumbnailDim
+        }
+
+        with(horizGuideline) {
+            val lp = this.layoutParams as ConstraintLayout.LayoutParams
+            lp.guideBegin = viewModel.thumbnailTop
+            this.layoutParams = lp
+        }
+
+        with(vertGuideline) {
+            val lp = this.layoutParams as ConstraintLayout.LayoutParams
+            lp.guideBegin = viewModel.thumbnailLeft
+            this.layoutParams = lp
+        }
+    }
+
+    private fun adjustBoardDimensions(board: PuzzleBoardView, bitmap: Bitmap) {
+        val screenSideRatio = screenWidth.toFloat() / screenHeight
+        val origPictureSideRatio = bitmap.width.toFloat() / bitmap.height
+        if (origPictureSideRatio > screenSideRatio) {
+            boardWidth = screenWidth
+            boardHeight = (screenWidth / origPictureSideRatio).toInt()
+        } else {
+            boardHeight = screenHeight
+            boardWidth = (screenHeight * origPictureSideRatio).toInt()
+        }
+        val widthMultiple = if (boardWidth > boardHeight) prefs.gridDimLong else prefs.gridDimShort
+        val heightMultiple = if (boardWidth > boardHeight) prefs.gridDimShort else prefs.gridDimLong
+
+        boardWidth -= boardWidth % widthMultiple
+        boardHeight -= boardHeight % heightMultiple
+
+        board.setDimensions(boardWidth, boardHeight)
+    }
+
+    private var imageTarget: Target = object : Target {
+        override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
+            adjustBoardDimensions(board, bitmap)
+            progressBar.hide()
+            board.init(bitmap, viewModel)
+            viewModel.storedBoardState?.let { boardState ->
+                if (boardState == GameState.LOADING
+                        || boardState == GameState.LOADED
+                        || boardState == GameState.READY_TO_SHUFFLE) {
+                    animateThumbnailToBoard(bitmap)
+                } else {
+                    showBoardWithoutAnimation()
+                }
+            } ?: kotlin.run {
+                animateThumbnailToBoard(bitmap)
+            }
+        }
+
+        override fun onBitmapFailed(errorDrawable: Drawable?) {
+            goBackWithMessage(R.string.unable_to_load_flickr_picture)
+        }
+
+        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
     }
 }

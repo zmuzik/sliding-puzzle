@@ -6,11 +6,12 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import java.lang.ref.WeakReference
+import kotlin.math.sqrt
 
 class ShakeDetector(private val context: Context) : SensorEventListener {
 
-    private val SHAKE_FORCE_THRESHOLD = 2f
-    private val SHAKE_SLOP_TIME_MS = 500
+    private val shakeForceThreshold = 2f
+    private val shakeSlopTimeMs = 500
 
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
@@ -48,11 +49,11 @@ class ShakeDetector(private val context: Context) : SensorEventListener {
             val gY = y / SensorManager.GRAVITY_EARTH
             val gZ = z / SensorManager.GRAVITY_EARTH
 
-            val totalForce = Math.sqrt((gX * gX + gY * gY + gZ * gZ).toDouble())
+            val totalForce = sqrt((gX * gX + gY * gY + gZ * gZ).toDouble())
 
-            if (totalForce > SHAKE_FORCE_THRESHOLD) {
+            if (totalForce > shakeForceThreshold) {
                 val now = System.currentTimeMillis()
-                if (shakeTimestamp + SHAKE_SLOP_TIME_MS > now) return
+                if (shakeTimestamp + shakeSlopTimeMs > now) return
                 shakeTimestamp = now
                 it.onShake()
             }

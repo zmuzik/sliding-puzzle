@@ -1,6 +1,6 @@
 package zmuzik.slidingpuzzle2.common
 
-data class FileContainer(val filePath: String, val lastModified: Long)
+data class FileWrapper(val filePath: String, val lastModified: Long)
 
 sealed class Resource<out T> {
     class Loading<out T> : Resource<T>()

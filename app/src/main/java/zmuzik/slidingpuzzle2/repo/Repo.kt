@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import zmuzik.slidingpuzzle2.Conf
 import zmuzik.slidingpuzzle2.common.FILE_PREFIX
-import zmuzik.slidingpuzzle2.common.FileContainer
+import zmuzik.slidingpuzzle2.common.FileWrapper
 import zmuzik.slidingpuzzle2.common.Resource
 import zmuzik.slidingpuzzle2.common.isPicture
 import zmuzik.slidingpuzzle2.repo.flickr.FlickrApi
@@ -56,22 +56,22 @@ class Repo(private val flickrApi: FlickrApi) {
 
     suspend fun getFlickrPhotoSizes(photoId: String) = flickrApi.getPhotoSizes(photoId)
 
-    private fun retrieveCameraPictures(): List<FileContainer> {
-        val foundFiles = mutableListOf<FileContainer>()
+    private fun retrieveCameraPictures(): List<FileWrapper> {
+        val foundFiles = mutableListOf<FileWrapper>()
         val cameraDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
         scanDirectoryForPictures(cameraDir, foundFiles)
         foundFiles.also { it.sortByDescending { it.lastModified } }
         return foundFiles
     }
 
-    private fun scanDirectoryForPictures(root: File?, filePaths: MutableList<FileContainer>) {
+    private fun scanDirectoryForPictures(root: File?, filePaths: MutableList<FileWrapper>) {
         if (root == null) return
         val list = root.listFiles() ?: return
         list.filterNot { it.isHidden }.forEach {
             if (it.isDirectory) {
                 scanDirectoryForPictures(it, filePaths)
             } else if (isPicture(it)) {
-                filePaths.add(FileContainer(FILE_PREFIX + it.absolutePath, it.lastModified()))
+                filePaths.add(FileWrapper(FILE_PREFIX + it.absolutePath, it.lastModified()))
             }
         }
     }

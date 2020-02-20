@@ -1,5 +1,6 @@
 package zmuzik.slidingpuzzle2.screens.game
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.AttributeSet
@@ -49,54 +50,6 @@ class PuzzleBoardView
 
     private val prefsHelper by lazy { activity.get<Prefs>() }
 
-    fun setDimensions(width: Int, height: Int) {
-        val params = layoutParams
-        params.height = height
-        params.width = width
-        layoutParams = params
-        invalidate()
-        val shorterSideTiles = prefsHelper.gridDimLong
-        val longerSideTiles = prefsHelper.gridDimShort
-        tilesX = if (width < height) longerSideTiles else shorterSideTiles
-        tilesY = if (width < height) shorterSideTiles else longerSideTiles
-
-        tileWidth = width / tilesX
-        tileHeight = height / tilesY
-    }
-
-    fun init(bitmap: Bitmap, viewModel: GameScreenViewModel) {
-        completePictureBitmap = bitmap
-        initTiles()
-        restoreGameState(viewModel)
-    }
-
-    private inline fun <reified T> array2d(
-            sizeOuter: Int,
-            sizeInner: Int,
-            noinline innerInit: (Int) -> T
-    ): Array<Array<T>> = Array(sizeOuter) { Array(sizeInner, innerInit) }
-
-    private fun initTiles() {
-        tiles = array2d(tilesX, tilesY) { TileView(context) }
-        var tileNumber = 1
-        for (y in 0 until tilesY) {
-            for (x in 0 until tilesX) {
-                val completeBitmap = completePictureBitmap ?: continue
-                val tileBitmap = Bitmap.createBitmap(completeBitmap,
-                        x * tileWidth, y * tileHeight,
-                        tileWidth, tileHeight)
-                tiles[x][y] = TileView(context, x, y, tileBitmap, tileNumber)
-                tiles[x][y].displayNumbers = prefsHelper.displayTileNumbers
-                addView(tiles[x][y])
-                tileNumber++
-            }
-        }
-        // sets the black tile to the last tile of the grid
-        blackTileX = tilesX - 1
-        blackTileY = tilesY - 1
-        state = GameState.LOADED
-    }
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         (0 until childCount)
@@ -123,110 +76,7 @@ class PuzzleBoardView
         }
     }
 
-    private fun isPuzzleComplete(): Boolean {
-        for (i in 0 until tilesX) {
-            for (j in 0 until tilesY) {
-                if (tiles[i][j].origX != i || tiles[i][j].origY != j) {
-                    return false
-                }
-            }
-        }
-        return true
-    }
-
-    private fun isHorizPlayable(x: Int, y: Int): Boolean {
-        return y == blackTileY && y == activeTileY &&
-                (x in activeTileX until blackTileX || x in (blackTileX + 1)..activeTileX)
-    }
-
-    private fun isVertPlayable(x: Int, y: Int): Boolean {
-        return x == blackTileX && x == activeTileX &&
-                (y in activeTileY until blackTileY || y in (blackTileY + 1)..activeTileY)
-    }
-
-    fun maybeShuffle() {
-        if (state == GameState.READY_TO_SHUFFLE) {
-            shuffle()
-        }
-    }
-
-    private fun shuffle() {
-        state = GameState.SHUFFLING
-        gameScreen?.get()?.hideShuffleIcon()
-        requestLayout()
-        val random = Random()
-        var position: Int
-        val steps = tilesX * tilesY * 4
-        for (step in 0 until steps) {
-            if (step % 2 == 1) {
-                position = random.nextInt(tilesX - 1)
-                if (position >= blackTileX) position++
-                playTile(position, blackTileY, true)
-            } else {
-                position = random.nextInt(tilesY - 1)
-                if (position >= blackTileY) position++
-                playTile(blackTileX, position, true)
-            }
-        }
-
-        var animX: SpringAnimation? = null
-        var animY: SpringAnimation? = null
-        for (x in 0 until tilesX) {
-            for (y in 0 until tilesY) {
-                if (x == blackTileX && y == blackTileY) continue
-                val tile = tiles[x][y]
-                val endX = x * tileWidth
-                val endY = y * tileHeight
-                animX = SpringAnimation(tile, SpringAnimation.X, endX.toFloat())
-                animY = SpringAnimation(tile, SpringAnimation.Y, endY.toFloat())
-                animX.spring
-                        .setStiffness(shuffleStiffness).dampingRatio = shuffleDampingRatio
-                animY.spring
-                        .setStiffness(shuffleStiffness).dampingRatio = shuffleDampingRatio
-                animX.start()
-                animY.start()
-            }
-        }
-        if (animY == null) {
-            state = GameState.SHUFFLED
-            requestLayout()
-        } else {
-            animY.addEndListener { animation, canceled, value, velocity ->
-                state = GameState.SHUFFLED
-                requestLayout()
-            }
-        }
-    }
-
-    private fun playTile(x: Int, y: Int, isShuffleMove: Boolean) {
-        if (!isShuffleMove) state = GameState.PLAYING
-        val temp = tiles[blackTileX][blackTileY]
-        if (x == blackTileX) {
-            if (y < blackTileY) {
-                for (i in blackTileY - 1 downTo y) {
-                    tiles[blackTileX][i + 1] = tiles[blackTileX][i]
-                }
-            } else if (y > blackTileY) {
-                for (i in blackTileY + 1..y) {
-                    tiles[blackTileX][i - 1] = tiles[blackTileX][i]
-                }
-            }
-        } else if (y == blackTileY) {
-            if (x < blackTileX) {
-                for (i in blackTileX - 1 downTo x) {
-                    tiles[i + 1][blackTileY] = tiles[i][blackTileY]
-                }
-            } else if (x > blackTileX) {
-                for (i in blackTileX + 1..x) {
-                    tiles[i - 1][blackTileY] = tiles[i][blackTileY]
-                }
-            }
-        }
-        tiles[x][y] = temp
-        blackTileX = x
-        blackTileY = y
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (completePictureBitmap == null) return true
         when (state) {
@@ -312,6 +162,170 @@ class PuzzleBoardView
         return true
     }
 
+    fun init(bitmap: Bitmap, viewModel: GameScreenViewModel) {
+        completePictureBitmap = bitmap
+        initTiles()
+        restoreGameState(viewModel)
+    }
+
+    fun setDimensions(width: Int, height: Int) {
+        val params = layoutParams
+        params.height = height
+        params.width = width
+        layoutParams = params
+        invalidate()
+        val shorterSideTiles = prefsHelper.gridDimLong
+        val longerSideTiles = prefsHelper.gridDimShort
+        tilesX = if (width < height) longerSideTiles else shorterSideTiles
+        tilesY = if (width < height) shorterSideTiles else longerSideTiles
+
+        tileWidth = width / tilesX
+        tileHeight = height / tilesY
+    }
+
+    fun saveGameState(viewModel: GameScreenViewModel) {
+        viewModel.storedBoardState = state
+        viewModel.storedBlackX = blackTileX
+        viewModel.storedBlackY = blackTileY
+        viewModel.storedPositions = ArrayList<Int>()
+        tiles.forEach { column ->
+            column.forEach { tileView ->
+                viewModel.storedPositions?.add(tileView.tileNumber)
+            }
+        }
+    }
+
+    fun maybeShuffle() {
+        if (state == GameState.READY_TO_SHUFFLE) {
+            shuffle()
+        }
+    }
+
+    private inline fun <reified T> array2d(
+            sizeOuter: Int,
+            sizeInner: Int,
+            noinline innerInit: (Int) -> T
+    ): Array<Array<T>> = Array(sizeOuter) { Array(sizeInner, innerInit) }
+
+    private fun initTiles() {
+        tiles = array2d(tilesX, tilesY) { TileView(context) }
+        var tileNumber = 1
+        for (y in 0 until tilesY) {
+            for (x in 0 until tilesX) {
+                val completeBitmap = completePictureBitmap ?: continue
+                val tileBitmap = Bitmap.createBitmap(completeBitmap,
+                        x * tileWidth, y * tileHeight,
+                        tileWidth, tileHeight)
+                tiles[x][y] = TileView(context, x, y, tileBitmap, tileNumber)
+                tiles[x][y].displayNumbers = prefsHelper.displayTileNumbers
+                addView(tiles[x][y])
+                tileNumber++
+            }
+        }
+        // sets the black tile to the last tile of the grid
+        blackTileX = tilesX - 1
+        blackTileY = tilesY - 1
+        state = GameState.LOADED
+    }
+
+    private fun isPuzzleComplete(): Boolean {
+        for (i in 0 until tilesX) {
+            for (j in 0 until tilesY) {
+                if (tiles[i][j].origX != i || tiles[i][j].origY != j) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    private fun isHorizPlayable(x: Int, y: Int): Boolean {
+        return y == blackTileY && y == activeTileY &&
+                (x in activeTileX until blackTileX || x in (blackTileX + 1)..activeTileX)
+    }
+
+    private fun isVertPlayable(x: Int, y: Int): Boolean {
+        return x == blackTileX && x == activeTileX &&
+                (y in activeTileY until blackTileY || y in (blackTileY + 1)..activeTileY)
+    }
+
+    private fun shuffle() {
+        state = GameState.SHUFFLING
+        gameScreen?.get()?.hideShuffleIcon()
+        requestLayout()
+        val random = Random()
+        var position: Int
+        val steps = tilesX * tilesY * 4
+        for (step in 0 until steps) {
+            if (step % 2 == 1) {
+                position = random.nextInt(tilesX - 1)
+                if (position >= blackTileX) position++
+                playTile(position, blackTileY, true)
+            } else {
+                position = random.nextInt(tilesY - 1)
+                if (position >= blackTileY) position++
+                playTile(blackTileX, position, true)
+            }
+        }
+
+        var animX: SpringAnimation? = null
+        var animY: SpringAnimation? = null
+        for (x in 0 until tilesX) {
+            for (y in 0 until tilesY) {
+                if (x == blackTileX && y == blackTileY) continue
+                val tile = tiles[x][y]
+                val endX = x * tileWidth
+                val endY = y * tileHeight
+                animX = SpringAnimation(tile, SpringAnimation.X, endX.toFloat())
+                animY = SpringAnimation(tile, SpringAnimation.Y, endY.toFloat())
+                animX.spring
+                        .setStiffness(shuffleStiffness).dampingRatio = shuffleDampingRatio
+                animY.spring
+                        .setStiffness(shuffleStiffness).dampingRatio = shuffleDampingRatio
+                animX.start()
+                animY.start()
+            }
+        }
+        if (animY == null) {
+            state = GameState.SHUFFLED
+            requestLayout()
+        } else {
+            animY.addEndListener { _, _, _, _ ->
+                state = GameState.SHUFFLED
+                requestLayout()
+            }
+        }
+    }
+
+    private fun playTile(x: Int, y: Int, isShuffleMove: Boolean) {
+        if (!isShuffleMove) state = GameState.PLAYING
+        val temp = tiles[blackTileX][blackTileY]
+        if (x == blackTileX) {
+            if (y < blackTileY) {
+                for (i in blackTileY - 1 downTo y) {
+                    tiles[blackTileX][i + 1] = tiles[blackTileX][i]
+                }
+            } else if (y > blackTileY) {
+                for (i in blackTileY + 1..y) {
+                    tiles[blackTileX][i - 1] = tiles[blackTileX][i]
+                }
+            }
+        } else if (y == blackTileY) {
+            if (x < blackTileX) {
+                for (i in blackTileX - 1 downTo x) {
+                    tiles[i + 1][blackTileY] = tiles[i][blackTileY]
+                }
+            } else if (x > blackTileX) {
+                for (i in blackTileX + 1..x) {
+                    tiles[i - 1][blackTileY] = tiles[i][blackTileY]
+                }
+            }
+        }
+        tiles[x][y] = temp
+        blackTileX = x
+        blackTileY = y
+    }
+
     private fun onGameFinished() {
         state = GameState.FINISHED
         context.toast(R.string.congrats)
@@ -361,18 +375,6 @@ class PuzzleBoardView
             }
         }
         return result
-    }
-
-    fun saveGameState(viewModel: GameScreenViewModel) {
-        viewModel.storedBoardState = state
-        viewModel.storedBlackX = blackTileX
-        viewModel.storedBlackY = blackTileY
-        viewModel.storedPositions = ArrayList<Int>()
-        tiles.forEach { column ->
-            column.forEach { tileView ->
-                viewModel.storedPositions?.add(tileView.tileNumber)
-            }
-        }
     }
 
     private fun restoreGameState(viewModel: GameScreenViewModel) {
