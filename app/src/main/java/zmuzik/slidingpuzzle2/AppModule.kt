@@ -1,7 +1,6 @@
 package zmuzik.slidingpuzzle2
 
 import androidx.preference.PreferenceManager
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.Module
 import org.koin.dsl.module.module
@@ -19,7 +18,6 @@ val appModule: Module = module {
     single {
         Retrofit.Builder()
                 .baseUrl(FlickrApi.FLICKR_API_ROOT)
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(FlickrApi::class.java)
