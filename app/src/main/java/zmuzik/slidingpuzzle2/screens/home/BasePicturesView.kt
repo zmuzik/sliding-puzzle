@@ -47,11 +47,11 @@ open class BasePicturesView
         }
     }
 
-    val isHorizontal get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    private val isHorizontal get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    val isTablet get() = resources.getBoolean(R.bool.isTablet)
+    private val isTablet get() = resources.getBoolean(R.bool.isTablet)
 
-    val columnsNumber: Int
+    private val columnsNumber: Int
         get() = when {
             isTablet && isHorizontal -> Conf.GRID_COLS_TABLET_LANDSCAPE
             isTablet && !isHorizontal -> Conf.GRID_COLS_TABLET_PORTRAIT
@@ -66,7 +66,7 @@ open class BasePicturesView
 
         var dim: Int = 0
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PicturesGridAdapter.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             dim = parent.width / columns
             return ViewHolder(parent.inflate(R.layout.item_pictures_grid))
         }
@@ -87,7 +87,7 @@ open class BasePicturesView
 
         override fun getItemCount() = pictures.size
 
-        inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 
             fun bind(position: Int) {
                 val uriString = pictures[position].thumbUrl

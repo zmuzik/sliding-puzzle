@@ -23,6 +23,6 @@ interface FlickrApi {
     suspend fun getPhotoSizes(@Query("photo_id") photoId: String): FlickrPhotoSizesResponse
 
     companion object {
-        val FLICKR_API_ROOT = "https://api.flickr.com/services/rest/"
+        const val FLICKR_API_ROOT = "https://api.flickr.com/services/rest/"
     }
 }

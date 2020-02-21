@@ -259,10 +259,10 @@ class HomeFragment : BaseFragment(), HomeScreen {
         safeLet(mainActivity, uri, sharedView?.get()) { lactivity, luri, lview ->
             mainActivity?.thumbBitmap = WeakReference(lview.drawable.toBitmap())
             val args = bundleOf(
-                    "PICTURE_URI" to luri,
-                    "THUMBNAIL_DIM" to lview.width,
-                    "THUMBNAIL_LEFT" to lview.getRelativeLeft(),
-                    "THUMBNAIL_TOP" to lview.getRelativeTop())
+                    Keys.PICTURE_URI to luri,
+                    Keys.THUMBNAIL_DIM to lview.width,
+                    Keys.THUMBNAIL_LEFT to lview.getRelativeLeft(),
+                    Keys.THUMBNAIL_TOP to lview.getRelativeTop())
             findNavController().navigate(R.id.gameFragment, args)
             isOpeningGameInProgress = false
         }

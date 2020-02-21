@@ -34,16 +34,6 @@ data class FlickrPhoto(
     val thumbUrl: String
         get() = "https://farm$farm.staticflickr.com/$server/${id}_${secret}_q.jpg"
 
-    fun getFullPicUrl(maxScreenDim: Int, flickrPhotoSizes: List<FlickrPhotoSize>): String {
-        var result = thumbUrl
-        val prevSize = 0
-        val sortedSizes = flickrPhotoSizes.sortedBy { it.maxDim }
-        sortedSizes
-                .filter { it.maxDim in (prevSize + 1)..maxScreenDim }
-                .forEach { result = it.source }
-        return result
-    }
-
     val isHorizontal: Boolean get() = width_l > height_l
 }
 
