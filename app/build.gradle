@@ -101,8 +101,8 @@ dependencies {
     implementation "org.koin:koin-androidx-viewmodel:1.0.1"
 
     // networking
-    implementation "com.squareup.okhttp3:logging-interceptor:3.12.0"
-    implementation "com.squareup.okhttp3:okhttp:3.12.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.14.4"
+    implementation "com.squareup.okhttp3:okhttp:3.14.4"
     implementation "com.squareup.retrofit2:retrofit:2.7.1"
     implementation "com.squareup.retrofit2:converter-gson:2.7.1"
 
